@@ -1,9 +1,9 @@
-describe Cli, 'nested' do
+describe Cl, 'nested' do
   before do
     module Cmds
       module Nested
         class A
-          include Cli::Cmd
+          include Cl::Cmd
           register 'nested:a'
           on('-a') { opts[:a] = true }
           def initialize(*); end
@@ -22,12 +22,12 @@ describe Cli, 'nested' do
     end
   end
 
-  after { Cli.cmds.clear }
+  after { Cl.cmds.clear }
 
   let(:args) { %w(nested a b c d e -a -b -c) }
-  let(:cli)  { Cli::Runner.new(args) }
+  let(:cl)  { Cl::Runner.new(args) }
 
-  it { expect(cli.cmd).to be_a Cmds::Nested::A::B::C }
-  it { expect(cli.args).to eq %w(d e) }
-  it { expect(cli.opts).to eq a: true, b: true, c: true }
+  it { expect(cl.cmd).to be_a Cmds::Nested::A::B::C }
+  it { expect(cl.args).to eq %w(d e) }
+  it { expect(cl.opts).to eq a: true, b: true, c: true }
 end

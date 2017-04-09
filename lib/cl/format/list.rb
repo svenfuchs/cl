@@ -1,7 +1,7 @@
-require 'cli/format/table'
-require 'cli/format/usage'
+require 'cl/format/table'
+require 'cl/format/usage'
 
-module Cli
+module Cl
   class Format
     class List < Struct.new(:cmds)
       HEAD = %(Type "#{$0} help COMMAND [SUBCOMMAND]" for more details:\n)

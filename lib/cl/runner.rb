@@ -1,6 +1,6 @@
-require 'cli/cmds'
+require 'cl/cmds'
 
-module Cli
+module Cl
   class Runner
     attr_reader :const, :args, :opts
 

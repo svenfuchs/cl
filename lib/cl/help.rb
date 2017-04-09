@@ -1,9 +1,9 @@
-require 'cli/format/cmd'
-require 'cli/format/list'
+require 'cl/format/cmd'
+require 'cl/format/list'
 
-module Cli
+module Cl
   class Help < Struct.new(:args, :opts)
-    include Cli::Cmd
+    include Cl::Cmd
 
     register :help
 
@@ -18,14 +18,14 @@ module Cli
     private
 
       def cmds
-        cmds = Cli.cmds.reject { |cmd| cmd.registry_key == :help }
+        cmds = Cl.cmds.reject { |cmd| cmd.registry_key == :help }
         key  = args.join(':') if args
         cmds = cmds.select { |cmd| cmd.registry_key.to_s.start_with?(key) } if key
         cmds
       end
 
       def cmd
-        args && Cli[args.join(':')]
+        args && Cl[args.join(':')]
       end
   end
 end

@@ -1,6 +1,6 @@
-require 'cli/options'
+require 'cl/options'
 
-module Cli
+module Cl
   class Cmds < Struct.new(:args)
     def lookup
       cmd || abort("Unknown command: #{args.join(' ')}")
@@ -18,7 +18,7 @@ module Cli
       end
 
       def cmd
-        @cmd ||= keys.map { |key| Cli[key] }.compact.last
+        @cmd ||= keys.map { |key| Cl[key] }.compact.last
       end
 
       def keys

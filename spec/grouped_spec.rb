@@ -1,4 +1,4 @@
-describe Cli, 'grouped' do
+describe Cl, 'grouped' do
   before do
     module Cmds
       module Grouped
@@ -11,14 +11,14 @@ describe Cli, 'grouped' do
         end
 
         class A
-          include Cli::Cmd
+          include Cl::Cmd
           include Opts
           register 'grouped:a'
           def initialize(*); end
         end
 
         class B
-          include Cli::Cmd
+          include Cl::Cmd
           include Opts
           register 'grouped:b'
           def initialize(*); end
@@ -27,12 +27,12 @@ describe Cli, 'grouped' do
     end
   end
 
-  after { Cli.registry.clear }
+  after { Cl.registry.clear }
 
   let(:args) { %w(grouped b c d -a -b -c) }
-  let(:cli)  { Cli::Runner.new(args) }
+  let(:cl)  { Cl::Runner.new(args) }
 
-  it { expect(cli.cmd).to be_a Cmds::Grouped::B }
-  it { expect(cli.args).to eq %w(c d) }
-  it { expect(cli.opts).to eq a: true, b: true, c: true }
+  it { expect(cl.cmd).to be_a Cmds::Grouped::B }
+  it { expect(cl.args).to eq %w(c d) }
+  it { expect(cl.opts).to eq a: true, b: true, c: true }
 end

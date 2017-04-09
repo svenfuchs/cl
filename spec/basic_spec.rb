@@ -1,16 +1,16 @@
-describe Cli, 'basic' do
+describe Cl, 'basic' do
   before do
     module Cmds
       module Basic
         class A
-          include Cli::Cmd
+          include Cl::Cmd
           on('-a') { opts[:a] = true }
           register 'basic:a'
           def initialize(*); end
         end
 
         class B
-          include Cli::Cmd
+          include Cl::Cmd
           on('-b') { opts[:b] = true }
           register 'basic:b'
           def initialize(*); end
@@ -19,12 +19,12 @@ describe Cli, 'basic' do
     end
   end
 
-  after { Cli.registry.clear }
+  after { Cl.registry.clear }
 
   let(:args) { %w(basic b c d -b) }
-  let(:cli)  { Cli::Runner.new(args) }
+  let(:cl)  { Cl::Runner.new(args) }
 
-  it { expect(cli.cmd).to be_a Cmds::Basic::B }
-  it { expect(cli.args).to eq %w(c d) }
-  it { expect(cli.opts).to eq b: true }
+  it { expect(cl.cmd).to be_a Cmds::Basic::B }
+  it { expect(cl.args).to eq %w(c d) }
+  it { expect(cl.opts).to eq b: true }
 end

@@ -1,8 +1,8 @@
-require 'cli/cmd'
-require 'cli/help'
-require 'cli/runner'
+require 'cl/cmd'
+require 'cl/help'
+require 'cl/runner'
 
-module Cli
+module Cl
   def included(const)
     const.send(:include, Cmd)
   end

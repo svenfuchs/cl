@@ -1,7 +1,7 @@
-require 'cli/format/table'
-require 'cli/format/usage'
+require 'cl/format/table'
+require 'cl/format/usage'
 
-module Cli
+module Cl
   class Format
     class Cmd < Struct.new(:cmd)
       def format

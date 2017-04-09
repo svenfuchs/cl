@@ -1,4 +1,4 @@
-module Cli
+module Cl
   class Options < OptionParser
     attr_reader :opts
 

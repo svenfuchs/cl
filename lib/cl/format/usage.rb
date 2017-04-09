@@ -1,4 +1,4 @@
-module Cli
+module Cl
   class Format
     class Usage < Struct.new(:cmd)
       def format

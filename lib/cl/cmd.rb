@@ -1,6 +1,6 @@
-require 'cli/registry'
+require 'cl/registry'
 
-module Cli
+module Cl
   module Cmd
     def self.included(const)
       const.send :include, Registry

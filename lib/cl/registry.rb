@@ -1,4 +1,4 @@
-module Cli
+module Cl
   class << self
     def []=(key, object)
       registry[key.to_sym] = object
@@ -29,11 +29,11 @@ module Cli
       attr_reader :registry_key
 
       def [](key)
-        Cli[key.to_sym]
+        Cl[key.to_sym]
       end
 
       def register(key)
-        Cli[key] = self
+        Cl[key] = self
         @registry_key = key.to_sym
       end
 

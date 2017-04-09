@@ -1,4 +1,4 @@
-module Cli
+module Cl
   class Format
     class Table < Struct.new(:data, :separator)
       def format
