@@ -2,8 +2,7 @@ describe Cl, 'nested' do
   before do
     module Cmds
       module Nested
-        class A
-          include Cl::Cmd
+        class A < Cl::Cmd
           register 'nested:a'
           on('-a') { opts[:a] = true }
           def initialize(*); end

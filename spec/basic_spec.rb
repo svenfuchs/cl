@@ -2,18 +2,14 @@ describe Cl, 'basic' do
   before do
     module Cmds
       module Basic
-        class A
-          include Cl::Cmd
+        class A < Cl::Cmd
           on('-a') { opts[:a] = true }
           register 'basic:a'
-          def initialize(*); end
         end
 
-        class B
-          include Cl::Cmd
+        class B < Cl::Cmd
           on('-b') { opts[:b] = true }
           register 'basic:b'
-          def initialize(*); end
         end
       end
     end

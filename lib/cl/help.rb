@@ -2,9 +2,7 @@ require 'cl/format/cmd'
 require 'cl/format/list'
 
 module Cl
-  class Help < Struct.new(:args, :opts)
-    include Cl::Cmd
-
+  class Help < Cl::Cmd
     register :help
 
     def run

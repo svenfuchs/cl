@@ -2,8 +2,7 @@ describe Cl, 'help' do
   before do
     module Cmds
       module Help
-        class A
-          include Cl::Cmd
+        class A < Cl::Cmd
           purpose 'Use this to a the a'
           args :foo, :bar
           opts.clear
@@ -12,8 +11,7 @@ describe Cl, 'help' do
           register 'basic:a'
         end
 
-        class B
-          include Cl::Cmd
+        class B < Cl::Cmd
           purpose 'Use this to b the b'
           opts.clear
           on('-a', '--aaa', 'the flag A') { opts[:a] = true }

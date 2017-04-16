@@ -10,15 +10,13 @@ describe Cl, 'grouped' do
           end
         end
 
-        class A
-          include Cl::Cmd
+        class A < Cl::Cmd
           include Opts
           register 'grouped:a'
           def initialize(*); end
         end
 
-        class B
-          include Cl::Cmd
+        class B < Cl::Cmd
           include Opts
           register 'grouped:b'
           def initialize(*); end

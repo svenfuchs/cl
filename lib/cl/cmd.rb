@@ -1,13 +1,10 @@
 require 'cl/registry'
 
 module Cl
-  module Cmd
-    def self.included(const)
-      const.send :include, Registry
-      const.send :extend, ClassMethods
-    end
+  class Cmd < Struct.new(:args, :opts)
+    include Registry
 
-    module ClassMethods
+    class << self
       def args(*args)
         args.any? ? @args = args : @args ||= []
       end
