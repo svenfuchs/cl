@@ -6,16 +6,16 @@ describe Cl, 'help' do
           purpose 'Use this to a the a'
           args :foo, :bar
           opts.clear
-          on('-a', '--aaa', 'the flag A') { opts[:a] = true }
-          on('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
+          opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
+          opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
           register 'basic:a'
         end
 
         class B < Cl::Cmd
           purpose 'Use this to b the b'
           opts.clear
-          on('-a', '--aaa', 'the flag A') { opts[:a] = true }
-          on('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
+          opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
+          opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
           register 'basic:b'
         end
       end
@@ -23,22 +23,31 @@ describe Cl, 'help' do
   end
 
   before { Cl::Help.register :help }
-  after  { Cl.registry.clear }
+  before { Cl.registry.delete_if { |key, _| key.to_s !~ /(help|basic)/ } }
+  after  { Cmds.send(:remove_const, :Help) }
 
-  it do
-    expect(Cl::Runner.new('help').cmd.help).to eq <<~help.chomp
-      Type "/usr/local/bin/rspec help COMMAND [SUBCOMMAND]" for more details:
+  describe 'listing commands' do
+    let(:help) { Cl.runner('help').cmd.help }
 
-      /usr/local/bin/rspec basic a [foo] [bar] [options] # Use this to a the a
-      /usr/local/bin/rspec basic b [options]             # Use this to b the b
-    help
+    it do
+      expect(help).to include <<~str.chomp
+        Type "rspec help COMMAND [SUBCOMMAND]" for more details:
+      str
+    end
+
+    it do
+      expect(help).to include <<~str.chomp
+        rspec basic a [foo] [bar] [options] # Use this to a the a
+        rspec basic b [options]             # Use this to b the b
+      str
+    end
   end
 
-  it do
-    expect(Cl::Runner.new('help', 'basic', 'a').cmd.help).to eq <<~help.chomp
+  it 'command details' do
+    expect(Cl.runner('help', 'basic', 'a').cmd.help).to include <<~help.chomp
       Use this to a the a
 
-      Usage: basic a [foo] [bar] [options]
+      Usage: rspec basic a [foo] [bar] [options]
 
       -a --aaa     # the flag A
       -b --bbb BBB # the value B

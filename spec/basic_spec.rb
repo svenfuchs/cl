@@ -3,22 +3,22 @@ describe Cl, 'basic' do
     module Cmds
       module Basic
         class A < Cl::Cmd
-          on('-a') { opts[:a] = true }
+          opt('-a') { opts[:a] = true }
           register 'basic:a'
         end
 
         class B < Cl::Cmd
-          on('-b') { opts[:b] = true }
+          opt('-b') { opts[:b] = true }
           register 'basic:b'
         end
       end
     end
   end
 
-  after { Cl.registry.clear }
+  after { Cmds.send(:remove_const, :Basic) }
 
   let(:args) { %w(basic b c d -b) }
-  let(:cl)  { Cl::Runner.new(args) }
+  let(:cl)  { Cl.runner(args) }
 
   it { expect(cl.cmd).to be_a Cmds::Basic::B }
   it { expect(cl.args).to eq %w(c d) }

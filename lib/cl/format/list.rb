@@ -4,7 +4,7 @@ require 'cl/format/usage'
 module Cl
   class Format
     class List < Struct.new(:cmds)
-      HEAD = %(Type "#{$0} help COMMAND [SUBCOMMAND]" for more details:\n)
+      HEAD = %(Type "#{$0.split('/').last} help COMMAND [SUBCOMMAND]" for more details:\n)
 
       def format
         [HEAD, Format::Table.new(list).format].join("\n")
@@ -15,7 +15,7 @@ module Cl
       end
 
       def format_cmd(cmd)
-        ["#{$0} #{Usage.new(cmd).format}", cmd.purpose]
+        ["#{Usage.new(cmd).format}", cmd.purpose]
       end
     end
   end

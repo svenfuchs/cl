@@ -8,11 +8,20 @@ module Cl
   end
 
   def run(*args)
-    Runner.new(*args).run
+    runner(*args).run
   end
 
   def help
-    Runner.new(:help).run
+    runner(:help).run
+  end
+
+  attr_writer :runner
+  @runner = :default
+
+  def runner(*args)
+    args = args.flatten
+    runner = args.first.to_s == 'help' ? :default : @runner
+    Runner.const_get(runner.to_s.capitalize).new(*args)
   end
 
   extend self
