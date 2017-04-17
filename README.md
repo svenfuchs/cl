@@ -1,4 +1,4 @@
-# CLI
+# CL [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.org/svenfuchs/cl)
 
 This library wraps Ruby's `OptionParser` in order to make it easier to use it in an object oriented context.
 
