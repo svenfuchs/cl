@@ -6,11 +6,15 @@ describe Cl, 'multi' do
           register 'multi:foo'
           arg :a, type: :int
           arg :b, type: :int
+          opt('-c') { opts[:c] = true }
+          def run; [args, opts] end
         end
 
         class Bar < Cl::Cmd
           register 'multi:bar'
-          arg :c, type: :int
+          arg :d, type: :int
+          opt('-e') { opts[:e] = true }
+          def run; [args, opts] end
         end
       end
     end
@@ -19,12 +23,13 @@ describe Cl, 'multi' do
   after { Cmds.send(:remove_const, :Multi) }
 
   let(:cl)   { Cl::Runner::Multi.new(args) }
-  let(:args) { %w(multi:foo 1 2 multi:bar 3) }
+  let(:args) { %w(multi:foo 1 2 -c multi:bar 3 -e) }
 
   it { expect(cl.cmds[0].args).to eq [1, 2] }
-  it { expect(cl.cmds[0].a).to eq 1 }
-  it { expect(cl.cmds[0].b).to eq 2 }
+  it { expect(cl.run[0][0]).to eq [1, 2] }
+  it { expect(cl.run[0][1]).to eq c: true }
 
   it { expect(cl.cmds[1].args).to eq [3] }
-  it { expect(cl.cmds[1].c).to eq 3 }
+  it { expect(cl.run[1][0]).to eq [3] }
+  it { expect(cl.run[1][1]).to eq e: true }
 end

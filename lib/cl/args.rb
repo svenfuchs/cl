@@ -4,18 +4,17 @@ module Cl
   class Args
     include Enumerable
 
-    def apply(args)
-      return args unless self.args.any?
-      self.args.map.with_index do |arg, ix|
-        value = args[ix] || raise(ArgumentError, "Required argument missing: #{arg.name}")
-        arg.cast(value)
-      end
-    end
-
     def define(const, name, opts = {})
       arg = Arg.new(name, opts)
       arg.define(const)
       args << arg
+    end
+
+    def apply(cmd, args)
+      return args unless self.args.any?
+      args = grouped(args)
+      validate(args)
+      args.map { |(arg, value)| arg.set(cmd, value) }.flatten(1)
     end
 
     def each(&block)
@@ -29,5 +28,39 @@ module Cl
     def args
       @args ||= []
     end
+
+    private
+
+      def validate(args)
+        raise ArgumentError.new(:missing_args, args.size, required) if args.size < required
+        raise ArgumentError.new(:too_many_args, args.size, allowed) if args.size > allowed && !splat?
+      end
+
+      def allowed
+        args.size
+      end
+
+      def splat?
+        args.any?(&:splat?)
+      end
+
+      def required
+        args.select { |arg| arg.required? }.size
+      end
+
+      def grouped(values)
+        values.inject([0, {}]) do |(ix, group), value|
+          arg = args[ix]
+          if arg && arg.splat?
+            group[arg] ||= []
+            group[arg] << value
+            ix += 1 if args.size + group[arg].size > values.size
+          else
+            group[arg] = value
+            ix += 1
+          end
+          [ix, group]
+        end.last
+      end
   end
 end

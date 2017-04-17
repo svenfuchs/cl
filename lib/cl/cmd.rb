@@ -2,8 +2,6 @@ require 'cl/args'
 require 'cl/registry'
 
 module Cl
-  ArgumentError = Class.new(::ArgumentError)
-
   class Cmd < Struct.new(:args, :opts)
     include Registry
 
@@ -18,9 +16,11 @@ module Cl
         args.define(self, name, opts)
       end
 
-      def purpose(purpose = nil)
-        purpose ? @purpose = purpose : @purpose
+      def cmd(description = nil)
+        @description = description
       end
+
+      attr_reader :description
 
       def opt(*args, &block)
         opts << [args, block]
@@ -32,7 +32,8 @@ module Cl
     end
 
     def initialize(args, opts)
-      args = self.class.args.apply(args)
+      args = self.class.args.apply(self, args)
+      opts = self.class::OPTS.merge(opts) if self.class.const_defined?(:OPTS)
       super
     end
   end

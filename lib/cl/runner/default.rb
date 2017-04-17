@@ -23,7 +23,7 @@ module Cl
         def lookup(args)
           cmd = keys_for(args).map { |key| Cl[key] }.compact.last
           cmd || abort("Unknown command: #{args.join(' ')}")
-          opts = Options.new(cmd.opts, args).opts
+          opts = Options.new(cmd.opts, args).opts unless cmd == Help
           [cmd, args - cmds_for(cmd, args), opts]
         end
 

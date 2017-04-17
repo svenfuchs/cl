@@ -23,7 +23,11 @@ module Cl
       end
 
       def cmd
-        args && Cl[args.join(':')]
+        args.inject([[], []]) do |(args, cmds), arg|
+          args << arg
+          cmds << Cl[args.join(':')]
+          [args, cmds.compact]
+        end.last.last
       end
   end
 end

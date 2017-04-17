@@ -4,22 +4,31 @@ module Cl
     FALSE = /^(false|no|off)$/
 
     def define(const)
-      name = self.name
-      arg  = self
+      const.send(:attr_accessor, name)
+    end
 
-      const.send(:define_method, name) do
-        ix = self.class.args.index { |arg| arg.name == name }
-        value = self.args[ix]
-        value
-      end
+    def set(cmd, value)
+      cmd.send(:"#{name}=", cast(value))
+    end
+
+    def type
+      opts[:type] || :str
+    end
+
+    def splat?
+      type == :array
+    end
+
+    def required?
+      !!opts[:required]
     end
 
     def cast(value)
-      case opts[:type]
+      case type
       when nil
         value
       when :array
-        value.to_s.split(',')
+        Array(value).flatten.map { |value| value.split(',') }.flatten
       when :string, :str
         value.to_s
       when :boolean, :bool
@@ -29,14 +38,23 @@ module Cl
       when :integer, :int
         Integer(value)
       when :float
-        Float(int)
+        Float(value)
       else
         raise ArgumentError, "Unknown type: #{type}" if value
       end
+    rescue ::ArgumentError => e
+      raise ArgumentError.new(:wrong_type, value.inspect, type)
     end
 
     def to_s
-      opts[:required] ? name.to_s : "[#{name}]"
+      str = name
+      case type
+      when :array          then str = "#{str}.."
+      when :integer, :int  then str = "#{str} (int)"
+      when :boolean, :bool then str = "#{str} (bool)"
+      when :float          then str = "#{str} (float)"
+      end
+      required? ? str : "[#{str}]"
     end
   end
 end

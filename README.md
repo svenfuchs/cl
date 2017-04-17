@@ -4,10 +4,9 @@ This library wraps Ruby's `OptionParser` in order to make it easier to use it in
 
 ## Usage
 
-```
+```ruby
 module Owners
-  class Add < Struct.new(:args, :opts)
-    include Cli::Cmd
+  class Add < Cli::Cmd
 
     register 'owners:add'
 
