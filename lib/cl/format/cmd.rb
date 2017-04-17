@@ -10,7 +10,7 @@ module Cl
 
       def banner
         banner = []
-        banner << "#{cmd.description}\n" if cmd.description
+        banner << "#{cmd.summary}\n" if cmd.summary
         banner << "Usage: #{Usage.new(cmd).format}\n"
         banner
       end

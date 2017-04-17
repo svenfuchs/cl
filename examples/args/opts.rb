@@ -1,9 +1,6 @@
-$:.unshift 'lib'
 require 'cl'
 
 class Opts < Cl::Cmd
-  register :opts
-
   opt '-p', '--path PATH' do |value|
     opts[:path] = value
   end

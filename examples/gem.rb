@@ -1,11 +1,9 @@
-$:.unshift 'lib'
 require 'cl'
 
 module Gem
   module Release
     module Cmds
       class Release < Cl::Cmd
-        register :release
         arg :gemspec
 
         opt '-h', '--host HOST' do |value|
@@ -26,8 +24,6 @@ module Gem
       end
 
       class Bump < Cl::Cmd
-        register :bump
-
         OPTS = {
           commit: true
         }

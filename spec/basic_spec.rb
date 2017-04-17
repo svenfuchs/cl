@@ -4,13 +4,11 @@ describe Cl, 'basic' do
       module Basic
         class A < Cl::Cmd
           opt('-a') { opts[:a] = true }
-          register :a
           def run; [args, opts] end
         end
 
         class B < Cl::Cmd
           opt('-b') { opts[:b] = true }
-          register :b
           def run; [args, opts] end
         end
       end

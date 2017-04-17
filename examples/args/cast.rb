@@ -1,9 +1,6 @@
-$:.unshift 'lib'
 require 'cl'
 
 class Bool < Cl::Cmd
-  register :bool
-
   arg :bool, type: :bool
 
   def run
@@ -12,8 +9,6 @@ class Bool < Cl::Cmd
 end
 
 class Types < Cl::Cmd
-  register :types
-
   arg :a, type: :bool
   arg :b, type: :int
   arg :c, type: :float

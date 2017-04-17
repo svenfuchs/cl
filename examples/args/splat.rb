@@ -1,4 +1,3 @@
-$:.unshift 'lib'
 require 'cl'
 
 class SplatLeft < Cl::Cmd
