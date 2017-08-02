@@ -3,7 +3,7 @@ describe Cl, 'help' do
     module Cmds
       module Help
         class A < Cl::Cmd
-          cmd 'Use this to a the a'
+          purpose 'Use this to a the a'
           args :foo, :bar
           opts.clear
           opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
@@ -12,7 +12,7 @@ describe Cl, 'help' do
         end
 
         class B < Cl::Cmd
-          cmd 'Use this to b the b'
+          purpose 'Use this to b the b'
           opts.clear
           opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
           opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }

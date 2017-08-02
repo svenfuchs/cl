@@ -20,11 +20,9 @@ module Cl
         args.define(self, name, opts)
       end
 
-      def cmd(summary = nil)
-        @summary = summary
+      def purpose(purpose = nil)
+        purpose ? @purpose = purpose : @purpose
       end
-
-      attr_reader :summary
 
       def opt(*args, &block)
         opts << [args, block]

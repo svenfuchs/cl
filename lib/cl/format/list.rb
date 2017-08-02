@@ -15,7 +15,7 @@ module Cl
       end
 
       def format_cmd(cmd)
-        ["#{Usage.new(cmd).format}", cmd.summary]
+        ["#{Usage.new(cmd).format}", cmd.purpose]
       end
     end
   end
