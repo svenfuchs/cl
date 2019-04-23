@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    cl (0.0.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -20,7 +25,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cl!
   rspec
 
 BUNDLED WITH
-   1.14.6
+   1.16.1
