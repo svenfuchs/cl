@@ -32,7 +32,7 @@ describe Cl, 'defaults' do
   end
 
   def opts(args)
-    Cl.runner(ctx, args).cmd.opts
+    cmd(args).opts
   end
 
   it { expect(a.defaults).to eq a: 'a' }

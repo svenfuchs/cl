@@ -20,13 +20,13 @@ describe Cl, 'nested' do
     end
   end
 
-  let(:cl) { Cl.runner(ctx, %w(nested a b c d e -a -b -c)) }
+  let(:args) { %w(nested a b c d e -a -b -c) }
 
   it { expect(a.opts.map(&:first).flatten).to eq %w(-a --help) }
   it { expect(b.opts.map(&:first).flatten).to eq %w(-a -b --help) }
   it { expect(c.opts.map(&:first).flatten).to eq %w(-a -b -c --help) }
 
-  it { expect(cl.cmd).to be_a c }
-  it { expect(cl.args).to eq %w(d e) }
-  it { expect(cl.opts).to eq a: true, b: true, c: true }
+  it { expect(cmd).to be_a c }
+  it { expect(cmd.args).to eq %w(d e) }
+  it { expect(cmd.opts).to eq a: true, b: true, c: true }
 end

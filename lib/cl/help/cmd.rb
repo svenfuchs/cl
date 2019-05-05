@@ -1,7 +1,7 @@
 require 'cl/help/table'
 require 'cl/help/usage'
 
-module Cl
+class Cl
   class Help
     class Cmd < Struct.new(:cmd)
       def format

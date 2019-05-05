@@ -1,7 +1,7 @@
 require 'cl/config/env'
 require 'cl/config/files'
 
-module Cl
+class Cl
   class Config
     attr_reader :name, :opts
 

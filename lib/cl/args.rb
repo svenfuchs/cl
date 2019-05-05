@@ -1,6 +1,6 @@
 require 'cl/arg'
 
-module Cl
+class Cl
   class Args
     include Enumerable
 

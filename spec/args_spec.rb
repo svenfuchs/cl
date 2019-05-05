@@ -44,12 +44,9 @@ describe Cl, 'args' do
     end
   end
 
-  let(:cl)  { Cl.runner(ctx, args) }
-  let(:cmd) { cl.cmd }
-
   describe 'defines argument accessors' do
     let(:args) { %w(args foo 1 2) }
-    it { expect(cl.args).to eq %w(1 2) }
+    it { expect(runner.args).to eq %w(1 2) }
     it { expect(cmd).to be_a foo }
     it { expect(cmd.a).to eq '1' }
     it { expect(cmd.b).to eq '2' }

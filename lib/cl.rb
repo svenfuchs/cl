@@ -3,7 +3,7 @@ require 'cl/help'
 require 'cl/runner/default'
 require 'cl/runner/multi'
 
-module Cl
+class Cl
   class Error < StandardError
     MSGS = {
       missing_args:  'Missing arguments (given: %s, required: %s)',
@@ -20,29 +20,28 @@ module Cl
   ArgumentError = Class.new(Error)
   OptionError = Class.new(Error)
 
-  def included(const)
-    const.send(:include, Cmd)
+  attr_reader :ctx, :name, :opts
+
+  def initialize(*args)
+    ctx   = args.shift if args.first.is_a?(Ctx)
+    @opts = args.last.is_a?(Hash) ? args.pop : {}
+    @name = args.shift || $0
+    @ctx  = ctx || Ctx.new(name, opts)
   end
 
-  def run(name, *args)
-    ctx = Ctx.new(name)
-    runner(ctx, *args).run
+  def run(args)
+    runner(args).run
   rescue Error => e
     abort [e.message, runner(:help, *args).cmd.help].join("\n\n")
   end
 
-  def help(*args)
-    runner(:help, *args).run
-  end
-
-  attr_writer :runner
-  @runner = :default
-
-  def runner(ctx, *args)
-    args = args.flatten
-    runner = args.first.to_s == 'help' ? :default : @runner
+  def runner(args)
+    runner = :default if args.first.to_s == 'help'
+    runner ||= opts[:runner] || :default
     Runner.const_get(runner.to_s.capitalize).new(ctx, *args)
   end
 
-  extend self
+  # def help(*args)
+  #   runner(:help, *args).run
+  # end
 end

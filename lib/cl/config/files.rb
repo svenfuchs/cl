@@ -1,6 +1,6 @@
 require 'yaml'
 
-module Cl
+class Cl
   class Config
     class Files < Struct.new(:name)
       PATHS = %w(

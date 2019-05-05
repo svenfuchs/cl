@@ -17,10 +17,11 @@ describe Cl, 'grouped' do
     end
   end
 
-  let(:cl) { Cl.runner(ctx, %w(grouped b c d -a -b -c)) }
+  let(:args) { %w(grouped b c d -a -b -c) }
 
   it { expect(b.opts.map(&:first).flatten).to eq %w(-a -b -c --help) }
-  it { expect(cl.cmd).to be_a b }
-  it { expect(cl.run[0]).to eq %w(c d) }
-  it { expect(cl.run[1]).to eq a: true, b: true, c: true }
+
+  it { expect(cmd).to be_a b }
+  it { expect(cmd.run[0]).to eq %w(c d) }
+  it { expect(cmd.run[1]).to eq a: true, b: true, c: true }
 end

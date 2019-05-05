@@ -1,4 +1,4 @@
-module Cl
+class Cl
   class Help < Cl::Cmd
     register :help
 

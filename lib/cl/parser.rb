@@ -1,6 +1,6 @@
 require 'optparse'
 
-module Cl
+class Cl
   class Parser < OptionParser
     attr_reader :opts
 

@@ -1,7 +1,7 @@
 require 'cl/ctx'
 require 'cl/parser'
 
-module Cl
+class Cl
   module Runner
     class Default
       attr_reader :ctx, :const, :args, :opts

@@ -2,7 +2,7 @@ require 'cl/args'
 require 'cl/opts'
 require 'cl/registry'
 
-module Cl
+class Cl
   class Cmd < Struct.new(:ctx, :args, :opts)
     include Registry
 

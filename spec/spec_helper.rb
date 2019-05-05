@@ -5,5 +5,5 @@ require 'support'
 
 RSpec.configure do |c|
   c.before { Cl.registry.clear }
-  c.include Support::Ctx
+  c.include Support
 end

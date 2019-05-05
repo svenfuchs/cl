@@ -15,9 +15,9 @@ describe Cl, 'basic' do
     end
   end
 
-  let(:cl) { Cl.runner(ctx, %w(b c d -b)) }
+  let(:args) { %w(b c d -b) }
 
-  it { expect(cl.cmd).to be_a b }
-  it { expect(cl.run[0]).to eq %w(c d) }
-  it { expect(cl.run[1]).to eq b: true }
+  it { expect(cmd).to be_a b }
+  it { expect(cmd.run[0]).to eq %w(c d) }
+  it { expect(cmd.run[1]).to eq b: true }
 end

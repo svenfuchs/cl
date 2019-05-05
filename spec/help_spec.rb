@@ -32,7 +32,7 @@ describe Cl, 'help' do
       end
     end
 
-    before { Cl.runner(ctx, *args).run }
+    before { run }
 
     describe 'listing commands' do
       let(:args) { ['help'] }
@@ -92,7 +92,7 @@ describe Cl, 'help' do
     describe 'listing commands' do
       let(:args) { ['help'] }
 
-      before { Cl.runner(ctx, *args).cmd.run }
+      before { run }
 
       it do
         expect(ctx.stdout.string).to eq <<~str
@@ -106,7 +106,7 @@ describe Cl, 'help' do
     describe 'command details' do
       let(:args) { ['help', 'test:a'] }
 
-      it { expect { Cl.runner(ctx, *args).cmd.run }.to raise_error 'Unknown command: test:a' }
+      it { expect { run }.to raise_error 'Unknown command: test:a' }
     end
   end
 
@@ -124,7 +124,7 @@ describe Cl, 'help' do
       end
     end
 
-    before { Cl.runner(ctx, *args).cmd.run }
+    before { run }
 
     describe 'listing commands' do
       let(:args) { ['help', 'test:a'] }
@@ -160,7 +160,7 @@ describe Cl, 'help' do
       end
     end
 
-    before { Cl.runner(ctx, *args).cmd.run }
+    before { run }
 
     describe 'listing commands' do
       let(:args) { ['help', 'test:a'] }

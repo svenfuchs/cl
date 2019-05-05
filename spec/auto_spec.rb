@@ -2,7 +2,6 @@ describe Cl, 'auto register' do
   after { Object.send(:remove_const, :Test) }
 
   let(:keys) { Cl.registry.keys }
-  let(:cl)   { Cl.runner(ctx, args) }
 
   describe 'basic' do
     before do
@@ -17,7 +16,7 @@ describe Cl, 'auto register' do
     let(:args) { %w(c) }
 
     it { expect(keys).to eq %i(a b c d) }
-    it { expect(cl.cmd).to be_a Test::C }
+    it { expect(cmd).to be_a Test::C }
   end
 
   describe 'nested' do
@@ -33,6 +32,6 @@ describe Cl, 'auto register' do
     let(:args) { %w(a b c d) }
 
     it { expect(keys).to eq %i(a a:b a:b:c a:b:c:d) }
-    it { expect(cl.cmd).to be_a Test::D }
+    it { expect(cmd).to be_a Test::D }
   end
 end

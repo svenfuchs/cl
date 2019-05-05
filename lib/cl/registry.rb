@@ -1,4 +1,4 @@
-module Cl
+class Cl
   class << self
     def []=(key, object)
       registry[key.to_sym] = object

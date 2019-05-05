@@ -1,10 +1,6 @@
 describe Cl, 'opts' do
   let!(:const) { Class.new(Cl::Cmd, &opts).register(:cmd) }
 
-  def cmd(args)
-    Cl.runner(ctx, args).cmd
-  end
-
   describe 'string' do
     let(:opts) { ->(*) { opt('-s', '--str STR', 'A str') } }
 
@@ -28,7 +24,7 @@ describe Cl, 'opts' do
     let(:opts) { ->(*) { opt('--str STR', required: true) } }
 
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
-    it { expect { cmd(%(cmd)) }.to raise_error Cl::OptionError }
+    it { expect { cmd(%w(cmd)) }.to raise_error Cl::OptionError }
   end
 
   describe 'string, given a block' do

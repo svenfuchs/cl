@@ -1,4 +1,4 @@
-module Cl
+class Cl
   module Cast
     TRUE  = /^(true|yes|on)$/
     FALSE = /^(false|no|off)$/

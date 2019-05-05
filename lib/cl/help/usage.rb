@@ -1,4 +1,4 @@
-module Cl
+class Cl
   class Help
     class Usage < Struct.new(:cmd)
       def format

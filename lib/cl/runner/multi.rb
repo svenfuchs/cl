@@ -1,6 +1,6 @@
 require 'cl/parser'
 
-module Cl
+class Cl
   module Runner
     class Multi
       attr_reader :name, :cmds

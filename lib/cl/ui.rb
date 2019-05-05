@@ -1,6 +1,6 @@
 require 'stringio'
 
-module Cl
+class Cl
   module Ui
     def self.new(ctx, opts)
       const = Test if ctx.test?

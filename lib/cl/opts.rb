@@ -1,6 +1,6 @@
 require 'cl/opt'
 
-module Cl
+class Cl
   class Opts
     include Enumerable
 

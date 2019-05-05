@@ -1,6 +1,6 @@
 require 'cl/cast'
 
-module Cl
+class Cl
   class Opt < Struct.new(:strs, :opts, :block)
     include Cast
 

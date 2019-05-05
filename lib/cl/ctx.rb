@@ -2,7 +2,7 @@ require 'forwardable'
 require 'cl/config'
 require 'cl/ui'
 
-module Cl
+class Cl
   class Ctx
     extend Forwardable
 

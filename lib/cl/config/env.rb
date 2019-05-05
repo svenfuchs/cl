@@ -1,4 +1,4 @@
-module Cl
+class Cl
   class Config
     class Env < Struct.new(:name)
       TRUE  = /^(true|yes|on)$/
