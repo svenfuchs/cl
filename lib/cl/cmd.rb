@@ -29,14 +29,12 @@ module Cl
         args.each { |arg| arg(arg, opts) }
       end
 
-      def arg(name, *args)
-        opts = args.last.is_a?(Hash) ? args.pop : {}
-        opts[:description] = args.shift
-        self.args.define(self, name, opts)
+      def arg(*args)
+        self.args.define(self, *args)
       end
 
       def opt(*args, &block)
-        self.opts.define(self, args, block)
+        self.opts.define(self, *args, &block)
       end
 
       def opts

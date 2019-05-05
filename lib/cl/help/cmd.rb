@@ -5,7 +5,7 @@ module Cl
   class Help
     class Cmd < Struct.new(:cmd)
       def format
-        [usage, arguments, options, summary, description].compact.join("\n\n")
+        [usage, arguments, options, common, summary, description].compact.join("\n\n")
       end
 
       def usage
@@ -28,20 +28,41 @@ module Cl
         ['Options:', indent(opts.to_s(width - opts.width + 5))] if opts.any?
       end
 
-      def args
-        @args ||= Table.new(cmd.args.map { |arg| [arg.name, format_opts(arg)] })
+      def common
+        ['Common Options:', indent(cmmn.to_s(width - opts.width + 5))] if common?
       end
 
-      def width
-        [opts.width, args.width].max
+      def args
+        @args ||= begin
+          Table.new(cmd.args.map { |arg| [arg.name, format_opts(arg)] })
+        end
       end
 
       def opts
         @opts ||= begin
-          strs = Table.new(rjust(cmd.opts.map { |opt| [*opt.strs] }))
-          opts = cmd.opts.map { |opt| format_opts(opt) }
+          opts = cmd.opts.to_a
+          opts = opts - cmd.superclass.opts.to_a if common?
+          strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
+          opts = opts.map { |opt| format_opts(opt) }
           Table.new(strs.rows.zip(opts))
         end
+      end
+
+      def cmmn
+        @cmmn ||= begin
+          opts = cmd.superclass.opts
+          strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
+          opts = opts.map { |opt| format_opts(opt) }
+          Table.new(strs.rows.zip(opts))
+        end
+      end
+
+      def common?
+        cmd.superclass < Cl::Cmd
+      end
+
+      def width
+        [opts.width, args.width].max
       end
 
       def format_opts(obj)

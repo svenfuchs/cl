@@ -4,10 +4,13 @@ module Cl
   class Args
     include Enumerable
 
-    def define(const, name, opts = {})
+    def define(const, name, *args)
+      opts = args.last.is_a?(Hash) ? args.pop.dup : {}
+      opts[:description] = args.shift if args.any?
+
       arg = Arg.new(name, opts)
       arg.define(const)
-      args << arg
+      self.args << arg
     end
 
     def apply(cmd, args)

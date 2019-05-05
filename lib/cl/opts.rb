@@ -4,7 +4,7 @@ module Cl
   class Opts
     include Enumerable
 
-    def define(const, args, block)
+    def define(const, *args, &block)
       opts = args.last.is_a?(Hash) ? args.pop : {}
       strs = args.select { |arg| arg.start_with?('-') }
       opts[:description] = args.-(strs).first
@@ -27,6 +27,10 @@ module Cl
 
     def each(&block)
       opts.each(&block)
+    end
+
+    def to_a
+      opts
     end
 
     attr_writer :opts
