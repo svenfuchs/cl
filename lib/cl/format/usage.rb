@@ -3,7 +3,7 @@ module Cl
     class Usage < Struct.new(:cmd)
       def format
         usage = [$0.split('/').last, name]
-        usage += cmd.args.map(&:to_s)
+        usage += cmd.args.map(&:to_s) # { |arg| "[#{arg}]" }
         usage << '[options]' if opts?
         usage.join(' ')
       end

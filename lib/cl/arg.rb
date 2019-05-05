@@ -12,7 +12,11 @@ module Cl
     end
 
     def type
-      opts[:type] || :str
+      opts[:type] || :string
+    end
+
+    def description
+      opts[:description]
     end
 
     def splat?
@@ -50,9 +54,9 @@ module Cl
       str = name
       case type
       when :array          then str = "#{str}.."
-      when :integer, :int  then str = "#{str} (int)"
-      when :boolean, :bool then str = "#{str} (bool)"
-      when :float          then str = "#{str} (float)"
+      when :integer, :int  then str = "#{str}:int"
+      when :boolean, :bool then str = "#{str}:bool"
+      when :float          then str = "#{str}:float"
       end
       required? ? str : "[#{str}]"
     end

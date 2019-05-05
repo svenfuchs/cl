@@ -1,4 +1,4 @@
-require 'cl/options'
+require 'cl/parser'
 
 module Cl
   module Runner
@@ -25,7 +25,7 @@ module Cl
 
         def build(cmds)
           cmds.map do |(cmd, *args)|
-            cmd.new(args, Options.new(cmd.opts, args).opts)
+            cmd.new(args, Parser.new(cmd.opts, args).opts)
           end
         end
     end

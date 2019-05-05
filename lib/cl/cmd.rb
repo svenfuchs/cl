@@ -2,12 +2,30 @@ require 'cl/args'
 require 'cl/registry'
 
 module Cl
+  class Opt < Struct.new(:strs, :description, :opts, :block)
+    def type
+      strs.any? { |str| str.split(' ').size > 1 } ? :string : :boolean
+    end
+
+    def required?
+      !!opts[:required]
+    end
+  end
+
   class Cmd < Struct.new(:args, :opts)
     include Registry
 
     class << self
       def inherited(cmd)
-        cmd.register underscore(cmd.name.split('::').last)
+        cmd.register underscore(cmd.name.split('::').last) if cmd.name
+      end
+
+      def summary(summary = nil)
+        summary ? @summary = summary : @summary
+      end
+
+      def description(description = nil)
+        description ? @description = description : @description
       end
 
       def args(*args)
@@ -16,16 +34,17 @@ module Cl
         args.each { |arg| arg(arg, opts) }
       end
 
-      def arg(name, opts = {})
-        args.define(self, name, opts)
-      end
-
-      def purpose(purpose = nil)
-        purpose ? @purpose = purpose : @purpose
+      def arg(name, *args)
+        opts = args.last.is_a?(Hash) ? args.pop : {}
+        opts[:description] = args.shift
+        self.args.define(self, name, opts)
       end
 
       def opt(*args, &block)
-        opts << [args, block]
+        opts = args.last.is_a?(Hash) ? args.pop : {}
+        strs = args.select { |arg| arg.start_with?('-') }
+        desc = args.-(strs).first
+        self.opts << Opt.new(strs, desc, opts, block)
       end
 
       def opts
@@ -43,6 +62,10 @@ module Cl
       args = self.class.args.apply(self, args)
       opts = self.class::OPTS.merge(opts) if self.class.const_defined?(:OPTS)
       super
+    end
+
+    def name
+      registry_key
     end
   end
 end

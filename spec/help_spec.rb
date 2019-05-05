@@ -1,56 +1,60 @@
 describe Cl, 'help' do
-  before do
-    module Cmds
-      module Help
-        class A < Cl::Cmd
-          purpose 'Use this to a the a'
-          args :foo, :bar
-          opts.clear
-          opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
-          opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
-          register 'basic:a'
-        end
+  let!(:a) do
+    Class.new(Cl::Cmd) do
+      register :'test:a'
 
-        class B < Cl::Cmd
-          purpose 'Use this to b the b'
-          opts.clear
-          opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
-          opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
-          register 'basic:b'
-        end
-      end
+      summary 'Use this to a the a'
+
+      arg :foo, 'The foo', required: true, type: :integer
+      args :bar, :baz
+
+      opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
+      opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
+      opt('--ccc CCC', 'the extra C') { |c| opts[:c] = c }
     end
   end
 
-  before { Cl::Help.register :help }
-  before { Cl.registry.delete_if { |key, _| key.to_s !~ /(help|basic)/ } }
-  after  { Cmds.send(:remove_const, :Help) }
+  let!(:b) do
+    Class.new(Cl::Cmd) do
+      register :'test:b'
+
+      summary 'Use this to b the b'
+
+      opt('-a', '--aaa', 'the flag A') { opts[:a] = true }
+      opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
+    end
+  end
 
   describe 'listing commands' do
-    let(:help) { Cl.runner('help').cmd.help }
-
     it do
-      expect(help).to include <<~str.chomp
-        Type "rspec help COMMAND [SUBCOMMAND]" for more details:
-      str
-    end
+      expect(Cl.runner('help').cmd.help).to include <<~str.chomp
+       Type "rspec help COMMAND [SUBCOMMAND]" for more details:
 
-    it do
-      expect(help).to include <<~str.chomp
-        rspec basic a [foo] [bar] [options] # Use this to a the a
-        rspec basic b [options]             # Use this to b the b
+       rspec test a foo:int [bar] [baz] [options]         Use this to a the a
+       rspec test b [options]                             Use this to b the b
       str
     end
   end
 
   it 'command details' do
-    expect(Cl.runner('help', 'basic', 'a').cmd.help).to include <<~help.chomp
-      Use this to a the a
+    expect(Cl.runner('help', 'test:a').cmd.help).to include <<~str.chomp
+      Usage: rspec test a foo:int [bar] [baz] [options]
 
-      Usage: rspec basic a [foo] [bar] [options]
+      Arguments:
 
-      -a --aaa     # the flag A
-      -b --bbb BBB # the value B
-    help
+        foo               The foo (integer, required)
+        bar
+        baz
+
+      Options:
+
+        -a --aaa          the flag A (boolean)
+        -b --bbb BBB      the value B
+           --ccc CCC      the extra C
+
+      Summary:
+
+        Use this to a the a
+    str
   end
 end
