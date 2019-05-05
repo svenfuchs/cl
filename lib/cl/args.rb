@@ -41,11 +41,11 @@ module Cl
       end
 
       def splat?
-        args.any?(&:splat?)
+        any?(&:splat?)
       end
 
       def required
-        args.select { |arg| arg.required? }.size
+        select(&:required?).size
       end
 
       def grouped(values)

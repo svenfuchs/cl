@@ -1,17 +1,8 @@
 require 'cl/args'
+require 'cl/opts'
 require 'cl/registry'
 
 module Cl
-  class Opt < Struct.new(:strs, :description, :opts, :block)
-    def type
-      strs.any? { |str| str.split(' ').size > 1 } ? :string : :boolean
-    end
-
-    def required?
-      !!opts[:required]
-    end
-  end
-
   class Cmd < Struct.new(:args, :opts)
     include Registry
 
@@ -45,14 +36,11 @@ module Cl
       end
 
       def opt(*args, &block)
-        opts = args.last.is_a?(Hash) ? args.pop : {}
-        strs = args.select { |arg| arg.start_with?('-') }
-        desc = args.-(strs).first
-        self.opts << Opt.new(strs, desc, opts, block)
+        self.opts.define(self, args, block)
       end
 
       def opts
-        @opts ||= superclass != Cmd && superclass.respond_to?(:opts) ? superclass.opts.dup : []
+        @opts ||= superclass < Cmd ? superclass.opts.dup : Opts.new
       end
 
       def underscore(string)
@@ -64,7 +52,7 @@ module Cl
 
     def initialize(args, opts)
       args = self.class.args.apply(self, args)
-      opts = self.class::OPTS.merge(opts) if self.class.const_defined?(:OPTS)
+      opts = self.class.opts.apply(self, opts || {})
       super
     end
 

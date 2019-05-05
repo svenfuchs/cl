@@ -8,7 +8,8 @@ module Cl
     MSGS = {
       missing_args:  'Missing arguments (given: %s, required: %s)',
       too_many_args: 'Too many arguments (given: %s, allowed: %s)',
-      wrong_type:    'Wrong argument type (given: %s, expected: %s)'
+      wrong_type:    'Wrong argument type (given: %s, expected: %s)',
+      missing_opt:   'Missing required option --%s',
     }
 
     def initialize(msg, *args)
@@ -17,6 +18,7 @@ module Cl
   end
 
   ArgumentError = Class.new(Error)
+  OptionError = Class.new(Error)
 
   def included(const)
     const.send(:include, Cmd)

@@ -6,9 +6,15 @@ module Cl
 
     def initialize(opts, args)
       @opts = {}
-      opts = opts.map { |opt| [opt.strs, opt.block] }
-      super { opts.each { |args, block| on(*args) { |*args| instance_exec(*args, &block) } } }
+      super { opts.each { |opt| on(*opt.strs) { |value| set(opt, value) } } }
       parse!(args)
+    end
+
+    # should consider negative arities (e.g. |one, *two|)
+    def set(opt, value)
+      args = [opts, opt.name, value]
+      args = args[-opt.block.arity, opt.block.arity]
+      instance_exec(*args, &opt.block)
     end
   end
 end

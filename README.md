@@ -14,7 +14,7 @@ module Owners
 
     args :owners
 
-    on '-t', '--to TO', 'An owner in an existing group' do |value|
+    opt '-t', '--to TO', 'An owner in an existing group' do |value|
       opts[:to] = value
     end
   end
