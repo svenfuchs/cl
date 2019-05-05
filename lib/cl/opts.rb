@@ -15,7 +15,7 @@ module Cl
     end
 
     def apply(cmd, opts)
-      opts = cmd.class::OPTS.merge(opts) if cmd.class.const_defined?(:OPTS)
+      opts = cmd.class.defaults.merge(opts)
       opts = cast(opts)
       validate(opts)
       opts

@@ -11,7 +11,7 @@ module Cl
       end
 
       def list
-        cmds.map { |cmd| format_cmd(cmd) }
+        cmds.any? ? cmds.map { |cmd| format_cmd(cmd) } : [['[no commands]']]
       end
 
       def format_cmd(cmd)

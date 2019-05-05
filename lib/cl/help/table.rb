@@ -3,6 +3,10 @@ module Cl
     class Table < Struct.new(:data)
       attr_reader :padding
 
+      def any?
+        data.any?
+      end
+
       def format(padding = 8)
         @padding = padding
         rows.join("\n")
@@ -18,14 +22,14 @@ module Cl
       end
 
       def width
-        widths = cols[0..-2].map { |col| col.max_by(&:size).size }.inject(&:+)
+        widths = cols[0..-2].map { |col| col.max_by(&:size).size }.inject(&:+).to_i
         widths + cols.size - 1
       end
 
       def widths
         cols.map.with_index do |col, ix|
           width = col.compact.max_by(&:size)&.size
-          ix < cols.size - 2 ? width : width + padding.to_i
+          ix < cols.size - 2 ? width.to_i : width.to_i + padding.to_i
         end
       end
 

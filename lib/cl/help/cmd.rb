@@ -29,7 +29,7 @@ module Cl
       end
 
       def common
-        ['Common Options:', indent(cmmn.to_s(width - opts.width + 5))] if common?
+        ['Common Options:', indent(cmmn.to_s(width - cmmn.width + 5))] if common?
       end
 
       def args
@@ -62,7 +62,7 @@ module Cl
       end
 
       def width
-        [opts.width, args.width].max
+        [args.width, opts.width, cmmn.width].max
       end
 
       def format_opts(obj)

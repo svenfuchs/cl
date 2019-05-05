@@ -18,7 +18,7 @@ describe Cl, 'opts' do
   describe 'string, default' do
     let(:opts) { ->(*) { opt('-s', '--str STR') } }
 
-    before { const.const_set(:OPTS, str: 'default') }
+    before { const.defaults(str: 'default') }
 
     it { expect(cmd(%w(cmd)).opts[:str]).to eq 'default' }
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
@@ -62,7 +62,7 @@ describe Cl, 'opts' do
   describe 'flag, default' do
     let(:opts) { ->(*) { opt('-f', '--[no-]flag') } }
 
-    before { const.const_set(:OPTS, flag: true) }
+    before { const.defaults(flag: true) }
 
     it { expect(cmd(%w(cmd)).opts[:flag]).to be true }
     it { expect(cmd(%w(cmd --flag)).opts[:flag]).to be true }

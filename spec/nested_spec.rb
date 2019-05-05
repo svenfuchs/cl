@@ -3,7 +3,6 @@ describe Cl, 'nested' do
     Class.new(Cl::Cmd) do
       register 'nested:a'
       opt('-a') { opts[:a] = true }
-      def initialize(*); end
     end
   end
 

@@ -40,8 +40,7 @@ module Cl
         end
 
         def abort(msg)
-          fail(msg) if ENV['ENV'] == 'test'
-          super
+          ctx.abort(msg)
         end
     end
   end

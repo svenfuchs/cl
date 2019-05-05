@@ -1,75 +1,181 @@
 describe Cl, 'help' do
-  before do
-    Cl::Help.register :help
+  describe 'full example' do
+    before do
+      Cl::Help.register :help
 
-    base = Class.new(Cl::Cmd) do
-      opt '-d', '--ddd DDD', 'the inherited D'
-      opt '--eee EEE', 'the inherited E'
+      base = Class.new(Cl::Cmd) do
+        opt '-d', '--ddd DDD', 'the inherited D'
+        opt '--eee EEE', 'the inherited E'
+      end
+
+      Class.new(base) do
+        register :'test:a'
+
+        summary 'Use this to a the a'
+        description 'Description of the a'
+
+        arg :foo, 'The foo', required: true, type: :integer
+        args :bar, :baz
+
+        opt '-a', '--aaa', 'the flag A'
+        opt '-b', '--bbb BBB', 'the value B'
+        opt '--ccc CCC', 'the extra C'
+      end
+
+      Class.new(base) do
+        register :'test:b'
+
+        summary 'Use this to b the b'
+
+        opt '-a', '--aaa', 'the flag A'
+        opt '-b', '--bbb BBB', 'the value B'
+      end
     end
 
-    Class.new(base) do
-      register :'test:a'
+    before { Cl.runner(ctx, *args).cmd.run }
 
-      summary 'Use this to a the a'
-      description 'Description of the a'
+    describe 'listing commands' do
+      let(:args) { ['help'] }
 
-      arg :foo, 'The foo', required: true, type: :integer
-      args :bar, :baz
+      it do
+        expect(ctx.stdout.string).to eq <<~str
+         Type "rspec help COMMAND [SUBCOMMAND]" for more details:
 
-      opt '-a', '--aaa', 'the flag A'
-      opt '-b', '--bbb BBB', 'the value B'
-      opt '--ccc CCC', 'the extra C'
+         rspec test a foo:int [bar] [baz] [options]         Use this to a the a
+         rspec test b [options]                             Use this to b the b
+        str
+      end
     end
 
-    Class.new(base) do
-      register :'test:b'
+    describe 'command details' do
+      let(:args) { ['help', 'test:a'] }
 
-      summary 'Use this to b the b'
+      it do
+        expect(ctx.stdout.string).to eq <<~str
+          Usage: rspec test a foo:int [bar] [baz] [options]
 
-      opt '-a', '--aaa', 'the flag A'
-      opt '-b', '--bbb BBB', 'the value B'
+          Arguments:
+
+            foo               The foo (integer, required)
+            bar
+            baz
+
+          Options:
+
+            -a --aaa          the flag A (boolean)
+            -b --bbb BBB      the value B
+               --ccc CCC      the extra C
+
+          Common Options:
+
+            -d --ddd DDD      the inherited D
+               --eee EEE      the inherited E
+
+          Summary:
+
+            Use this to a the a
+
+          Description:
+
+            Description of the a
+        str
+      end
     end
   end
 
-  describe 'listing commands' do
-    it do
-      expect(Cl.runner(ctx, 'help').cmd.help).to eq <<~str.chomp
-       Type "rspec help COMMAND [SUBCOMMAND]" for more details:
+  describe 'no commands' do
+    before do
+      Cl::Help.register :help
+    end
 
-       rspec test a foo:int [bar] [baz] [options]         Use this to a the a
-       rspec test b [options]                             Use this to b the b
-      str
+    describe 'listing commands' do
+      let(:args) { ['help'] }
+
+      before { Cl.runner(ctx, *args).cmd.run }
+
+      it do
+        expect(ctx.stdout.string).to eq <<~str
+         Type "rspec help COMMAND [SUBCOMMAND]" for more details:
+
+         [no commands]
+        str
+      end
+    end
+
+    describe 'command details' do
+      let(:args) { ['help', 'test:a'] }
+
+      it { expect { Cl.runner(ctx, *args).cmd.run }.to raise_error 'Unknown command: test:a' }
     end
   end
 
-  it 'command details' do
-    expect(Cl.runner(ctx, 'help', 'test:a').cmd.help).to eq <<~str.chomp
-      Usage: rspec test a foo:int [bar] [baz] [options]
+  describe 'alignment (long common opt)' do
+    before do
+      Cl::Help.register :help
 
-      Arguments:
+      base = Class.new(Cl::Cmd) do
+        opt '--bbbbbbbbb bbbbbbbbb', 'the long B'
+      end
 
-        foo               The foo (integer, required)
-        bar
-        baz
+      Class.new(base) do
+        register :'test:a'
+        opt '-a', '--aaa aaa', 'the short A'
+      end
+    end
 
-      Options:
+    before { Cl.runner(ctx, *args).cmd.run }
 
-        -a --aaa          the flag A (boolean)
-        -b --bbb BBB      the value B
-           --ccc CCC      the extra C
+    describe 'listing commands' do
+      let(:args) { ['help', 'test:a'] }
 
-      Common Options:
+      it do
+        expect(ctx.stdout.string).to eq <<~str
+          Usage: rspec test a [options]
 
-        -d --ddd DDD      the inherited D
-           --eee EEE      the inherited E
+          Options:
 
-      Summary:
+            -a --aaa aaa               the short A
 
-        Use this to a the a
+          Common Options:
 
-      Description:
+            --bbbbbbbbb bbbbbbbbb      the long B
+        str
+      end
+    end
+  end
 
-        Description of the a
-    str
+  describe 'alignment (long opt)' do
+    before do
+      Cl::Help.register :help
+
+      base = Class.new(Cl::Cmd) do
+        opt '--bbb bbb', 'the short B'
+      end
+
+      Class.new(base) do
+        register :'test:a'
+        opt '-a', '--aaaaaaaaa aaaaaaaaa', 'the long A'
+      end
+    end
+
+    before { Cl.runner(ctx, *args).cmd.run }
+
+    describe 'listing commands' do
+      let(:args) { ['help', 'test:a'] }
+
+      it do
+        expect(ctx.stdout.string).to eq <<~str
+          Usage: rspec test a [options]
+
+          Options:
+
+            -a --aaaaaaaaa aaaaaaaaa      the long A
+
+          Common Options:
+
+            --bbb bbb                     the short B
+        str
+      end
+    end
   end
 end

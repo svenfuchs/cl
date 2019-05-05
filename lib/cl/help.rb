@@ -3,11 +3,11 @@ module Cl
     register :help
 
     def run
-      puts help
+      ctx.puts help
     end
 
     def help
-      cmd ? Cmd.new(cmd).format : Cmds.new(cmds).format
+      args.any? ? Cmd.new(cmd).format : Cmds.new(cmds).format
     end
 
     private
@@ -20,11 +20,7 @@ module Cl
       end
 
       def cmd
-        args.inject([[], []]) do |(args, cmds), arg|
-          args << arg
-          cmds << Cl[args.join(':')]
-          [args, cmds.compact]
-        end.last.last
+        Cl[args.join(':')] || ctx.abort("Unknown command: #{args.join(':')}")
       end
   end
 end

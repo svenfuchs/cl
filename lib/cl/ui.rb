@@ -1,7 +1,10 @@
+require 'stringio'
+
 module Cl
   module Ui
-    def self.new(opts)
-      const = Silent if opts[:silent]
+    def self.new(ctx, opts)
+      const = Test if ctx.test?
+      const ||= Silent if opts[:silent]
       const ||= Tty if $stdout.tty?
       const ||= Pipe
       const.new(opts)
@@ -11,7 +14,7 @@ module Cl
       attr_writer :stdout
 
       def stdout
-        @stdout || $stdout
+        @stdout ||= opts[:stdout] || $stdout
       end
 
       def puts(*str)
@@ -22,6 +25,18 @@ module Cl
     class Silent < Base
       %i(announce info notice warn error success cmd).each do |name|
         define_method (name) { |*| }
+      end
+    end
+
+    class Test < Base
+      %i(announce info notice warn error success cmd).each do |name|
+        define_method (name) do |*args|
+          puts ["[#{name}]", *args.map(&:inspect)].join(' ')
+        end
+      end
+
+      def stdout
+        @stdout ||= StringIO.new
       end
     end
 
