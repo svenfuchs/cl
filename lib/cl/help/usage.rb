@@ -1,5 +1,5 @@
 module Cl
-  class Format
+  class Help
     class Usage < Struct.new(:cmd)
       def format
         usage = [$0.split('/').last, name]

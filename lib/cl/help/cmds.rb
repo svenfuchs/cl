@@ -1,13 +1,13 @@
-require 'cl/format/table'
-require 'cl/format/usage'
+require 'cl/help/table'
+require 'cl/help/usage'
 
 module Cl
-  class Format
-    class List < Struct.new(:cmds)
+  class Help
+    class Cmds < Struct.new(:cmds)
       HEAD = %(Type "#{$0.split('/').last} help COMMAND [SUBCOMMAND]" for more details:\n)
 
       def format
-        [HEAD, Format::Table.new(list).format].join("\n")
+        [HEAD, Table.new(list).format].join("\n")
       end
 
       def list

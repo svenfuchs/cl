@@ -1,6 +1,3 @@
-require 'cl/format/cmd'
-require 'cl/format/list'
-
 module Cl
   class Help < Cl::Cmd
     register :help
@@ -10,7 +7,7 @@ module Cl
     end
 
     def help
-      cmd ? Format::Cmd.new(cmd).format : Format::List.new(cmds).format
+      cmd ? Cmd.new(cmd).format : Cmds.new(cmds).format
     end
 
     private
@@ -31,3 +28,6 @@ module Cl
       end
   end
 end
+
+require 'cl/help/cmd'
+require 'cl/help/cmds'

@@ -1,5 +1,5 @@
 module Cl
-  class Format
+  class Help
     class Table < Struct.new(:data)
       attr_reader :padding
 
