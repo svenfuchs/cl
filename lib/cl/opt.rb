@@ -15,7 +15,8 @@ class Cl
     def name
       return @name if instance_variable_defined?(:@name)
       opt = strs.detect { |str| str.start_with?('--') }
-      @name = opt.split(' ').first.match(OPT)[1]&.to_sym if opt
+      name = opt.split(' ').first.match(OPT)[1] if opt
+      @name = name&.sub('-', '_')&.to_sym
     end
 
     def type

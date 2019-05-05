@@ -12,7 +12,7 @@ class Cl
     attr_accessor :config, :ui
 
     def initialize(name, opts = {})
-      @config = Config.new(name)
+      @config = Config.new(name).to_h
       @ui = Ui.new(self, opts)
     end
 

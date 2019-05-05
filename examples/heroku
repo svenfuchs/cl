@@ -26,15 +26,24 @@ module Heroku
 end
 
 def output(cmd, args, opts)
-  puts "Called #{cmd} with args=#{args} opts=#{opts}"
+  puts "Called #{cmd} with args=#{args} opts=#{opts}\n\n"
 end
 
-output *Cl.run($0, *%w(apps:create name -o org))
-# Called apps:create with args=["name"] opts={:org=>"org"}
+output *Cl.new($0).run(%w(apps:create name -o org))
 
-output *Cl.run($0, *%w(apps create name -o org))
-# Called apps:create with args=["name"] opts={:org=>"org"}
+# Output:
+#
+#   Called apps:create with args=["name"] opts={:org=>"org"}
 
-output *Cl.run($0, *%w(apps:info -a app))
-# Called apps:create with args=["app"] opts={}
+output *Cl.new($0).run(%w(apps create name -o org))
+
+# Output:
+#
+#   Called apps:create with args=["name"] opts={:org=>"org"}
+
+output *Cl.new($0).run(%w(apps:info -a app))
+
+# Output:
+#
+#   Called apps:create with args=["app"] opts={}
 

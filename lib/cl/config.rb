@@ -1,8 +1,11 @@
 require 'cl/config/env'
 require 'cl/config/files'
+require 'cl/helper'
 
 class Cl
   class Config
+    include Merge
+
     attr_reader :name, :opts
 
     def initialize(name)
@@ -10,26 +13,18 @@ class Cl
       @opts = load
     end
 
-    def [](key)
-      opts[key]
-    end
-
-    def for(key)
-      common.merge(self[key] || {})
-    end
-
-    def common
-      opts.reject { |_, value| value.is_a?(Hash) }
+    def to_h
+      opts
     end
 
     private
 
       def load
-        sources.map(&:load).inject(&:merge)
+        merge(*sources.map(&:load))
       end
 
       def sources
-        [Env.new(name), Files.new(name)]
+        [Files.new(name), Env.new(name)]
       end
   end
 end

@@ -10,7 +10,7 @@ class SplatLeft < Cl::Cmd
   args :two, :three
 
   def run
-    [self.registry_key, one: one, two: two, three: three]
+    [registry_key, one: one, two: two, three: three]
   end
 end
 
@@ -22,7 +22,7 @@ class SplatMiddle < Cl::Cmd
   arg :three
 
   def run
-    [self.registry_key, one: one, two: two, three: three]
+    [registry_key, one: one, two: two, three: three]
   end
 end
 
@@ -33,23 +33,29 @@ class SplatRight < Cl::Cmd
   arg :three, type: :array
 
   def run
-    [self.registry_key, one: one, two: two, three: three]
+    [registry_key, one: one, two: two, three: three]
   end
 end
 
 def output(cmd, args)
   args = args.map { |key, value| "#{key}=#{value.inspect}" }.join(' ')
-  puts "Called #{cmd} with #{args}"
+  puts "Called #{cmd} with #{args}\n\n"
 end
 
-output *Cl.run($0, *%w(splat left foo bar baz buz))
-# Output:
-# Called splat:left with one=["foo", "bar"] two="baz" three="buz"
+output *Cl.new($0).run(%w(splat left foo bar baz buz))
 
-output *Cl.run($0, *%w(splat middle foo bar baz buz))
 # Output:
-# Called splat:middle with one="foo" two=["bar", "baz"] three="buz"
+#
+#   Called splat:left with one=["foo", "bar"] two="baz" three="buz"
 
-output *Cl.run($0, *%w(splat right foo bar baz buz))
+output *Cl.new($0).run(%w(splat middle foo bar baz buz))
+
 # Output:
-# Called splat:middle with one="foo" two="bar" three=["baz", "buz"]
+#
+#   Called splat:middle with one="foo" two=["bar", "baz"] three="buz"
+
+output *Cl.new($0).run(%w(splat right foo bar baz buz))
+
+# Output:
+#
+#   Called splat:middle with one="foo" two="bar" three=["baz", "buz"]

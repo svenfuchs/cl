@@ -38,7 +38,7 @@ class Cl
   def runner(args)
     runner = :default if args.first.to_s == 'help'
     runner ||= opts[:runner] || :default
-    Runner.const_get(runner.to_s.capitalize).new(ctx, *args)
+    Runner.const_get(runner.to_s.capitalize).new(ctx, args)
   end
 
   # def help(*args)

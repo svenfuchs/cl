@@ -8,31 +8,39 @@ class Required < Cl::Cmd
   arg :two
 
   def run
-    [self.registry_key, one: one, two: two]
+    [registry_key, one: one, two: two]
   end
 end
 
 def output(cmd, args)
   args = args.map { |key, value| "#{key}=#{value.inspect}" }.join(' ')
-  puts "Called #{cmd} with #{args}"
+  puts "Called #{cmd} with #{args}\n\n"
 end
 
-output *Cl.run($0, *%w(required one two))
-# Output:
-# Called required with one="one" two="two"
+output *Cl.new($0).run(%w(required one two))
 
-output *Cl.run($0, *%w(required one))
 # Output:
-# Called required with one="one" two=nil
-
-output *Cl.run($0, *%w(required))
-# Output:
-# Missing arguments (given: 0, required: 1)
 #
-# Usage: args.rb required one [two]
+#   Called required with one="one" two="two"
 
-output *Cl.run($0, *%w(required one two three))
+output *Cl.new($0).run(%w(required one))
+
 # Output:
-# Too many arguments (given: 3, allowed: 2)
 #
-# Usage: args.rb required one [two]
+#   Called required with one="one" two=nil
+
+output *Cl.new($0).run(%w(required))
+
+# Output:
+#
+#   Missing arguments (given: 0, required: 1)
+#
+#   Usage: args.rb required one [two]
+
+output *Cl.new($0).run(%w(required one two three))
+
+# Output:
+#
+#   Too many arguments (given: 3, allowed: 2)
+#
+#   Usage: args.rb required one [two]

@@ -1,14 +1,22 @@
+require 'forwardable'
 require 'cl/ctx'
 require 'cl/parser'
+require 'cl/helper'
 
 class Cl
   module Runner
     class Default
+      extend Forwardable
+      include Merge
+
+      def_delegators :ctx, :config, :abort
+
       attr_reader :ctx, :const, :args, :opts
 
-      def initialize(ctx, *args)
+      def initialize(ctx, args)
         @ctx = ctx
-        @const, @args, @opts = lookup(args.flatten.map(&:to_s))
+        @const, args = lookup(args)
+        @opts, @args = parse(args)
       end
 
       def run
@@ -26,26 +34,29 @@ class Cl
       private
 
         def lookup(args)
-          cmd = keys_for(args).map { |key| Cl[key] }.compact.last
-          cmd || abort("Unknown command: #{args.join(' ')}")
-          opts = Parser.new(cmd.opts, args).opts unless cmd == Help
-          [cmd, args - cmds_for(cmd, args), opts]
+          keys = expand(args) & Cl.registry.keys.map(&:to_s)
+          cmd = Cl[keys.last] || abort("Unknown command: #{args.join(' ')}")
+          [cmd, args - keys(cmd)]
         end
 
-        def cmds_for(cmd, args)
-          name = cmd.registry_key.to_s
-          args.take_while do |arg|
-            # ???
-            name = name.sub(/#{arg}(:|$)/, '') if name =~ /#{arg}(:|$)/
-          end
+        def parse(args)
+          opts = Parser.new(const.opts, args).opts unless const == Help
+          opts = merge(config[name], opts) if config[name]
+          [opts, args]
         end
 
-        def keys_for(args)
-          args.inject([]) { |keys, key| keys << [keys.last, key].compact.join(':') }
+        def name
+          const.registry_key
         end
 
-        def abort(msg)
-          ctx.abort(msg)
+        def keys(cmd)
+          keys = cmd.registry_key.to_s.split(':')
+          keys.concat(expand(keys)).uniq
+        end
+
+        def expand(strs)
+          strs = strs.reject { |str| str.start_with?('-') }
+          strs.inject([]) { |strs, str| strs << [strs.last, str].compact.join(':') }
         end
     end
   end

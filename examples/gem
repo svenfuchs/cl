@@ -14,7 +14,7 @@ module Gem
         opt '-q', '--quiet',     'Silence output'
 
         def run
-          [name, args, opts]
+          [registry_key, args, opts]
         end
       end
 
@@ -25,32 +25,32 @@ module Gem
         opt '--[no-]commit',           'Bump the version, but do not commit'
 
         def run
-          [name, args, opts]
+          [registry_key, args, opts]
         end
       end
     end
   end
 end
 
-Cl.run($0, *%w(help))
+Cl.new($0).run(%w(help))
 puts
 
-# Outputs:
+# Output:
 #
 #   Type "gem help COMMAND [SUBCOMMAND]" for more details:
 #
 #   gem release [gemspec] [options]
 #   gem bump [options]
 
-Cl.run($0, *%w(help release))
+Cl.new($0).run(%w(help release))
 puts
 
 # or:
 #
-#   Cl.run($0, *%w(release --help))
-#   Cl.run($0, *%w(release -h))
+#   Cl.new($0).run(%w(release --help)))
+#   Cl.new($0).run(%w(release -h)))
 #
-# Outputs:
+# Output:
 #
 #   Usage: gem release [gemspec] [options]
 #
@@ -65,15 +65,15 @@ puts
 #     -q --quiet          Silence output
 #        --help           Get help on this command
 
-Cl.run($0, *%w(help release))
+Cl.new($0).run(%w(help release))
 puts
 
 # or:
 #
-#   Cl.run($0, *%w(release --help))
-#   Cl.run($0, *%w(release -h))
+#   Cl.run($0, %w(release --help))
+#   Cl.run($0, %w(release -h))
 #
-# Outputs:
+# Output:
 #
 #   Usage: gem bump [options]
 #
@@ -84,8 +84,8 @@ puts
 #     -h --help                 Get help on this command
 
 cmds = [
-  Cl.run($0, *%w(bump -v 1.1.1)),
-  Cl.run($0, *%w(release foo.gemspec -h host -k key -q))
+  Cl.new($0).run(%w(bump -v 1.1.1)),
+  Cl.new($0).run(%w(release foo.gemspec -h host -k key -q))
 ]
 
 puts "Commands run:\n\n"

@@ -60,9 +60,5 @@ class Cl
       args = self.class.args.apply(self, args) unless opts[:help]
       super
     end
-
-    def name
-      registry_key
-    end
   end
 end

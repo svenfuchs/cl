@@ -1,15 +1,18 @@
 require 'yaml'
+require 'cl/helper'
 
 class Cl
   class Config
     class Files < Struct.new(:name)
+      include Merge
+
       PATHS = %w(
         ~/.%s.yml
         ./.%s.yml
       )
 
       def load
-        configs.any? ? symbolize(configs.inject(&:merge)) : {}
+        configs.any? ? symbolize(merge(*configs)) : {}
       end
 
       private
@@ -24,7 +27,7 @@ class Cl
         end
 
         def symbolize(hash)
-          hash.map { |key, value| [key.to_sym, value] }
+          hash.map { |key, value| [key.to_sym, value] }.to_h
         end
     end
   end

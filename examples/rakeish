@@ -39,11 +39,14 @@ def output(result)
   result.each do |cmd, args, opts|
     puts "Called #{cmd} with args=#{args} opts=#{opts}"
   end
+  puts
 end
 
-Cl.runner = :multi
-output Cl.run($0, *%w(db:drop production -f db:create db:migrate production -v 1))
+argv = %w(db:drop production -f db:create db:migrate production -v 1)
+output Cl.new($0, runner: :multi).run(argv)
+
 # Output:
-# Called db:drop with args=["production"] opts={:force=>true}
-# Called db:create with args=[] opts={}
-# Called db:migrate with args=["production"] opts={:version=>"1"}
+#
+#   Called db:drop with args=["production"] opts={:force=>true}
+#   Called db:create with args=[] opts={}
+#   Called db:migrate with args=["production"] opts={:version=>"1"}
