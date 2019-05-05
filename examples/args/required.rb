@@ -14,21 +14,21 @@ def output(cmd, args)
   puts "Called #{cmd} with #{args}"
 end
 
-output *Cl.run(*%w(required one two))
+output *Cl.run($1, *%w(required one two))
 # Output:
 # Called required with one="one" two="two"
 
-output *Cl.run(*%w(required one))
+output *Cl.run($1, *%w(required one))
 # Output:
 # Called required with one="one" two=nil
 
-output *Cl.run(*%w(required))
+output *Cl.run($1, *%w(required))
 # Output:
 # Missing arguments (given: 0, required: 1)
 #
 # Usage: args.rb required one [two]
 
-output *Cl.run(*%w(required one two three))
+output *Cl.run($1, *%w(required one two three))
 # Output:
 # Too many arguments (given: 3, allowed: 2)
 #

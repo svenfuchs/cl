@@ -24,8 +24,9 @@ module Cl
     const.send(:include, Cmd)
   end
 
-  def run(*args)
-    runner(*args).run
+  def run(name, *args)
+    ctx = Ctx.new(name)
+    runner(ctx, *args).run
   rescue Error => e
     abort [e.message, runner(:help, *args).cmd.help].join("\n\n")
   end
@@ -37,10 +38,10 @@ module Cl
   attr_writer :runner
   @runner = :default
 
-  def runner(*args)
+  def runner(ctx, *args)
     args = args.flatten
     runner = args.first.to_s == 'help' ? :default : @runner
-    Runner.const_get(runner.to_s.capitalize).new(*args)
+    Runner.const_get(runner.to_s.capitalize).new(ctx, *args)
   end
 
   extend self

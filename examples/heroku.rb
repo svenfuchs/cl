@@ -30,12 +30,12 @@ def output(cmd, args, opts)
   puts "Called #{cmd} with args=#{args} opts=#{opts}"
 end
 
-output *Cl.run(*%w(apps:create name -o org))
+output *Cl.run($1, *%w(apps:create name -o org))
 # Called apps:create with args=["name"] opts={:org=>"org"}
 
-output *Cl.run(*%w(apps create name -o org))
+output *Cl.run($1, *%w(apps create name -o org))
 # Called apps:create with args=["name"] opts={:org=>"org"}
 
-output *Cl.run(*%w(apps:info -a app))
+output *Cl.run($1, *%w(apps:info -a app))
 # Called apps:create with args=["app"] opts={}
 

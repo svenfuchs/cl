@@ -3,7 +3,7 @@ require 'cl/opts'
 require 'cl/registry'
 
 module Cl
-  class Cmd < Struct.new(:args, :opts)
+  class Cmd < Struct.new(:ctx, :args, :opts)
     include Registry
 
     class << self
@@ -48,7 +48,7 @@ module Cl
       end
     end
 
-    def initialize(args, opts)
+    def initialize(ctx, args, opts)
       args = self.class.args.apply(self, args)
       opts = self.class.opts.apply(self, opts || {})
       super

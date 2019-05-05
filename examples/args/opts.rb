@@ -18,15 +18,15 @@ def output(cmd, args, opts)
   puts "Called #{cmd} with args=#{args} opts=#{opts}"
 end
 
-output *Cl.run(*%w(opts -p path -v))
+output *Cl.run($1, *%w(opts -p path -v))
 # Output:
 # Called cast with args=[] opts={:path=>"path", :verbose=>true}
 
-output *Cl.run(*%w(opts --path path --verbose))
+output *Cl.run($1, *%w(opts --path path --verbose))
 # Output:
 # Called cast with args=[] opts={:path=>"path", :verbose=>true}
 
-output *Cl.run(*%w(opts one -p path two -v three))
+output *Cl.run($1, *%w(opts one -p path two -v three))
 # Output:
 # Called cast with args=["one", "two", "three"] opts={:path=>"path", :verbose=>true}
 

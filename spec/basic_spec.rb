@@ -15,7 +15,7 @@ describe Cl, 'basic' do
     end
   end
 
-  let(:cl) { Cl.runner(%w(b c d -b)) }
+  let(:cl) { Cl.runner(ctx, %w(b c d -b)) }
 
   it { expect(cl.cmd).to be_a b }
   it { expect(cl.run[0]).to eq %w(c d) }

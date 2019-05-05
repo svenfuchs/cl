@@ -44,7 +44,7 @@ describe Cl, 'args' do
     end
   end
 
-  let(:cl)  { Cl.runner(args) }
+  let(:cl)  { Cl.runner(ctx, args) }
   let(:cmd) { cl.cmd }
 
   describe 'defines argument accessors' do

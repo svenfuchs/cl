@@ -1,13 +1,14 @@
+require 'cl/ctx'
 require 'cl/parser'
 
 module Cl
   module Runner
     class Default
-      attr_reader :const, :args, :opts
+      attr_reader :ctx, :const, :args, :opts
 
-      def initialize(*args)
-        args = args.flatten.map(&:to_s)
-        @const, @args, @opts = lookup(args)
+      def initialize(ctx, *args)
+        @ctx = ctx
+        @const, @args, @opts = lookup(args.flatten.map(&:to_s))
       end
 
       def run
@@ -15,7 +16,7 @@ module Cl
       end
 
       def cmd
-        const.new(args, opts)
+        const.new(ctx, args, opts)
       end
 
       private

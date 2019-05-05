@@ -18,7 +18,7 @@ describe Cl, 'multi' do
     end
   end
 
-  let(:cl) { Cl::Runner::Multi.new(%w(multi:foo 1 2 -c multi:bar 3 -e)) }
+  let(:cl) { Cl::Runner::Multi.new(ctx, %w(multi:foo 1 2 -c multi:bar 3 -e)) }
 
   it { expect(cl.cmds[0]).to be_a a }
   it { expect(cl.cmds[0].args).to eq [1, 2] }

@@ -2,7 +2,7 @@ describe Cl, 'opts' do
   let!(:const) { Class.new(Cl::Cmd, &opts).register(:cmd) }
 
   def cmd(args)
-    Cl.runner(args).cmd
+    Cl.runner(ctx, args).cmd
   end
 
   describe 'string' do

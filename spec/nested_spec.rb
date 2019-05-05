@@ -21,7 +21,7 @@ describe Cl, 'nested' do
     end
   end
 
-  let(:cl) { Cl.runner(%w(nested a b c d e -a -b -c)) }
+  let(:cl) { Cl.runner(ctx, %w(nested a b c d e -a -b -c)) }
 
   it { expect(a.opts.map(&:first).flatten).to eq %w(-a) }
   it { expect(b.opts.map(&:first).flatten).to eq %w(-a -b) }

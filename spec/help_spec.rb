@@ -33,7 +33,7 @@ describe Cl, 'help' do
 
   describe 'listing commands' do
     it do
-      expect(Cl.runner('help').cmd.help).to eq <<~str.chomp
+      expect(Cl.runner(ctx, 'help').cmd.help).to eq <<~str.chomp
        Type "rspec help COMMAND [SUBCOMMAND]" for more details:
 
        rspec test a foo:int [bar] [baz] [options]         Use this to a the a
@@ -43,7 +43,7 @@ describe Cl, 'help' do
   end
 
   it 'command details' do
-    expect(Cl.runner('help', 'test:a').cmd.help).to eq <<~str.chomp
+    expect(Cl.runner(ctx, 'help', 'test:a').cmd.help).to eq <<~str.chomp
       Usage: rspec test a foo:int [bar] [baz] [options]
 
       Arguments:

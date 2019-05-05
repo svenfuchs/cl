@@ -2,7 +2,7 @@ describe Cl, 'auto register' do
   after { Object.send(:remove_const, :Test) }
 
   let(:keys) { Cl.registry.keys }
-  let(:cl)   { Cl.runner(args) }
+  let(:cl)   { Cl.runner(ctx, args) }
 
   describe 'basic' do
     before do

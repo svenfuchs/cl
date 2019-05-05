@@ -39,14 +39,14 @@ def output(cmd, args)
   puts "Called #{cmd} with #{args}"
 end
 
-output *Cl.run(*%w(splat left foo bar baz buz))
+output *Cl.run($1, *%w(splat left foo bar baz buz))
 # Output:
 # Called splat:left with one=["foo", "bar"] two="baz" three="buz"
 
-output *Cl.run(*%w(splat middle foo bar baz buz))
+output *Cl.run($1, *%w(splat middle foo bar baz buz))
 # Output:
 # Called splat:middle with one="foo" two=["bar", "baz"] three="buz"
 
-output *Cl.run(*%w(splat right foo bar baz buz))
+output *Cl.run($1, *%w(splat right foo bar baz buz))
 # Output:
 # Called splat:middle with one="foo" two="bar" three=["baz", "buz"]

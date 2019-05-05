@@ -45,7 +45,7 @@ module Gem
 end
 
 Cl.runner = :multi
-Cl.run(*%w(help))
+Cl.run($1, *%w(help))
 puts
 
 # Type "gem.rb help COMMAND [SUBCOMMAND]" for more details:
@@ -53,7 +53,7 @@ puts
 # gem.rb release [gemspec] [options]
 # gem.rb bump [options]
 
-Cl.run(*%w(help release))
+Cl.run($1, *%w(help release))
 puts
 
 # Usage: gem.rb release [gemspec] [options]
@@ -62,7 +62,7 @@ puts
 # -k --key KEY
 # -q --quiet
 
-Cl.run(*%w(help bump))
+Cl.run($1, *%w(help bump))
 puts
 
 # Usage: gem.rb bump [options]
@@ -70,7 +70,7 @@ puts
 # -v --version VERSION # the version to bump to [1.1.1|major|minor|patch|pre|rc|release]
 # --no-commit          # bump the version, but do not commit
 
-cmds = Cl.run(*%w(bump -v 1.1.1 release foo.gemspec -h host -k key -q))
+cmds = Cl.run($1, *%w(bump -v 1.1.1 release foo.gemspec -h host -k key -q))
 puts 'Commands run:'
 cmds.each do |(cmd, args, opts)|
   puts "#{cmd} with args=#{args} opts=#{opts}"

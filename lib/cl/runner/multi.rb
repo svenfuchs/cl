@@ -3,9 +3,10 @@ require 'cl/parser'
 module Cl
   module Runner
     class Multi
-      attr_reader :cmds
+      attr_reader :name, :cmds
 
-      def initialize(*args)
+      def initialize(name, *args)
+        @name = name
         @cmds = build(group(args))
       end
 
@@ -25,7 +26,7 @@ module Cl
 
         def build(cmds)
           cmds.map do |(cmd, *args)|
-            cmd.new(args, Parser.new(cmd.opts, args).opts)
+            cmd.new(name, args, Parser.new(cmd.opts, args).opts)
           end
         end
     end

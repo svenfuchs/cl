@@ -43,7 +43,7 @@ def output(result)
 end
 
 Cl.runner = :multi
-output Cl.run(*%w(db:drop production -f db:create db:migrate production -v 1))
+output Cl.run($1, *%w(db:drop production -f db:create db:migrate production -v 1))
 # Output:
 # Called db:drop with args=["production"] opts={:force=>true}
 # Called db:create with args=[] opts={}

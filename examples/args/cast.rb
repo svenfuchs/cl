@@ -24,39 +24,39 @@ def output(cmd, args)
   puts "Called #{cmd} with #{args}"
 end
 
-output *Cl.run(*%w(bool on))
+output *Cl.run($1, *%w(bool on))
 # Output:
 # Called bool with bool=true
 
-output *Cl.run(*%w(bool on))
+output *Cl.run($1, *%w(bool on))
 # Output:
 # Called bool with bool=true
 
-output *Cl.run(*%w(bool on))
+output *Cl.run($1, *%w(bool on))
 # Output:
 # Called bool with bool=true
 
-output *Cl.run(*%w(bool on))
+output *Cl.run($1, *%w(bool on))
 # Output:
 # Called bool with bool=true
 
-output *Cl.run(*%w(types true 1 1.2 foo))
+output *Cl.run($1, *%w(types true 1 1.2 foo))
 # Output:
 # Called types with a=true b=1 c=1.2 d="foo"
 
-output *Cl.run(*%w(types true 1 1.2))
+output *Cl.run($1, *%w(types true 1 1.2))
 # Output:
 # Too many arguments (given: 5, allowed: 4)
 #
 # Usage: cast.rb types [a (bool)] [b (int)] [c (float)] [d]
 
-output *Cl.run(*%w(types true one 1.2))
+output *Cl.run($1, *%w(types true one 1.2))
 # Output:
 # Wrong argument type (given: "one", expected: int)
 #
 # Usage: cast.rb types [a (bool)] [b (int)] [c (float)] [d]
 
-output *Cl.run(*%w(types true 1 one))
+output *Cl.run($1, *%w(types true 1 one))
 # Output:
 # Wrong argument type (given: "one", expected: float)
 #
