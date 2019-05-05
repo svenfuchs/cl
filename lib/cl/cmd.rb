@@ -16,9 +16,12 @@ module Cl
     include Registry
 
     class << self
-      def inherited(cmd)
-        cmd.register underscore(cmd.name.split('::').last) if cmd.name
+      inherited = ->(const) do
+        const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
+        const.define_singleton_method(:inherited, &inherited)
       end
+
+      define_method(:inherited, &inherited)
 
       def summary(summary = nil)
         summary ? @summary = summary : @summary

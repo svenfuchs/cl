@@ -33,6 +33,7 @@ module Cl
       end
 
       def register(key)
+        Cl.registry.delete(registry_key) if registry_key
         Cl[key] = self
         @registry_key = key.to_sym
       end

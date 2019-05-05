@@ -1,5 +1,7 @@
 describe Cl, 'help' do
   before do
+    Cl::Help.register :help
+
     Class.new(Cl::Cmd) do
       register :'test:a'
 
