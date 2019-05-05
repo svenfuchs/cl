@@ -1,5 +1,5 @@
 describe Cl, 'help' do
-  let!(:a) do
+  before do
     Class.new(Cl::Cmd) do
       register :'test:a'
 
@@ -12,9 +12,7 @@ describe Cl, 'help' do
       opt('-b', '--bbb BBB', 'the value B') { |b| opts[:b] = b }
       opt('--ccc CCC', 'the extra C') { |c| opts[:c] = c }
     end
-  end
 
-  let!(:b) do
     Class.new(Cl::Cmd) do
       register :'test:b'
 

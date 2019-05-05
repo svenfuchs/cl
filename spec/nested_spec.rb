@@ -1,36 +1,33 @@
 describe Cl, 'nested' do
-  before do
-    module Cmds
-      module Nested
-        class A < Cl::Cmd
-          register 'nested:a'
-          opt('-a') { opts[:a] = true }
-          def initialize(*); end
-
-          class B < A
-            register 'nested:a:b'
-            opt('-b') { opts[:b] = true }
-
-            class C < B
-              register 'nested:a:b:c'
-              opt('-c') { opts[:c] = true }
-            end
-          end
-        end
-      end
+  let!(:a) do
+    Class.new(Cl::Cmd) do
+      register 'nested:a'
+      opt('-a') { opts[:a] = true }
+      def initialize(*); end
     end
   end
 
-  after { Cmds.send(:remove_const, :Nested) }
+  let!(:b) do
+    Class.new(a) do
+      register 'nested:a:b'
+      opt('-b') { opts[:b] = true }
+    end
+  end
 
-  let(:args) { %w(nested a b c d e -a -b -c) }
-  let(:cl)  { Cl.runner(args) }
+  let!(:c) do
+    Class.new(b) do
+      register 'nested:a:b:c'
+      opt('-c') { opts[:c] = true }
+    end
+  end
 
-  it { expect(Cmds::Nested::A.opts.map(&:first).flatten).to eq %w(-a) }
-  it { expect(Cmds::Nested::A::B.opts.map(&:first).flatten).to eq %w(-a -b) }
-  it { expect(Cmds::Nested::A::B::C.opts.map(&:first).flatten).to eq %w(-a -b -c) }
+  let(:cl) { Cl.runner(%w(nested a b c d e -a -b -c)) }
 
-  it { expect(cl.cmd).to be_a Cmds::Nested::A::B::C }
+  it { expect(a.opts.map(&:first).flatten).to eq %w(-a) }
+  it { expect(b.opts.map(&:first).flatten).to eq %w(-a -b) }
+  it { expect(c.opts.map(&:first).flatten).to eq %w(-a -b -c) }
+
+  it { expect(cl.cmd).to be_a c }
   it { expect(cl.args).to eq %w(d e) }
   it { expect(cl.opts).to eq a: true, b: true, c: true }
 end

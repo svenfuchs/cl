@@ -37,6 +37,11 @@ module Cl
         def keys_for(args)
           args.inject([]) { |keys, key| keys << [keys.last, key].compact.join(':') }
         end
+
+        def abort(msg)
+          fail(msg) if ENV['ENV'] == 'test'
+          super
+        end
     end
   end
 end

@@ -23,6 +23,7 @@ module Cl
       def summary(summary = nil)
         summary ? @summary = summary : @summary
       end
+      alias purpose summary
 
       def description(description = nil)
         description ? @description = description : @description
