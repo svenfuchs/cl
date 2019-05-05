@@ -38,7 +38,7 @@ module Cl
       end
 
       def opts
-        @opts ||= superclass < Cmd ? superclass.opts.dup : Opts.new
+        @opts ||= self == Cmd ? Opts.new : superclass.opts.dup
       end
 
       def defaults(defaults = nil)
@@ -53,9 +53,11 @@ module Cl
       end
     end
 
+    opt '--help', 'Get help on this command'
+
     def initialize(ctx, args, opts)
-      args = self.class.args.apply(self, args)
       opts = self.class.opts.apply(self, opts || {})
+      args = self.class.args.apply(self, args) unless opts[:help]
       super
     end
 

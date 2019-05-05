@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
 require 'cl'
 
 module Rakeish
@@ -15,9 +18,7 @@ module Rakeish
 
       arg :name
 
-      opt '-f', '--force' do
-        opts[:force] = true
-      end
+      opt '-f', '--force'
 
       def run; [registry_key, args, opts] end
     end
@@ -27,9 +28,7 @@ module Rakeish
 
       arg :name
 
-      opt '-v', '--version VERSION' do |value|
-        opts[:version] = value
-      end
+      opt '-v', '--version VERSION'
 
       def run; [registry_key, args, opts] end
     end
@@ -43,7 +42,7 @@ def output(result)
 end
 
 Cl.runner = :multi
-output Cl.run($1, *%w(db:drop production -f db:create db:migrate production -v 1))
+output Cl.run($0, *%w(db:drop production -f db:create db:migrate production -v 1))
 # Output:
 # Called db:drop with args=["production"] opts={:force=>true}
 # Called db:create with args=[] opts={}

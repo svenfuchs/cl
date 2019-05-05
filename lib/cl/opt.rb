@@ -19,8 +19,11 @@ module Cl
     end
 
     def type
-      return opts[:type] if opts[:type]
-      strs.any? { |str| str.split(' ').size > 1 } ? :string : :boolean
+      opts[:type]
+    end
+
+    def infer_type
+      strs.any? { |str| str.split(' ').size > 1 } ? :string : :flag
     end
 
     def description

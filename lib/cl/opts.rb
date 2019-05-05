@@ -11,7 +11,7 @@ module Cl
 
       opt = Opt.new(strs, opts, block)
       opt.define(const)
-      self.opts << opt
+      self << opt
     end
 
     def apply(cmd, opts)
@@ -19,6 +19,10 @@ module Cl
       opts = cast(opts)
       validate(opts)
       opts
+    end
+
+    def <<(opt)
+      opts.empty? ? opts << opt : opts.insert(-2, opt) # keep the --help option at the end
     end
 
     def [](key)

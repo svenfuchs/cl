@@ -32,7 +32,7 @@ describe Cl, 'help' do
       end
     end
 
-    before { Cl.runner(ctx, *args).cmd.run }
+    before { Cl.runner(ctx, *args).run }
 
     describe 'listing commands' do
       let(:args) { ['help'] }
@@ -48,7 +48,7 @@ describe Cl, 'help' do
     end
 
     describe 'command details' do
-      let(:args) { ['help', 'test:a'] }
+      let(:args) { ['test', 'a', '--help'] }
 
       it do
         expect(ctx.stdout.string).to eq <<~str
@@ -62,7 +62,7 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaa          the flag A (boolean)
+            -a --aaa          the flag A
             -b --bbb BBB      the value B
                --ccc CCC      the extra C
 
@@ -70,6 +70,7 @@ describe Cl, 'help' do
 
             -d --ddd DDD      the inherited D
                --eee EEE      the inherited E
+               --help         Get help on this command
 
           Summary:
 
@@ -114,12 +115,12 @@ describe Cl, 'help' do
       Cl::Help.register :help
 
       base = Class.new(Cl::Cmd) do
-        opt '--bbbbbbbbb bbbbbbbbb', 'the long B'
+        opt '--bbbbbbbbb bbbbbbbbb', 'The long B'
       end
 
       Class.new(base) do
         register :'test:a'
-        opt '-a', '--aaa aaa', 'the short A'
+        opt '-a', '--aaa aaa', 'The short A'
       end
     end
 
@@ -134,11 +135,12 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaa aaa               the short A
+            -a --aaa aaa               The short A
 
           Common Options:
 
-            --bbbbbbbbb bbbbbbbbb      the long B
+            --bbbbbbbbb bbbbbbbbb      The long B
+            --help                     Get help on this command
         str
       end
     end
@@ -149,12 +151,12 @@ describe Cl, 'help' do
       Cl::Help.register :help
 
       base = Class.new(Cl::Cmd) do
-        opt '--bbb bbb', 'the short B'
+        opt '--bbb bbb', 'The short B'
       end
 
       Class.new(base) do
         register :'test:a'
-        opt '-a', '--aaaaaaaaa aaaaaaaaa', 'the long A'
+        opt '-a', '--aaaaaaaaa aaaaaaaaa', 'The long A'
       end
     end
 
@@ -169,11 +171,12 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaaaaaaaa aaaaaaaaa      the long A
+            -a --aaaaaaaaa aaaaaaaaa      The long A
 
           Common Options:
 
-            --bbb bbb                     the short B
+            --bbb bbb                     The short B
+            --help                        Get help on this command
         str
       end
     end

@@ -11,7 +11,7 @@ module Cl
         Array(value).flatten.map { |value| value.split(',') }.flatten
       when :string, :str
         value.to_s
-      when :boolean, :bool
+      when :flag, :boolean, :bool
         return true  if value.to_s =~ TRUE
         return false if value.to_s =~ FALSE
         !!value

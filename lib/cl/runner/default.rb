@@ -12,11 +12,15 @@ module Cl
       end
 
       def run
-        cmd.run
+        cmd.help? ? help.run : cmd.run
       end
 
       def cmd
-        const.new(ctx, args, opts)
+        @cmd ||= const.new(ctx, args, opts)
+      end
+
+      def help
+        Help.new(ctx, [cmd.registry_key], opts)
       end
 
       private
@@ -31,6 +35,7 @@ module Cl
         def cmds_for(cmd, args)
           name = cmd.registry_key.to_s
           args.take_while do |arg|
+            # ???
             name = name.sub(/#{arg}(:|$)/, '') if name =~ /#{arg}(:|$)/
           end
         end

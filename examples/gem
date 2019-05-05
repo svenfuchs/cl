@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+module Gem
+  module Release
+    module Cmds
+      class Release < Cl::Cmd
+        arg :gemspec
+
+        opt '-h', '--host HOST', 'Push to a compatible host other than rubygems.org'
+        opt '-k', '--key KEY',   'Rubygems API key to use'
+        opt '-q', '--quiet',     'Silence output'
+
+        def run
+          [name, args, opts]
+        end
+      end
+
+      class Bump < Cl::Cmd
+        defaults commit: true
+
+        opt '-v', '--version VERSION', 'The version to bump to [1.1.1|major|minor|patch|pre|rc|release]'
+        opt '--[no-]commit',           'Bump the version, but do not commit'
+
+        def run
+          [name, args, opts]
+        end
+      end
+    end
+  end
+end
+
+Cl.run($0, *%w(help))
+puts
+
+# Outputs:
+#
+#   Type "gem help COMMAND [SUBCOMMAND]" for more details:
+#
+#   gem release [gemspec] [options]
+#   gem bump [options]
+
+Cl.run($0, *%w(help release))
+puts
+
+# or:
+#
+#   Cl.run($0, *%w(release --help))
+#   Cl.run($0, *%w(release -h))
+#
+# Outputs:
+#
+#   Usage: gem release [gemspec] [options]
+#
+#   Arguments:
+#
+#     gemspec
+#
+#   Options:
+#
+#     -h --host HOST      Push to a compatible host other than rubygems.org
+#     -k --key KEY        Rubygems API key to use
+#     -q --quiet          Silence output
+#        --help           Get help on this command
+
+Cl.run($0, *%w(help release))
+puts
+
+# or:
+#
+#   Cl.run($0, *%w(release --help))
+#   Cl.run($0, *%w(release -h))
+#
+# Outputs:
+#
+#   Usage: gem bump [options]
+#
+#   Options:
+#
+#     -v --version VERSION      The version to bump to [1.1.1|major|minor|patch|pre|rc|release]
+#        --no-commit            Bump the version, but do not commit
+#     -h --help                 Get help on this command
+
+cmds = [
+  Cl.run($0, *%w(bump -v 1.1.1)),
+  Cl.run($0, *%w(release foo.gemspec -h host -k key -q))
+]
+
+puts "Commands run:\n\n"
+puts cmds.map { |cmd, args, opts| "  cmd #{cmd} has run with:\n\n    args=#{args}\n    opts=#{opts}\n\n" }
+
+# Commands run:
+#
+#   cmd bump has run with:
+#
+#     args=[]
+#     opts={:version=>"1.1.1"}
+#
+#   cmd release has run with:
+#
+#     args=["foo.gemspec"]
+#     opts={:host=>"host", :key=>"key", :quiet=>true}
