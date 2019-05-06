@@ -3,7 +3,7 @@ require 'cl/opts'
 require 'cl/registry'
 
 class Cl
-  class Cmd < Struct.new(:ctx, :args, :opts)
+  class Cmd
     include Registry
 
     class << self
@@ -63,10 +63,12 @@ class Cl
 
     opt '--help', 'Get help on this command'
 
+    attr_reader :ctx, :args, :opts
+
     def initialize(ctx, args, opts)
-      opts = self.class.opts.apply(self, opts || {})
-      args = self.class.args.apply(self, args) unless opts[:help]
-      super
+      @ctx = ctx
+      @opts = self.class.opts.apply(self, opts || {})
+      @args = self.class.args.apply(self, args) unless opts[:help]
     end
   end
 end

@@ -8,7 +8,7 @@ class Cl
       when nil
         value
       when :array
-        Array(value).flatten.map { |value| value.split(',') }.flatten
+        Array(value).compact.flatten.map { |value| value.split(',') }.flatten
       when :string, :str
         value.to_s
       when :flag, :boolean, :bool
