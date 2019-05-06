@@ -25,7 +25,7 @@ describe Cl, 'defaults' do
   let!(:d) do
     Class.new(Cl::Cmd) do
       register 'd'
-      opt '--d D', default: 'd'
+      opt '--d D', type: :array, default: ['d']
     end
   end
 
@@ -36,6 +36,7 @@ describe Cl, 'defaults' do
   it { expect(a.defaults).to eq a: 'a' }
   it { expect(b.defaults).to eq a: 'a', b: 'b' }
   it { expect(c.defaults).to eq a: 'a', b: 'b', c: 'c' }
+  it { expect(d.defaults).to eq d: ['d'] }
 
   it { expect(opts(%w(a))[:a]).to eq 'a' }
   it { expect(opts(%w(a))[:b]).to be_nil }
@@ -55,5 +56,5 @@ describe Cl, 'defaults' do
   it { expect(opts(%w(d))[:a]).to be_nil }
   it { expect(opts(%w(d))[:b]).to be_nil }
   it { expect(opts(%w(d))[:c]).to be_nil }
-  it { expect(opts(%w(d))[:d]).to eq 'd' }
+  it { expect(opts(%w(d))[:d]).to eq ['d'] }
 end
