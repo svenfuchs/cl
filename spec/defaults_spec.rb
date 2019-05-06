@@ -18,16 +18,14 @@ describe Cl, 'defaults' do
   let!(:c) do
     Class.new(b) do
       register 'a:b:c'
-      defaults c: 'c'
-      opt '-c C'
+      opt '--c C', default: 'c'
     end
   end
 
   let!(:d) do
     Class.new(Cl::Cmd) do
       register 'd'
-      defaults d: 'd'
-      opt '-d D'
+      opt '--d D', default: 'd'
     end
   end
 

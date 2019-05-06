@@ -50,6 +50,10 @@ class Cl
         @defaults ||= superclass < Cmd ? superclass.defaults.dup : {}
       end
 
+      def default(name, value)
+        defaults name => value
+      end
+
       def underscore(string)
         string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
         gsub(/([a-z\d])([A-Z])/,'\1_\2').

@@ -10,6 +10,7 @@ class Cl
       return unless __key__ = name
       const.send(:define_method, name) { opts[__key__] }
       const.send(:define_method, :"#{name}?") { !!opts[__key__] }
+      const.default name, default if default?
     end
 
     def name
@@ -33,6 +34,14 @@ class Cl
 
     def required?
       !!opts[:required]
+    end
+
+    def default?
+      !!default
+    end
+
+    def default
+      opts[:default]
     end
 
     def block
