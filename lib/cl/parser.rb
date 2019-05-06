@@ -12,7 +12,7 @@ class Cl
 
     # should consider negative arities (e.g. |one, *two|)
     def set(opt, value)
-      args = [opts, opt.name, value]
+      args = [opts, opt.type, opt.name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
     end

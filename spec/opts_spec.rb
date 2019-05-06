@@ -44,6 +44,17 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd -i 1)).int?).to be true }
   end
 
+  describe 'array' do
+    let(:opts) { ->(*) { opt('-s', '--strs STRS', 'A array', type: :array) } }
+
+    it { expect(cmd(%w(cmd --strs a --strs b)).opts[:strs]).to eq %w(a b) }
+    it { expect(cmd(%w(cmd -s a -s b)).opts[:strs]).to eq %w(a b) }
+
+    it { expect(cmd(%w(cmd -s a)).strs).to eq %w(a) }
+    it { expect(cmd(%w(cmd -s a)).strs?).to be true }
+    it { expect(cmd(%w(cmd)).strs?).to be false }
+  end
+
   describe 'flag' do
     let(:opts) { ->(*) { opt('-f', '--[no-]flag', 'A flag') } }
 

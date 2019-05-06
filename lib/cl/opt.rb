@@ -46,7 +46,16 @@ class Cl
 
     def block
       # raise if no block was given, and the option's name cannot be inferred
-      super || ->(opts, name, value) { opts[name] = value }
+      super || method(:assign)
+    end
+
+    def assign(opts, type, name, value)
+      if type == :array
+        opts[name] ||= []
+        opts[name] << value
+      else
+        opts[name] = value
+      end
     end
   end
 end
