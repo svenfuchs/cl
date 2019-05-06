@@ -32,7 +32,7 @@ class Cl
   def run(args)
     runner(args).run
   rescue Error => e
-    abort [e.message, runner(:help, *args).cmd.help].join("\n\n")
+    abort [e.message, runner(['help', args.first]).cmd.help].join("\n\n")
   end
 
   def runner(args)

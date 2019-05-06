@@ -14,6 +14,10 @@ class Cl
 
       define_method(:inherited, &inherited)
 
+      def abstract
+        unregister
+      end
+
       def summary(summary = nil)
         summary ? @summary = summary : @summary
       end

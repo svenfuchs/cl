@@ -33,9 +33,14 @@ class Cl
       end
 
       def register(key)
-        Cl.registry.delete(registry_key) if registry_key
+        unregister if registry_key
         @registry_key = key.to_sym
         Cl[key] = self
+      end
+
+      def unregister
+        @registry_key = nil
+        Cl.registry.delete(registry_key)
       end
     end
 

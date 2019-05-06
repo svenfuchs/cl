@@ -1,5 +1,3 @@
-require 'support/env'
-
 module Support
   module Cl
     def self.included(base)
