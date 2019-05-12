@@ -25,7 +25,7 @@ class Cl
       def parse(ctx, args)
         opts = Parser.new(self.opts, args).opts unless self == Help
         opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
-        [args, opts]
+        [args, opts || {}]
       end
 
       def abstract
@@ -81,8 +81,8 @@ class Cl
     def initialize(ctx, args)
       args, opts = self.class.parse(ctx, args)
       @ctx = ctx
-      @opts = self.class.opts.apply(self, self.opts.merge(opts || {}))
-      @args = @opts[:help] ? args : self.class.args.apply(self, args)
+      @opts = self.class.opts.apply(self, self.opts.merge(opts))
+      @args = self.class.args.apply(self, args, opts)
     end
 
     def opts

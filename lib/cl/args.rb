@@ -13,8 +13,8 @@ class Cl
       self.args << arg
     end
 
-    def apply(cmd, args)
-      return args unless self.args.any?
+    def apply(cmd, args, opts)
+      return args unless self.args.any? || opts[:help]
       args = grouped(args)
       validate(args)
       args.map { |(arg, value)| arg.set(cmd, value) }.flatten(1)

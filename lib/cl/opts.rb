@@ -15,10 +15,11 @@ class Cl
     end
 
     def apply(cmd, opts)
+      return opts if opts[:help]
       opts = with_defaults(cmd, opts)
       opts = downcase(opts)
       opts = cast(opts)
-      validate(cmd, opts) unless opts[:help]
+      validate(cmd, opts)
       opts
     end
 
