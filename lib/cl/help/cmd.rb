@@ -27,20 +27,25 @@ class Cl
       end
 
       def arguments
-        ['Arguments:', indent(args.to_s(width - args.width + 5))] if args.any?
+        ['Arguments:', table(:args)] if args.any?
       end
 
       def options
-        ['Options:', indent(opts.to_s(width - opts.width + 5))] if opts.any?
+        ['Options:', requireds, table(:opts)].compact if opts.any?
       end
 
       def common
-        ['Common Options:', indent(cmmn.to_s(width - cmmn.width + 5))] if common?
+        ['Common Options:', table(:cmmn)] if common?
+      end
+
+      def table(name)
+        table = send(name)
+        indent(table.to_s(width - table.width + 5))
       end
 
       def args
         @args ||= begin
-          Table.new(cmd.args.map { |arg| [arg.name, format_opts(arg)] })
+          Table.new(cmd.args.map { |arg| [arg.name, format_obj(arg)] })
         end
       end
 
@@ -49,7 +54,7 @@ class Cl
           opts = cmd.opts.to_a
           opts = opts - cmd.superclass.opts.to_a if common?
           strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
-          opts = opts.map { |opt| format_opts(opt) }
+          opts = opts.map { |opt| format_obj(opt) }
           Table.new(strs.rows.zip(opts))
         end
       end
@@ -58,9 +63,17 @@ class Cl
         @cmmn ||= begin
           opts = cmd.superclass.opts
           strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
-          opts = opts.map { |opt| format_opts(opt) }
+          opts = opts.map { |opt| format_obj(opt) }
           Table.new(strs.rows.zip(opts))
         end
+      end
+
+      def requireds
+        return unless cmd.required?
+        opts = cmd.required
+        strs = opts.map { |alts| alts.map { |alt| Array(alt).join(' and ') }.join(', or ' ) }
+        strs = strs.map { |str| "Either #{str} are required." }.join("\n")
+        indent(strs)
       end
 
       def common?
@@ -71,13 +84,49 @@ class Cl
         [args.width, opts.width, cmmn.width].max
       end
 
-      def format_opts(obj)
+      def format_obj(obj)
         opts = []
-        opts << "type: #{obj.type}"
+        opts << "type: #{format_type(obj)}"
         opts << 'required: true' if obj.required?
-        opts = "(#{opts.join(', ')})" if obj.description && opts.any?
+        opts += format_opt(obj) if obj.is_a?(Opt)
+        opts = opts.join(', ')
+        opts = "(#{opts})" if obj.description && !opts.empty?
         opts = [obj.description, opts]
         opts.compact.join(' ')
+      end
+
+      def format_opt(opt)
+        opts = []
+        opts << "alias: #{format_aliases(opt)}" if opt.aliases?
+        opts << "requires: #{opt.requires.join(', ')}" if opt.requires?
+        opts << "default: #{format_default(opt)}" if opt.default?
+        opts << "known values: #{opt.enum.join(', ')}" if opt.enum?
+        opts << "format: #{opt.format}" if opt.format?
+        opts << "max: #{opt.max}" if opt.max?
+        opts << format_deprecated(opt) if opt.deprecated?
+        opts.compact
+      end
+
+      def format_aliases(opt)
+        opt.aliases.map do |name|
+          strs = [name]
+          strs << '(deprecated)' if Array(opt.deprecated).include?(name)
+          strs.join(' ')
+        end.join(', ')
+      end
+
+
+      def format_type(obj)
+        return obj.type unless obj.is_a?(Opt) && obj.type == :array
+        "array (can be given multiple times)"
+      end
+
+      def format_default(opt)
+        opt.default.is_a?(Symbol) ? opt.default.to_s.sub('_', ' ') : opt.default
+      end
+
+      def format_deprecated(opt)
+        return 'deprecated' if opt.deprecated == [opt.name]
       end
 
       def rjust(objs)

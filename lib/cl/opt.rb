@@ -6,13 +6,24 @@ class Cl
 
     OPT = /^--(?:\[.*\])?(.*)$/
 
+    TYPES = {
+      int: :integer,
+      str: :string,
+      bool: :flag,
+      boolean: :flag
+    }
+
+    def initialize(*)
+      super
+      noize(strs) if type == :flag && default.is_a?(TrueClass)
+    end
+
     def define(const)
       return unless __key__ = name
       const.include Module.new {
         define_method (__key__) { opts[__key__] }
         define_method (:"#{__key__}?") { !!opts[__key__] }
       }
-      const.default name, default if default?
     end
 
     def name
@@ -23,7 +34,7 @@ class Cl
     end
 
     def type
-      opts[:type] || infer_type
+      TYPES[opts[:type]] || opts[:type] || infer_type
     end
 
     def infer_type
@@ -38,8 +49,16 @@ class Cl
       opts[:description]
     end
 
+    def aliases?
+      !!opts[:alias]
+    end
+
     def aliases
       Array(opts[:alias])
+    end
+
+    def deprecated?
+      !!opts[:deprecated]
     end
 
     def deprecated
@@ -111,6 +130,12 @@ class Cl
       else
         opts[name] = value
       end
+    end
+
+    def noize(strs)
+      strs = strs.select { |str| str.start_with?('--') }
+      strs = strs.reject { |str| str.include?('[no-]') }
+      strs.each { |str| str.replace(str.sub('--', '--[no-]')) }
     end
   end
 end

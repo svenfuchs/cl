@@ -62,19 +62,13 @@ describe Cl, 'opts' do
   end
 
   describe 'string, default (string)' do
-    let(:opts) { ->(*) { opt('-s', '--str STR') } }
-
-    before { const.defaults(str: 'default') }
-
+    let(:opts) { ->(*) { opt('--str STR', default: 'default') } }
     it { expect(cmd(%w(cmd)).opts[:str]).to eq 'default' }
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
   end
 
   describe 'string, default (symbol)' do
-    let(:opts) { ->(*) { opt('-s', '--str STR'); opt('--other STR') } }
-
-    before { const.defaults(str: :other) }
-
+    let(:opts) { ->(*) { opt('-s', '--str STR', default: :other); opt('--other STR') } }
     it { expect(cmd(%w(cmd)).opts[:str]).to be nil }
     it { expect(cmd(%w(cmd --other other)).opts[:str]).to eq 'other' }
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
@@ -173,13 +167,20 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd -f)).flag?).to be true }
   end
 
-  describe 'flag, default' do
-    let(:opts) { ->(*) { opt('-f', '--[no-]flag') } }
-
-    before { const.defaults(flag: true) }
+  describe 'flag, default true' do
+    let(:opts) { ->(*) { opt('--flag', default: true) } }
 
     it { expect(cmd(%w(cmd)).opts[:flag]).to be true }
     it { expect(cmd(%w(cmd --flag)).opts[:flag]).to be true }
+    it { expect(cmd(%w(cmd --no-flag)).opts[:flag]).to be false }
+  end
+
+  describe 'flag, default true (given [no-])' do
+    let(:opts) { ->(*) { opt('--[no-]flag', default: true) } }
+
+    it { expect(cmd(%w(cmd)).opts[:flag]).to be true }
+    it { expect(cmd(%w(cmd --flag)).opts[:flag]).to be true }
+    it { expect(cmd(%w(cmd --no-flag)).opts[:flag]).to be false }
   end
 
   describe 'flag, given a block' do

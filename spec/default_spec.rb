@@ -1,17 +1,15 @@
-describe Cl, 'defaults' do
+describe Cl, 'default' do
   let!(:a) do
     Class.new(Cl::Cmd) do
       register 'a'
-      defaults a: 'a'
-      opt '-a A'
+      opt '--a A', default: 'a'
     end
   end
 
   let!(:b) do
     Class.new(a) do
       register 'a:b'
-      defaults b: 'b'
-      opt '-b B'
+      opt '--b B', default: 'b'
     end
   end
 
@@ -32,11 +30,6 @@ describe Cl, 'defaults' do
   def opts(args)
     cmd(args).opts
   end
-
-  it { expect(a.defaults).to eq a: 'a' }
-  it { expect(b.defaults).to eq a: 'a', b: 'b' }
-  it { expect(c.defaults).to eq a: 'a', b: 'b', c: 'c' }
-  it { expect(d.defaults).to eq d: ['d'] }
 
   it { expect(opts(%w(a))[:a]).to eq 'a' }
   it { expect(opts(%w(a))[:b]).to be_nil }

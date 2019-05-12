@@ -50,17 +50,12 @@ class Cl
         @opts ||= self == Cmd ? Opts.new : superclass.opts.dup
       end
 
-      def defaults(defaults = nil)
-        return @defaults = self.defaults.merge(defaults) if defaults
-        @defaults ||= superclass < Cmd ? superclass.defaults.dup : {}
-      end
-
-      def default(name, value)
-        defaults name => value
-      end
-
       def description(description = nil)
         description ? @description = description : @description
+      end
+
+      def required?
+        !!@required
       end
 
       def required(*required)

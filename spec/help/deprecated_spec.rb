@@ -1,0 +1,40 @@
+describe Cl, 'help' do
+  before do
+    Cl::Help.register :help
+    const = Class.new(Cl::Cmd, &opts)
+    const.register :a
+  end
+
+  let(:args) { ['a', '--help'] }
+  before { run }
+
+  describe 'deprecated: true' do
+    let(:opts) { ->(*) { opt '--aaa AAA', deprecated: true } }
+
+    it do
+      expect(ctx.stdout.string).to eq <<~str
+        Usage: rspec a [options]
+
+        Options:
+
+          --aaa AAA      type: string, deprecated
+          --help         Get help on this command (type: flag)
+      str
+    end
+  end
+
+  describe 'deprecated: alias' do
+    let(:opts) { ->(*) { opt '--aaa AAA', alias: :bbb, deprecated: :bbb } }
+
+    it do
+      expect(ctx.stdout.string).to eq <<~str
+        Usage: rspec a [options]
+
+        Options:
+
+          --aaa AAA      type: string, alias: bbb (deprecated)
+          --help         Get help on this command (type: flag)
+      str
+    end
+  end
+end

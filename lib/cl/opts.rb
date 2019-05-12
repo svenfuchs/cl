@@ -15,9 +15,9 @@ class Cl
     end
 
     def apply(cmd, opts)
-      opts = with_defaults(cmd, opts) if cmd.class.defaults
+      opts = with_defaults(cmd, opts)
       opts = cast(opts)
-      validate(cmd, opts)
+      validate(cmd, opts) unless opts[:help]
       opts
     end
 
@@ -130,12 +130,16 @@ class Cl
       end
 
       def with_defaults(cmd, opts)
-        cmd.class.defaults.inject(opts) do |opts, (key, value)|
-          next opts if opts.key?(key)
-          value = opts[value] || cmd.send(value) if value.is_a?(Symbol)
-          opts[key] = value
-          opts
+        select(&:default?).inject(opts) do |opts, opt|
+          next opts if opts.key?(opt.name)
+          value = opt.default
+          value = resolve(cmd, opts, value) if value.is_a?(Symbol)
+          opts.merge(opt.name => value)
         end
+      end
+
+      def resolve(cmd, opts, key)
+        opts[key] || cmd.respond_to?(key) && cmd.send(key)
       end
 
       def cast(opts)
