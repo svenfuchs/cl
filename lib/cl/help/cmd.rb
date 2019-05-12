@@ -92,7 +92,7 @@ class Cl
         opts = opts.join(', ')
         opts = "(#{opts})" if obj.description && !opts.empty?
         opts = [obj.description, opts]
-        opts.compact.join(' ')
+        opts.compact.map(&:strip).join(' ')
       end
 
       def format_opt(opt)

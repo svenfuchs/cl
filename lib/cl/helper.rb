@@ -16,5 +16,14 @@ class Cl
     end
   end
 
-  extend Merge, Regex
+  module Wrap
+    def wrap(str, opts = {})
+      width = opts[:width] || 80
+      str.lines.map do |line|
+        line.size > width ? line.gsub(/(.{1,#{width}})(\s+|$)/, "\\1\n").strip : line
+      end.join("\n")
+    end
+  end
+
+  extend Merge, Regex, Wrap
 end

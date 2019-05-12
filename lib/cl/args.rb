@@ -14,7 +14,7 @@ class Cl
     end
 
     def apply(cmd, args, opts)
-      return args unless self.args.any? || opts[:help]
+      return args if self.args.empty? || opts[:help]
       args = grouped(args)
       validate(args)
       args.map { |(arg, value)| arg.set(cmd, value) }.flatten(1)

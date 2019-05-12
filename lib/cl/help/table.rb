@@ -1,6 +1,8 @@
 class Cl
   class Help
     class Table
+      include Wrap
+
       attr_reader :data, :padding
 
       def initialize(data)
@@ -22,7 +24,14 @@ class Cl
       end
 
       def cells(row)
-        row.map.with_index { |cell, ix| cell.to_s.ljust(widths[ix]) }
+        row.map.with_index do |cell, ix|
+          indent(wrap(cell.to_s), widths[ix - 1]).ljust(widths[ix])
+        end
+      end
+
+      def indent(str, width)
+        return str if str.empty? || !width
+        [str.lines[0], *str.lines[1..-1].map { |str| ' ' * (width + 1) + str }].join.rstrip
       end
 
       def width
