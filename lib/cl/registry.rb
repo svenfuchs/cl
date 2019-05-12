@@ -8,6 +8,10 @@ class Cl
       key && registry[key.to_sym]
     end
 
+    def registered?(key)
+      registry.key?(key)
+    end
+
     def cmds
       registry.values
     end

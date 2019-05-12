@@ -8,8 +8,10 @@ class Cl
 
     def define(const)
       return unless __key__ = name
-      const.send(:define_method, name) { opts[__key__] }
-      const.send(:define_method, :"#{name}?") { !!opts[__key__] }
+      const.include Module.new {
+        define_method (__key__) { opts[__key__] }
+        define_method (:"#{__key__}?") { !!opts[__key__] }
+      }
       const.default name, default if default?
     end
 
@@ -32,8 +34,13 @@ class Cl
       opts[:description]
     end
 
-    def required?
-      !!opts[:required]
+    def deprecated
+      return [name] if opts[:deprecated].is_a?(TrueClass)
+      Array(opts[:deprecated]) if opts[:deprecated]
+    end
+
+    def aliases
+      Array(opts[:alias])
     end
 
     def default?
@@ -42,6 +49,18 @@ class Cl
 
     def default
       opts[:default]
+    end
+
+    def required?
+      !!opts[:required]
+    end
+
+    def requires?
+      !!opts[:requires]
+    end
+
+    def requires
+      Array(opts[:requires])
     end
 
     def block

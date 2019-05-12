@@ -6,8 +6,16 @@ class Cl
 
     def initialize(opts, args)
       @opts = {}
-      super { opts.each { |opt| on(*opt.strs) { |value| set(opt, value) } } }
+      super { opts.each { |opt| on(*strs(opt)) { |value| set(opt, value) } } }
       parse!(args)
+    end
+
+    def strs(opt)
+      opt.strs + aliases(opt)
+    end
+
+    def aliases(opt)
+      opt.aliases.map { |name| "--#{name}" }
     end
 
     # should consider negative arities (e.g. |one, *two|)

@@ -15,14 +15,15 @@ class Cl
     end
 
     def apply(cmd, opts)
-      opts = cmd.class.defaults.merge(opts)
+      opts = with_defaults(cmd, opts) if cmd.class.defaults
       opts = cast(opts)
       validate(opts)
       opts
     end
 
     def <<(opt)
-      opts.empty? ? opts << opt : opts.insert(-2, opt) # keep the --help option at the end
+      # keep the --help option at the end for help output
+      opts.empty? ? opts << opt : opts.insert(-2, opt)
     end
 
     def [](key)
@@ -43,16 +44,50 @@ class Cl
       @opts ||= []
     end
 
+    def deprecated
+      map(&:deprecated).flatten.compact
+    end
+
     def dup
       super.tap { |obj| obj.opts = opts.dup }
     end
 
     private
 
-      # make sure we do not accept unnamed required options
       def validate(opts)
-        return unless opt = required.detect { |opt| !opts.key?(opt.name) }
-        raise OptionError.new(:missing_opt, opt.name)
+        validate_required(opts)
+        validate_requires(opts)
+      end
+
+      def validate_required(opts)
+        opts = missing_required(opts)
+        # make sure we do not accept unnamed required options
+        raise RequiredOpts.new(opts.map(&:name)) if opts.any?
+      end
+
+      def validate_requires(opts)
+        opts = missing_requires(opts)
+        raise RequiresOpts.new(invert(opts)) if opts.any?
+      end
+
+      def missing_required(opts)
+        select(&:required?).select { |opt| !opts.key?(opt.name) }
+      end
+
+      def missing_requires(opts)
+        select(&:requires?).map do |opt|
+          missing = opt.requires.select { |key| !opts.key?(key) }
+          [opt.name, missing] if missing.any?
+        end.compact
+      end
+
+      def with_defaults(cmd, opts)
+        cmd.class.defaults.inject(opts) do |opts, (key, value)|
+          next opts if opts.key?(key)
+          value = opts[value] || cmd.send(value) if value.is_a?(Symbol)
+          opts[key] = value
+          opts
+        end
       end
 
       def cast(opts)
@@ -61,8 +96,8 @@ class Cl
         end.to_h
       end
 
-      def required
-        select(&:required?)
+      def invert(hash)
+        hash.map { |key, obj| Array(obj).map { |obj| [obj, key] } }.flatten(1).to_h
       end
   end
 end

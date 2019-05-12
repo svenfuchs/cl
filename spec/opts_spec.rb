@@ -11,7 +11,41 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd -s str)).str?).to be true }
   end
 
-  describe 'string, default' do
+  describe 'string, alias' do
+    let(:opts) { ->(*) { opt('-s', '--str STR', alias: :other) } }
+
+    it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
+    it { expect(cmd(%w(cmd --other str)).opts[:str]).to eq 'str' }
+    it { expect(cmd(%w(cmd --other str)).opts[:other]).to be nil }
+  end
+
+  describe 'string, deprecated' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', deprecated: true
+        opt '--two STR', deprecated: true
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [:one] }
+  end
+
+  describe 'string, deprecated alias' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', alias: :two, deprecated: :two
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [] }
+
+    it { expect(cmd(%w(cmd --two two)).opts[:one]).to eq 'two' }
+    xit { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [:two] }
+  end
+
+  describe 'string, default (string)' do
     let(:opts) { ->(*) { opt('-s', '--str STR') } }
 
     before { const.defaults(str: 'default') }
@@ -20,11 +54,47 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
   end
 
+  describe 'string, default (symbol)' do
+    let(:opts) { ->(*) { opt('-s', '--str STR'); opt('--other STR') } }
+
+    before { const.defaults(str: :other) }
+
+    it { expect(cmd(%w(cmd)).opts[:str]).to be nil }
+    it { expect(cmd(%w(cmd --other other)).opts[:str]).to eq 'other' }
+    it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
+  end
+
   describe 'string, required' do
     let(:opts) { ->(*) { opt('--str STR', required: true) } }
 
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
     it { expect { cmd(%w(cmd)) }.to raise_error Cl::OptionError }
+  end
+
+  describe 'string, requires another option' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', requires: :two
+        opt '--two STR'
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one --two two)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one one)) }.to raise_error 'Missing option: two (required by one)' }
+  end
+
+  describe 'string, requires two other options' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', requires: [:two, :three]
+        opt '--two STR'
+        opt '--three STR'
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one --two two --three three)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one one --two two)) }.to raise_error 'Missing option: three (required by one)' }
+    it { expect { cmd(%w(cmd --one one)) }.to raise_error 'Missing options: two (required by one), three (required by one)' }
   end
 
   describe 'string, given a block' do

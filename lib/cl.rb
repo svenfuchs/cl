@@ -9,7 +9,10 @@ class Cl
       missing_args:  'Missing arguments (given: %s, required: %s)',
       too_many_args: 'Too many arguments (given: %s, allowed: %s)',
       wrong_type:    'Wrong argument type (given: %s, expected: %s)',
-      missing_opt:   'Missing required option --%s',
+      required_opt:  'Missing required option: %s',
+      required_opts: 'Missing required options: %s',
+      requires_opt:  'Missing option: %s',
+      requires_opts: 'Missing options: %s',
     }
 
     def initialize(msg, *args)
@@ -19,6 +22,15 @@ class Cl
 
   ArgumentError = Class.new(Error)
   OptionError = Class.new(Error)
+  RequiredOpts = Class.new(OptionError)
+
+  class RequiresOpts < OptionError
+    def initialize(opts)
+      msg = opts.size == 1 ? :requires_opt : :requires_opts
+      opts = opts.map { |one, other| "#{one} (required by #{other})" }.join(', ')
+      super(msg, opts)
+    end
+  end
 
   attr_reader :ctx, :name, :opts
 

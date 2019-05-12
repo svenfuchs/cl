@@ -55,7 +55,8 @@ class Cl
         end
 
         def expand(strs)
-          strs = strs.reject { |str| str.start_with?('-') }
+          # strs = strs.reject { |str| str.start_with?('-') }
+          strs = strs.take_while { |str| !str.start_with?('-') }
           strs.inject([]) { |strs, str| strs << [strs.last, str].compact.join(':') }
         end
     end

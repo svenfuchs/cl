@@ -63,12 +63,20 @@ class Cl
 
     opt '--help', 'Get help on this command'
 
-    attr_reader :ctx, :args, :opts
+    attr_reader :ctx, :args
 
     def initialize(ctx, args, opts)
       @ctx = ctx
-      @opts = self.class.opts.apply(self, opts || {})
-      @args = self.class.args.apply(self, args) unless opts[:help]
+      @opts = self.class.opts.apply(self, self.opts.merge(opts || {}))
+      @args = @opts[:help] ? args : self.class.args.apply(self, args)
+    end
+
+    def opts
+      @opts ||= {}
+    end
+
+    def deprecated_opts
+      opts.keys & self.class.opts.deprecated
     end
   end
 end
