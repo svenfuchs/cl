@@ -2,7 +2,7 @@ require 'cl/cast'
 
 class Cl
   class Opt < Struct.new(:strs, :opts, :block)
-    include Cast
+    include Cast, Regex
 
     OPT = /^--(?:\[.*\])?(.*)$/
 
@@ -45,16 +45,16 @@ class Cl
       type == :int || type == :integer
     end
 
-    def description
-      opts[:description]
-    end
-
     def aliases?
       !!opts[:alias]
     end
 
     def aliases
       Array(opts[:alias])
+    end
+
+    def description
+      opts[:description]
     end
 
     def deprecated?
@@ -64,6 +64,10 @@ class Cl
     def deprecated
       return [name, opts[:deprecated]] unless opts[:deprecated].is_a?(Symbol)
       [opts[:deprecated], name] if opts[:deprecated]
+    end
+
+    def downcase?
+      !!opts[:downcase]
     end
 
     def default?
@@ -84,6 +88,19 @@ class Cl
 
     def known?(value)
       enum.include?(value)
+      enum.any? { |obj| matches?(obj, value) }
+    end
+
+    def matches?(obj, value)
+      obj.is_a?(Regexp) ? obj =~ value.to_s : obj == value
+    end
+
+    def example?
+      !!opts[:example]
+    end
+
+    def example
+      opts[:example]
     end
 
     def format?
@@ -91,7 +108,7 @@ class Cl
     end
 
     def format
-      opts[:format].to_s.sub('(?-mix:', '').sub(/\)$/, '')
+      format_regex(opts[:format])
     end
 
     def formatted?(value)
@@ -116,6 +133,14 @@ class Cl
 
     def requires
       Array(opts[:requires])
+    end
+
+    def see?
+      !!opts[:see]
+    end
+
+    def see
+      opts[:see]
     end
 
     def block

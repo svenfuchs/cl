@@ -29,8 +29,8 @@ class Cl
 
   class RequiredsOpts < OptionError
     def initialize(opts)
-      opts = opts.map { |alts| alts.map { |alt| Array(alt).join(' and ') }.join(' or ' ) }
-      super(:requires_opts, opts.join(', '))
+      opts = opts.map { |alts| alts.map { |alt| Array(alt).join(' and ') }.join(', or ' ) }
+      super(:requires_opts, opts.join('; '))
     end
   end
 

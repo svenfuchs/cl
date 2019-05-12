@@ -18,7 +18,7 @@ describe Cl, 'help' do
         args :bar, :baz
 
         opt '-a', '--aaa', 'the flag A'
-        opt '-b', '--bbb BBB', 'the value B'
+        opt '-b', '--bbb BBB', 'the value B', example: 'B', see: 'http://docs.com/b'
         opt '--ccc CCC', 'the extra C'
       end
 
@@ -63,7 +63,7 @@ describe Cl, 'help' do
           Options:
 
             -a --aaa          the flag A (type: flag)
-            -b --bbb BBB      the value B (type: string)
+            -b --bbb BBB      the value B (type: string, e.g.: B, see: http://docs.com/b)
                --ccc CCC      the extra C (type: string)
 
           Common Options:

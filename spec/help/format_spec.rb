@@ -20,7 +20,7 @@ describe Cl, 'help' do
 
           Options:
 
-            --aaa AAA      type: string, format: ^\\d+(?:\\.\\d+)*$
+            --aaa AAA      type: string, format: /^\\d+(?:\\.\\d+)*$/
             --help         Get help on this command (type: flag)
         str
       end

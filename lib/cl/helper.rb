@@ -8,4 +8,13 @@ class Cl
       objs.inject({}) { |lft, rgt| lft.merge(rgt, &MERGE) }
     end
   end
+
+  module Regex
+    def format_regex(str)
+      return str unless str.is_a?(Regexp)
+      "/#{str.to_s.sub('(?-mix:', '').sub(/\)$/, '')}/"
+    end
+  end
+
+  extend Merge, Regex
 end

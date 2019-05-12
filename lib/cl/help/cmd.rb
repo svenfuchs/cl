@@ -102,7 +102,10 @@ class Cl
         opts << "default: #{format_default(opt)}" if opt.default?
         opts << "known values: #{opt.enum.join(', ')}" if opt.enum?
         opts << "format: #{opt.format}" if opt.format?
+        opts << "downcase: true" if opt.downcase?
         opts << "max: #{opt.max}" if opt.max?
+        opts << "e.g.: #{opt.example}" if opt.example?
+        opts << "see: #{opt.see}" if opt.see?
         opts << format_deprecated(opt) if opt.deprecated?
         opts.compact
       end
@@ -118,7 +121,7 @@ class Cl
 
       def format_type(obj)
         return obj.type unless obj.is_a?(Opt) && obj.type == :array
-        "array (can be given multiple times)"
+        "array (string, can be given multiple times)"
       end
 
       def format_default(opt)

@@ -6,16 +6,19 @@
 
 * Add config, reading from env vars and yml files (inspired by gem-release)
 * Add `abstract` in order to signal a cmd is a base class that is not meant to be executed
-* Add `opt '--path', type: :array` for options that can be given multiple times
+* Add `required :one, [:two, :three]` (DNF, i.e: either :one or both :two and :three must be given)
+* Add `opt '--one STR', type: :array` for options that can be given multiple times
 * Add `opt '--one STR', default: 'one'`
 * Add `opt '--one STR', requires :two` or `[:two, :three]` for options that depend on other options
 * Add `opt '--one', alias: :other`
 * Add `opt '--one', deprecated: 'message'`, and `cmd.deprected_opts`, so clients can look up which deprecated options were used
 * Add `opt '--one', alias: :other, deprecated: :other`, so that `cmd.deprecated_opts` returns the alias name if it was used
-* Add `opt '--int', max: 10, type: :integer`
-* Add `opt '--one', format: /.+/`
-* Add `opt '--one', enum: ['one', 'two']`
-* Add `required :one, [:two, :three]` (DNF, i.e: either :one or both :two and :three must be given)
+* Add `opt '--int INT', max: 10, type: :integer`
+* Add `opt '--one STR', format: /.+/`
+* Add `opt '--one STR', enum: ['one', /\w+/]`
+* Add `opt '--one STR', downcase: true`
+* Add `opt '--one STR', example: 'foo'`
+* Add `opt '--one STR', see: 'https://provider.com/docs'
 
 ### Changed
 

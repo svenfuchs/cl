@@ -13,9 +13,9 @@ describe Cl, 'opts' do
 
     it { expect { cmd(%w(cmd --one)) }.to_not raise_error }
     it { expect { cmd(%w(cmd --two --three)) }.to_not raise_error }
-    it { expect { cmd(%w(cmd)) }.to raise_error 'Missing options: one or two and three' }
-    it { expect { cmd(%w(cmd --two)) }.to raise_error 'Missing options: one or two and three' }
-    it { expect { cmd(%w(cmd --three)) }.to raise_error 'Missing options: one or two and three' }
+    it { expect { cmd(%w(cmd)) }.to raise_error 'Missing options: one, or two and three' }
+    it { expect { cmd(%w(cmd --two)) }.to raise_error 'Missing options: one, or two and three' }
+    it { expect { cmd(%w(cmd --three)) }.to raise_error 'Missing options: one, or two and three' }
   end
 
   describe 'string' do
@@ -77,18 +77,35 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
   end
 
-  describe 'string, enum' do
-    let(:opts) { ->(*) { opt('--one STR', enum: ['one', 'two']) } }
+  describe 'string, downcase' do
+    let(:opts) { ->(*) { opt('--one STR', downcase: true) } }
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect { cmd(%w(cmd --one three)) }.to raise_error 'Unknown value: one=three (known values: one, two)' }
+    it { expect(cmd(%w(cmd --one One)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one ONE)).opts[:one]).to eq 'one' }
+  end
+
+  describe 'string, enum' do
+    let(:opts) { ->(*) { opt('--one STR', enum: ['one', /^two$/]) } }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one two)).opts[:one]).to eq 'two' }
+    it { expect { cmd(%w(cmd --one three)) }.to raise_error 'Unknown value: one=three (known values: one, /^two$/)' }
+  end
+
+  describe 'string, enum, downcase' do
+    let(:opts) { ->(*) { opt('--one STR', enum: ['one'], downcase: true) } }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one ONE)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one two)) }.to raise_error 'Unknown value: one=two (known values: one)' }
   end
 
   describe 'string, format' do
-    let(:opts) { ->(*) { opt('--one STR', format: /one/) } }
+    let(:opts) { ->(*) { opt('--one STR', format: /^one$/) } }
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect { cmd(%w(cmd --one two)) }.to raise_error 'Invalid format: one (format: one)' }
+    it { expect { cmd(%w(cmd --one two)) }.to raise_error 'Invalid format: one (format: /^one$/)' }
   end
 
   describe 'string, required' do

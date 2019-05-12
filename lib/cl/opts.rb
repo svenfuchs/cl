@@ -2,7 +2,7 @@ require 'cl/opt'
 
 class Cl
   class Opts
-    include Enumerable
+    include Enumerable, Regex
 
     def define(const, *args, &block)
       opts = args.last.is_a?(Hash) ? args.pop : {}
@@ -16,6 +16,7 @@ class Cl
 
     def apply(cmd, opts)
       opts = with_defaults(cmd, opts)
+      opts = downcase(opts)
       opts = cast(opts)
       validate(cmd, opts) unless opts[:help]
       opts
@@ -106,6 +107,7 @@ class Cl
 
       def missing_requires(opts)
         select(&:requires?).map do |opt|
+          next unless opts.key?(opt.name)
           missing = opt.requires.select { |key| !opts.key?(key) }
           [opt.name, missing] if missing.any?
         end.compact
@@ -113,19 +115,24 @@ class Cl
 
       def exceeding_max(opts)
         select(&:max?).map do |opt|
-          [opt.name, opt.max] if opts[opt.name] > opt.max
+          value = opts[opt.name]
+          [opt.name, opt.max] if value && value > opt.max
         end.compact
       end
 
       def invalid_format(opts)
         select(&:format?).map do |opt|
-          [opt.name, opt.format] unless opt.formatted?(opts[opt.name])
+          value = opts[opt.name]
+          [opt.name, opt.format] if value && !opt.formatted?(value)
         end.compact
       end
 
       def unknown_values(opts)
         select(&:enum?).map do |opt|
-          [opt.name, opts[opt.name], opt.enum] unless opt.known?(opts[opt.name])
+          value = opts[opt.name]
+          next unless value && !opt.known?(value)
+          known = opt.enum.map { |str| format_regex(str) }
+          [opt.name, value, known]
         end.compact
       end
 
@@ -140,6 +147,13 @@ class Cl
 
       def resolve(cmd, opts, key)
         opts[key] || cmd.respond_to?(key) && cmd.send(key)
+      end
+
+      def downcase(opts)
+        select(&:downcase?).inject(opts) do |opts, opt|
+          next opts unless value = opts[opt.name]
+          opts.merge(opt.name => value.to_s.downcase)
+        end
       end
 
       def cast(opts)

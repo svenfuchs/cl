@@ -33,7 +33,7 @@ describe Cl, 'help' do
 
         Options:
 
-          --aaa AAA      type: array (can be given multiple times)
+          --aaa AAA      type: array (string, can be given multiple times)
           --help         Get help on this command (type: flag)
       str
     end
