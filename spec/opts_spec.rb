@@ -39,13 +39,16 @@ describe Cl, 'opts' do
   describe 'string, deprecated' do
     let(:opts) do
       ->(*) do
-        opt '--one STR', deprecated: true
-        opt '--two STR', deprecated: true
+        opt '--one STR', deprecated: 'msg one'
+        opt '--two STR', deprecated: 'msg two'
       end
     end
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [:one] }
+    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [[:one, 'msg one']] }
+
+    it { expect(cmd(%w(cmd --two two)).opts[:two]).to eq 'two' }
+    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [[:two, 'msg two']] }
   end
 
   describe 'string, deprecated alias' do
@@ -58,7 +61,7 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
     it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [] }
     it { expect(cmd(%w(cmd --two two)).opts[:one]).to eq 'two' }
-    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [:two] }
+    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [[:two, :one]] }
   end
 
   describe 'string, default (string)' do

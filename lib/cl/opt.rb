@@ -62,8 +62,8 @@ class Cl
     end
 
     def deprecated
-      return [name] if opts[:deprecated].is_a?(TrueClass)
-      Array(opts[:deprecated]) if opts[:deprecated]
+      return [name, opts[:deprecated]] unless opts[:deprecated].is_a?(Symbol)
+      [opts[:deprecated], name] if opts[:deprecated]
     end
 
     def default?

@@ -9,7 +9,7 @@ describe Cl, 'help' do
   before { run }
 
   describe 'deprecated: true' do
-    let(:opts) { ->(*) { opt '--aaa AAA', deprecated: true } }
+    let(:opts) { ->(*) { opt '--aaa AAA', deprecated: 'msg' } }
 
     it do
       expect(ctx.stdout.string).to eq <<~str
@@ -17,7 +17,7 @@ describe Cl, 'help' do
 
         Options:
 
-          --aaa AAA      type: string, deprecated
+          --aaa AAA      type: string, deprecated (msg)
           --help         Get help on this command (type: flag)
       str
     end
@@ -32,7 +32,7 @@ describe Cl, 'help' do
 
         Options:
 
-          --aaa AAA      type: string, alias: bbb (deprecated)
+          --aaa AAA      type: string, alias: bbb (deprecated, please use aaa)
           --help         Get help on this command (type: flag)
       str
     end

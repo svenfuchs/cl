@@ -110,7 +110,7 @@ class Cl
       def format_aliases(opt)
         opt.aliases.map do |name|
           strs = [name]
-          strs << '(deprecated)' if Array(opt.deprecated).include?(name)
+          strs << "(deprecated, please use #{opt.name})" if opt.deprecated[0] == name
           strs.join(' ')
         end.join(', ')
       end
@@ -126,7 +126,7 @@ class Cl
       end
 
       def format_deprecated(opt)
-        return 'deprecated' if opt.deprecated == [opt.name]
+        return "deprecated (#{opt.deprecated[1]})" if opt.deprecated[0] == opt.name
       end
 
       def rjust(objs)

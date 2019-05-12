@@ -90,7 +90,9 @@ class Cl
     end
 
     def deprecated_opts
-      opts.keys & self.class.opts.deprecated
+      opts = self.class.opts.select(&:deprecated?)
+      opts = opts.select { |opt| self.opts.key?(opt.deprecated[0]) }
+      opts.map(&:deprecated)
     end
   end
 end

@@ -10,7 +10,7 @@
 * Add `opt '--one STR', default: 'one'`
 * Add `opt '--one STR', requires :two` or `[:two, :three]` for options that depend on other options
 * Add `opt '--one', alias: :other`
-* Add `opt '--one', deprecated: true`, and `cmd.deprected_opts`, so clients can look up which deprecated options were used
+* Add `opt '--one', deprecated: 'message'`, and `cmd.deprected_opts`, so clients can look up which deprecated options were used
 * Add `opt '--one', alias: :other, deprecated: :other`, so that `cmd.deprecated_opts` returns the alias name if it was used
 * Add `opt '--int', max: 10, type: :integer`
 * Add `opt '--one', format: /.+/`
