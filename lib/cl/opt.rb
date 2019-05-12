@@ -30,17 +30,21 @@ class Cl
       strs.any? { |str| str.split(' ').size > 1 } ? :string : :flag
     end
 
+    def int?
+      type == :int || type == :integer
+    end
+
     def description
       opts[:description]
+    end
+
+    def aliases
+      Array(opts[:alias])
     end
 
     def deprecated
       return [name] if opts[:deprecated].is_a?(TrueClass)
       Array(opts[:deprecated]) if opts[:deprecated]
-    end
-
-    def aliases
-      Array(opts[:alias])
     end
 
     def default?
@@ -49,6 +53,38 @@ class Cl
 
     def default
       opts[:default]
+    end
+
+    def enum?
+      !!opts[:enum]
+    end
+
+    def enum
+      Array(opts[:enum])
+    end
+
+    def known?(value)
+      enum.include?(value)
+    end
+
+    def format?
+      !!opts[:format]
+    end
+
+    def format
+      opts[:format].to_s.sub('(?-mix:', '').sub(/\)$/, '')
+    end
+
+    def formatted?(value)
+      opts[:format] =~ value
+    end
+
+    def max?
+      int? && !!opts[:max]
+    end
+
+    def max
+      opts[:max]
     end
 
     def required?

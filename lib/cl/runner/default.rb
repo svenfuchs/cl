@@ -9,14 +9,14 @@ class Cl
       extend Forwardable
       include Merge
 
-      def_delegators :ctx, :config, :abort
+      def_delegators :ctx, :abort
 
       attr_reader :ctx, :const, :args, :opts
 
       def initialize(ctx, args)
         @ctx = ctx
-        @const, args = lookup(args)
-        @opts, @args = parse(args)
+        @const, @args = lookup(args)
+        # @opts, @args = parse(args)
       end
 
       def run
@@ -24,11 +24,11 @@ class Cl
       end
 
       def cmd
-        @cmd ||= const.new(ctx, args, opts)
+        @cmd ||= const.new(ctx, args)
       end
 
       def help
-        Help.new(ctx, [cmd.registry_key], opts)
+        Help.new(ctx, [cmd.registry_key])
       end
 
       private
@@ -37,12 +37,6 @@ class Cl
           keys = expand(args) & Cl.registry.keys.map(&:to_s)
           cmd = Cl[keys.last] || abort("Unknown command: #{args.join(' ')}")
           [cmd, args - keys(cmd)]
-        end
-
-        def parse(args)
-          opts = Parser.new(const.opts, args).opts unless const == Help
-          opts = merge(config[name], opts) if config[name]
-          [opts, args]
         end
 
         def name

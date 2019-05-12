@@ -16,7 +16,7 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
     it { expect(cmd(%w(cmd --other str)).opts[:str]).to eq 'str' }
-    it { expect(cmd(%w(cmd --other str)).opts[:other]).to be nil }
+    it { expect(cmd(%w(cmd --other str)).opts[:other]).to eq 'str' }
   end
 
   describe 'string, deprecated' do
@@ -40,9 +40,8 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
     it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq [] }
-
     it { expect(cmd(%w(cmd --two two)).opts[:one]).to eq 'two' }
-    xit { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [:two] }
+    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq [:two] }
   end
 
   describe 'string, default (string)' do
@@ -62,6 +61,20 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd)).opts[:str]).to be nil }
     it { expect(cmd(%w(cmd --other other)).opts[:str]).to eq 'other' }
     it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq 'str' }
+  end
+
+  describe 'string, enum' do
+    let(:opts) { ->(*) { opt('--one STR', enum: ['one', 'two']) } }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one three)) }.to raise_error 'Unknown value: one=three (known values: one, two)' }
+  end
+
+  describe 'string, format' do
+    let(:opts) { ->(*) { opt('--one STR', format: /one/) } }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one two)) }.to raise_error 'Invalid format: one (format: one)' }
   end
 
   describe 'string, required' do
@@ -112,6 +125,13 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd -i 1)).int).to eq 1 }
     it { expect(cmd(%w(cmd -i 1)).int?).to be true }
+  end
+
+  describe 'integer, max' do
+    let(:opts) { ->(*) { opt('--int INT', type: :int, max: 1) } }
+
+    it { expect(cmd(%w(cmd --int 1)).opts[:int]).to eq 1 }
+    it { expect { cmd(%w(cmd --int 2)) }.to raise_error 'Exceeds max value: int (max: 1)' }
   end
 
   describe 'array' do

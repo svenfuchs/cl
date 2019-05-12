@@ -57,6 +57,9 @@ class Cl
       def validate(opts)
         validate_required(opts)
         validate_requires(opts)
+        validate_max(opts)
+        validate_format(opts)
+        validate_enum(opts)
       end
 
       def validate_required(opts)
@@ -70,6 +73,21 @@ class Cl
         raise RequiresOpts.new(invert(opts)) if opts.any?
       end
 
+      def validate_max(opts)
+        opts = exceeding_max(opts)
+        raise ExceedingMax.new(opts) if opts.any?
+      end
+
+      def validate_format(opts)
+        opts = invalid_format(opts)
+        raise InvalidFormat.new(opts) if opts.any?
+      end
+
+      def validate_enum(opts)
+        opts = unknown_values(opts)
+        raise UnknownValues.new(opts) if opts.any?
+      end
+
       def missing_required(opts)
         select(&:required?).select { |opt| !opts.key?(opt.name) }
       end
@@ -78,6 +96,24 @@ class Cl
         select(&:requires?).map do |opt|
           missing = opt.requires.select { |key| !opts.key?(key) }
           [opt.name, missing] if missing.any?
+        end.compact
+      end
+
+      def exceeding_max(opts)
+        select(&:max?).map do |opt|
+          [opt.name, opt.max] if opts[opt.name] > opt.max
+        end.compact
+      end
+
+      def invalid_format(opts)
+        select(&:format?).map do |opt|
+          [opt.name, opt.format] unless opt.formatted?(opts[opt.name])
+        end.compact
+      end
+
+      def unknown_values(opts)
+        select(&:enum?).map do |opt|
+          [opt.name, opts[opt.name], opt.enum] unless opt.known?(opts[opt.name])
         end.compact
       end
 

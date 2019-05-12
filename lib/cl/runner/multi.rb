@@ -1,5 +1,3 @@
-require 'cl/parser'
-
 class Cl
   module Runner
     class Multi
@@ -26,7 +24,7 @@ class Cl
 
         def build(cmds)
           cmds.map do |(cmd, *args)|
-            cmd.new(name, args, Parser.new(cmd.opts, args).opts)
+            cmd.new(name, args)
           end
         end
     end

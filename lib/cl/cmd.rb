@@ -1,4 +1,5 @@
 require 'cl/args'
+require 'cl/helper'
 require 'cl/opts'
 require 'cl/registry'
 
@@ -7,12 +8,20 @@ class Cl
     include Registry
 
     class << self
+      include Merge
+
       inherited = ->(const) do
         const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
         const.define_singleton_method(:inherited, &inherited)
       end
 
       define_method(:inherited, &inherited)
+
+      def parse(ctx, args)
+        opts = Parser.new(self.opts, args).opts unless self == Help
+        opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
+        [args, opts]
+      end
 
       def abstract
         unregister
@@ -65,7 +74,8 @@ class Cl
 
     attr_reader :ctx, :args
 
-    def initialize(ctx, args, opts)
+    def initialize(ctx, args)
+      args, opts = self.class.parse(ctx, args)
       @ctx = ctx
       @opts = self.class.opts.apply(self, self.opts.merge(opts || {}))
       @args = @opts[:help] ? args : self.class.args.apply(self, args)
