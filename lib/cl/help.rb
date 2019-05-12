@@ -13,14 +13,16 @@ class Cl
     private
 
       def cmds
-        cmds = Cl.cmds.reject { |cmd| cmd.registry_key == :help }
+        cmds = Cl::Cmd.cmds.reject { |cmd| cmd.registry_key == :help }
         key  = args.join(':') if args
         cmds = cmds.select { |cmd| cmd.registry_key.to_s.start_with?(key) } if key
         cmds
       end
 
       def cmd
-        Cl[args.join(':')] || ctx.abort("Unknown command: #{args.join(':')}")
+        key = args.join(':')
+        return Cl::Cmd[key] if Cl::Cmd.registered?(key)
+        ctx.abort("Unknown command: #{key}")
       end
   end
 end

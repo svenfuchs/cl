@@ -5,7 +5,7 @@ require 'support'
 require 'cl'
 
 RSpec.configure do |c|
-  c.before { Cl.registry.clear }
+  c.before { Cl::Cmd.registry.clear }
 
   c.before { MemFs.activate! }
   c.after  { MemFs.deactivate! }

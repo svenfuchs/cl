@@ -34,8 +34,8 @@ class Cl
       private
 
         def lookup(args)
-          keys = expand(args) & Cl.registry.keys.map(&:to_s)
-          cmd = Cl[keys.last] || abort("Unknown command: #{args.join(' ')}")
+          keys = expand(args) & Cmd.registry.keys.map(&:to_s)
+          cmd = Cmd[keys.last] || abort("Unknown command: #{args.join(' ')}")
           [cmd, args - keys(cmd)]
         end
 

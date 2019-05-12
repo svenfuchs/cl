@@ -20,7 +20,7 @@
 
 * Much improved help output, modeled after rubygems' help output
 * Cl is now a class
-
+* Use the regstry gem, remove the local Registry implementation
 
 ## 0.0.4 (2017-08-02)
 

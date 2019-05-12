@@ -1,7 +1,8 @@
+require 'registry'
 require 'cl/args'
 require 'cl/helper'
 require 'cl/opts'
-require 'cl/registry'
+# require 'cl/registry'
 
 class Cl
   class Cmd
@@ -16,6 +17,10 @@ class Cl
       end
 
       define_method(:inherited, &inherited)
+
+      def cmds
+        registry.values
+      end
 
       def parse(ctx, args)
         opts = Parser.new(self.opts, args).opts unless self == Help

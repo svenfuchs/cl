@@ -16,7 +16,7 @@ class Cl
 
         def group(args, cmds = [])
           args.flatten.map(&:to_s).inject([[]]) do |cmds, arg|
-            cmd = Cl[arg]
+            cmd = Cmd.registered?(arg) ? Cmd[arg] : nil
             cmd ? cmds << [cmd] : cmds.last << arg
             cmds.reject(&:empty?)
           end

@@ -3,8 +3,14 @@ require 'cl/help/usage'
 
 class Cl
   class Help
-    class Cmds < Struct.new(:cmds)
+    class Cmds
       HEAD = %(Type "#{$0.split('/').last} help COMMAND [SUBCOMMAND]" for more details:\n)
+
+      attr_reader :cmds
+
+      def initialize(cmds)
+        @cmds = cmds
+      end
 
       def format
         [HEAD, Table.new(list).format].join("\n")

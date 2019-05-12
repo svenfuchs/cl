@@ -3,7 +3,13 @@ require 'cl/help/usage'
 
 class Cl
   class Help
-    class Cmd < Struct.new(:cmd)
+    class Cmd
+      attr_reader :cmd
+
+      def initialize(cmd)
+        @cmd = cmd
+      end
+
       def format
         [usage, arguments, options, common, summary, description].compact.join("\n\n")
       end

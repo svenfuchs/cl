@@ -20,7 +20,7 @@ class Cl
         end
 
         def opts
-          Cl.registry.map { |key, cmd| [key, cmd.opts.map(&:name) - [:help]] }
+          Cmd.registry.map { |key, cmd| [key, cmd.opts.map(&:name) - [:help]] }
         end
 
         def var(cmd, opt, key)

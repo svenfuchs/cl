@@ -1,7 +1,11 @@
 class Cl
   class Help
-    class Table < Struct.new(:data)
-      attr_reader :padding
+    class Table
+      attr_reader :data, :padding
+
+      def initialize(data)
+        @data = data
+      end
 
       def any?
         data.any?
