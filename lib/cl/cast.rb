@@ -10,7 +10,7 @@ class Cl
       when :array
         Array(value).compact.flatten.map { |value| value.to_s.split(',') }.flatten
       when :string, :str
-        value.to_s
+        value.to_s unless value.to_s.empty?
       when :flag, :boolean, :bool
         return true  if value.to_s =~ TRUE
         return false if value.to_s =~ FALSE

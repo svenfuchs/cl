@@ -17,7 +17,7 @@ class Cl
     def apply(cmd, opts)
       opts = with_defaults(cmd, opts) if cmd.class.defaults
       opts = cast(opts)
-      validate(opts)
+      validate(cmd, opts)
       opts
     end
 
@@ -54,12 +54,18 @@ class Cl
 
     private
 
-      def validate(opts)
+      def validate(cmd, opts)
+        validate_requireds(cmd, opts)
         validate_required(opts)
         validate_requires(opts)
         validate_max(opts)
         validate_format(opts)
         validate_enum(opts)
+      end
+
+      def validate_requireds(cmd, opts)
+        opts = missing_requireds(cmd, opts)
+        raise RequiredsOpts.new(opts) if opts.any?
       end
 
       def validate_required(opts)
@@ -86,6 +92,12 @@ class Cl
       def validate_enum(opts)
         opts = unknown_values(opts)
         raise UnknownValues.new(opts) if opts.any?
+      end
+
+      def missing_requireds(cmd, opts)
+        opts = cmd.class.required.map do |alts|
+          alts if alts.none? { |alt| Array(alt).all? { |key| opts.key?(key) } }
+        end.compact
       end
 
       def missing_required(opts)

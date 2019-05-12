@@ -73,9 +73,9 @@ class Cl
 
       def format_opts(obj)
         opts = []
-        opts << obj.type unless obj.type == :string
-        opts << 'required' if obj.required?
-        opts = "(#{opts.join(', ')})" if opts.any?
+        opts << "type: #{obj.type}"
+        opts << 'required: true' if obj.required?
+        opts = "(#{opts.join(', ')})" if obj.description && opts.any?
         opts = [obj.description, opts]
         opts.compact.join(' ')
       end

@@ -27,6 +27,13 @@ class Cl
   OptionError = Class.new(Error)
   RequiredOpts = Class.new(OptionError)
 
+  class RequiredsOpts < OptionError
+    def initialize(opts)
+      opts = opts.map { |alts| alts.map { |alt| Array(alt).join(' and ') }.join(' or ' ) }
+      super(:requires_opts, opts.join(', '))
+    end
+  end
+
   class RequiresOpts < OptionError
     def initialize(opts)
       msg = opts.size == 1 ? :requires_opt : :requires_opts

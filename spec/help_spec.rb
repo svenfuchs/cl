@@ -56,21 +56,21 @@ describe Cl, 'help' do
 
           Arguments:
 
-            foo               The foo (integer, required)
-            bar
-            baz
+            foo               The foo (type: integer, required: true)
+            bar               type: string
+            baz               type: string
 
           Options:
 
-            -a --aaa          the flag A
-            -b --bbb BBB      the value B
-               --ccc CCC      the extra C
+            -a --aaa          the flag A (type: flag)
+            -b --bbb BBB      the value B (type: string)
+               --ccc CCC      the extra C (type: string)
 
           Common Options:
 
-            -d --ddd DDD      the inherited D
-               --eee EEE      the inherited E
-               --help         Get help on this command
+            -d --ddd DDD      the inherited D (type: string)
+               --eee EEE      the inherited E (type: string)
+               --help         Get help on this command (type: flag)
 
           Summary:
 
@@ -135,12 +135,12 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaa aaa               The short A
+            -a --aaa aaa               The short A (type: string)
 
           Common Options:
 
-            --bbbbbbbbb bbbbbbbbb      The long B
-            --help                     Get help on this command
+            --bbbbbbbbb bbbbbbbbb      The long B (type: string)
+            --help                     Get help on this command (type: flag)
         str
       end
     end
@@ -171,12 +171,12 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaaaaaaaa aaaaaaaaa      The long A
+            -a --aaaaaaaaa aaaaaaaaa      The long A (type: string)
 
           Common Options:
 
-            --bbb bbb                     The short B
-            --help                        Get help on this command
+            --bbb bbb                     The short B (type: string)
+            --help                        Get help on this command (type: flag)
         str
       end
     end

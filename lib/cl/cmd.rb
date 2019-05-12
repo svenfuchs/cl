@@ -32,15 +32,6 @@ class Cl
         unregister
       end
 
-      def summary(summary = nil)
-        summary ? @summary = summary : @summary
-      end
-      alias purpose summary
-
-      def description(description = nil)
-        description ? @description = description : @description
-      end
-
       def args(*args)
         return @args ||= Args.new unless args.any?
         opts = args.last.is_a?(Hash) ? args.pop : {}
@@ -67,6 +58,19 @@ class Cl
       def default(name, value)
         defaults name => value
       end
+
+      def description(description = nil)
+        description ? @description = description : @description
+      end
+
+      def required(*required)
+        required.any? ? self.required << required : @required ||= []
+      end
+
+      def summary(summary = nil)
+        summary ? @summary = summary : @summary
+      end
+      alias purpose summary
 
       def underscore(string)
         string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').

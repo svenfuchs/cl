@@ -1,6 +1,23 @@
 describe Cl, 'opts' do
   let!(:const) { Class.new(Cl::Cmd, &opts).register(:cmd) }
 
+  describe 'opts.required' do
+    let(:opts) do
+      ->(*) do
+        required :one, [:two, :three]
+        opt '--one'
+        opt '--two'
+        opt '--three'
+      end
+    end
+
+    it { expect { cmd(%w(cmd --one)) }.to_not raise_error }
+    it { expect { cmd(%w(cmd --two --three)) }.to_not raise_error }
+    it { expect { cmd(%w(cmd)) }.to raise_error 'Missing options: one or two and three' }
+    it { expect { cmd(%w(cmd --two)) }.to raise_error 'Missing options: one or two and three' }
+    it { expect { cmd(%w(cmd --three)) }.to raise_error 'Missing options: one or two and three' }
+  end
+
   describe 'string' do
     let(:opts) { ->(*) { opt('-s', '--str STR', 'A str') } }
 

@@ -23,7 +23,7 @@ class Cl
     end
 
     def type
-      opts[:type]
+      opts[:type] || infer_type
     end
 
     def infer_type
