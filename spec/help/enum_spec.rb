@@ -6,7 +6,7 @@ describe Cl, 'help' do
   end
 
   describe 'enum' do
-    let(:opts) { ->(*) { opt '--aaa AAA', enum: %w(one two) } }
+    let(:opts) { ->(*) { opt '--aaa AAA', enum: ['one', /two/] } }
     let(:args) { ['a', '--help'] }
     before { run }
 
@@ -16,7 +16,7 @@ describe Cl, 'help' do
 
         Options:
 
-          --aaa AAA      type: string, known values: one, two
+          --aaa AAA      type: string, known values: one, /two/
           --help         Get help on this command (type: flag)
       str
     end

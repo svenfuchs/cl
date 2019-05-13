@@ -6,7 +6,7 @@
 
 * Add config, reading from env vars and yml files (inspired by gem-release)
 * Add `abstract` in order to signal a cmd is a base class that is not meant to be executed
-* Add `required :one, [:two, :three]` (DNF, i.e: either :one or both :two and :three must be given)
+* Add `required :one, [:two, :three]` (DNF, i.e: either `:one` or both `:two` and `:three` must be given)
 * Add `opt '--one STR', type: :array` for options that can be given multiple times
 * Add `opt '--one STR', default: 'one'`
 * Add `opt '--one STR', requires :two` or `[:two, :three]` for options that depend on other options

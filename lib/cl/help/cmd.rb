@@ -4,6 +4,8 @@ require 'cl/help/usage'
 class Cl
   class Help
     class Cmd
+      include Regex
+
       attr_reader :cmd
 
       def initialize(cmd)
@@ -100,7 +102,7 @@ class Cl
         opts << "alias: #{format_aliases(opt)}" if opt.aliases?
         opts << "requires: #{opt.requires.join(', ')}" if opt.requires?
         opts << "default: #{format_default(opt)}" if opt.default?
-        opts << "known values: #{opt.enum.join(', ')}" if opt.enum?
+        opts << "known values: #{format_enum(opt)}" if opt.enum?
         opts << "format: #{opt.format}" if opt.format?
         opts << "downcase: true" if opt.downcase?
         opts << "max: #{opt.max}" if opt.max?
@@ -118,6 +120,9 @@ class Cl
         end.join(', ')
       end
 
+      def format_enum(opt)
+        opt.enum.map { |value| format_regex(value) }.join(', ')
+      end
 
       def format_type(obj)
         return obj.type unless obj.is_a?(Opt) && obj.type == :array
