@@ -2,13 +2,18 @@ dist: trusty
 
 
 rvm:
-  - 2.0
-  - 2.1
-  - 2.2
-  - 2.3
-  - 2.4
-  - 2.5
-  - 2.6
+  - 2.0.0
+  - 2.1.10
+  - 2.2.10
+  - 2.3.8
+  - 2.4.5
+  - 2.5.5
+  - 2.6.2
+  - 2.7.0-dev
+
+matrix:
+  allow_failures:
+    - rvm: 2.7.0-dev
 
 before_install: rvm list
 script: bundle exec rspec
