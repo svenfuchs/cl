@@ -20,7 +20,7 @@ class Cl
 
     def define(const)
       return unless __key__ = name
-      const.include Module.new {
+      const.send :include, Module.new {
         define_method (__key__) { opts[__key__] }
         define_method (:"#{__key__}?") { !!opts[__key__] }
       }
