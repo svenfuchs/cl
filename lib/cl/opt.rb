@@ -30,7 +30,7 @@ class Cl
       return @name if instance_variable_defined?(:@name)
       opt = strs.detect { |str| str.start_with?('--') }
       name = opt.split(' ').first.match(OPT)[1] if opt
-      @name = name&.sub('-', '_')&.to_sym
+      @name = name.sub('-', '_').to_sym if name
     end
 
     def type
