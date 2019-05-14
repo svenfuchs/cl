@@ -10,7 +10,7 @@ describe Cl, 'help' do
       before { run }
 
       it do
-        expect(ctx.stdout.string).to eq <<~str
+        expect(ctx.stdout.string).to eq unindent(<<-str)
          Type "rspec help COMMAND [SUBCOMMAND]" for more details:
 
          [no commands]

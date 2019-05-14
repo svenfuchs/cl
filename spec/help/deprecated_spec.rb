@@ -12,7 +12,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', deprecated: 'msg' } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:
@@ -27,7 +27,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', alias: :bbb, deprecated: :bbb } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:

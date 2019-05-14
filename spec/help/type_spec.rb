@@ -13,7 +13,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', type: :int } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:
@@ -28,7 +28,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', type: :array } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:

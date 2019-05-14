@@ -38,7 +38,7 @@ describe Cl, 'help' do
       let(:args) { ['help'] }
 
       it do
-        expect(ctx.stdout.string).to eq <<~str
+        expect(ctx.stdout.string).to eq unindent(<<-str)
          Type "rspec help COMMAND [SUBCOMMAND]" for more details:
 
          rspec test a foo:int [bar] [baz] [options]         Use this to a the a
@@ -51,7 +51,7 @@ describe Cl, 'help' do
       let(:args) { ['test', 'a', '--help'] }
 
       it do
-        expect(ctx.stdout.string).to eq <<~str
+        expect(ctx.stdout.string).to eq unindent(<<-str)
           Usage: rspec test a foo:int [bar] [baz] [options]
 
           Arguments:
