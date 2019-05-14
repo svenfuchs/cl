@@ -1,11 +1,10 @@
-require 'cl/options'
-
-module Cl
+class Cl
   module Runner
     class Multi
-      attr_reader :cmds
+      attr_reader :name, :cmds
 
-      def initialize(*args)
+      def initialize(name, *args)
+        @name = name
         @cmds = build(group(args))
       end
 
@@ -17,7 +16,7 @@ module Cl
 
         def group(args, cmds = [])
           args.flatten.map(&:to_s).inject([[]]) do |cmds, arg|
-            cmd = Cl[arg]
+            cmd = Cmd.registered?(arg) ? Cmd[arg] : nil
             cmd ? cmds << [cmd] : cmds.last << arg
             cmds.reject(&:empty?)
           end
@@ -25,7 +24,7 @@ module Cl
 
         def build(cmds)
           cmds.map do |(cmd, *args)|
-            cmd.new(args, Options.new(cmd.opts, args).opts)
+            cmd.new(name, args)
           end
         end
     end

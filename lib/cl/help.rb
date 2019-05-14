@@ -1,33 +1,31 @@
-require 'cl/format/cmd'
-require 'cl/format/list'
-
-module Cl
+class Cl
   class Help < Cl::Cmd
     register :help
 
     def run
-      puts help
+      ctx.puts help
     end
 
     def help
-      cmd ? Format::Cmd.new(cmd).format : Format::List.new(cmds).format
+      args.any? ? Cmd.new(cmd).format : Cmds.new(cmds).format
     end
 
     private
 
       def cmds
-        cmds = Cl.cmds.reject { |cmd| cmd.registry_key == :help }
+        cmds = Cl::Cmd.cmds.reject { |cmd| cmd.registry_key == :help }
         key  = args.join(':') if args
         cmds = cmds.select { |cmd| cmd.registry_key.to_s.start_with?(key) } if key
         cmds
       end
 
       def cmd
-        args.inject([[], []]) do |(args, cmds), arg|
-          args << arg
-          cmds << Cl[args.join(':')]
-          [args, cmds.compact]
-        end.last.last
+        key = args.join(':')
+        return Cl::Cmd[key] if Cl::Cmd.registered?(key)
+        ctx.abort("Unknown command: #{key}")
       end
   end
 end
+
+require 'cl/help/cmd'
+require 'cl/help/cmds'

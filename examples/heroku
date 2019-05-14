@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+module Heroku
+  module Apps
+    class Create < Cl::Cmd
+      register 'apps:create'
+
+      arg :name, required: true
+
+      opt '-o', '--org ORG'
+
+      def run; [registry_key, args, opts] end
+    end
+
+    class List < Cl::Cmd
+      register 'apps:info'
+
+      opt '-a', '--app APP'
+
+      def run; [registry_key, args, opts] end
+    end
+  end
+end
+
+def output(cmd, args, opts)
+  puts "Called #{cmd} with args=#{args} opts=#{opts}\n\n"
+end
+
+output *Cl.new($0).run(%w(apps:create name -o org))
+
+# Output:
+#
+#   Called apps:create with args=["name"] opts={:org=>"org"}
+
+output *Cl.new($0).run(%w(apps create name -o org))
+
+# Output:
+#
+#   Called apps:create with args=["name"] opts={:org=>"org"}
+
+output *Cl.new($0).run(%w(apps:info -a app))
+
+# Output:
+#
+#   Called apps:create with args=["app"] opts={}
+

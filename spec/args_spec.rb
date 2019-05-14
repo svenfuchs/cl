@@ -1,59 +1,60 @@
 describe Cl, 'args' do
-  before do
-    module Cmds
-      module Args
-        class Foo < Cl::Cmd
-          register 'args:foo'
-          arg :a, required: true
-          arg :b
-        end
-
-        class Bar < Cl::Cmd
-          register 'args:bar'
-          arg :a, type: :array
-          arg :b, type: :bool
-          arg :c, type: :int
-          arg :d, type: :float
-        end
-
-        class Baz < Cl::Cmd
-          register 'args:baz'
-          arg :a, type: :array
-          arg :b
-          arg :c
-        end
-
-        class Buz < Cl::Cmd
-          register 'args:buz'
-          arg :a
-          arg :b, type: :array
-          arg :c
-        end
-
-        class Bum < Cl::Cmd
-          register 'args:bum'
-          arg :a
-          arg :b
-          arg :c, type: :array
-        end
-      end
+  let!(:foo) do
+    Class.new(Cl::Cmd) do
+      register 'args:foo'
+      arg :a, required: true
+      arg :b
     end
   end
 
-  after { Cmds.send(:remove_const, :Args) }
+  let!(:bar) do
+    Class.new(Cl::Cmd) do
+      register 'args:bar'
+      arg :a, type: :array
+      arg :b, type: :bool
+      arg :c, type: :int
+      arg :d, type: :float
+    end
+  end
 
-  let(:cl)   { Cl.runner(args) }
-  let(:cmd)  { cl.cmd }
+  let!(:baz) do
+    Class.new(Cl::Cmd) do
+      register 'args:baz'
+      arg :a, type: :array
+      arg :b
+      arg :c
+    end
+  end
+
+  let!(:buz) do
+    Class.new(Cl::Cmd) do
+      register 'args:buz'
+      arg :a
+      arg :b, type: :array
+      arg :c
+    end
+  end
+
+  let!(:bum) do
+    Class.new(Cl::Cmd) do
+      register 'args:bum'
+      arg :a
+      arg :b
+      arg :c, type: :array
+    end
+  end
 
   describe 'defines argument accessors' do
     let(:args) { %w(args foo 1 2) }
-    it { expect(cl.args).to eq %w(1 2) }
+    it { expect(runner.args).to eq %w(1 2) }
+    it { expect(cmd).to be_a foo }
     it { expect(cmd.a).to eq '1' }
     it { expect(cmd.b).to eq '2' }
   end
 
   describe 'casts' do
     let(:args) { %w(args bar a,b,c true 1 1.2) }
+    it { expect(cmd).to be_a bar }
     it { expect(cmd.a).to eq %w(a b c) }
     it { expect(cmd.b).to eq true }
     it { expect(cmd.c).to eq 1 }
@@ -62,6 +63,7 @@ describe Cl, 'args' do
 
   describe 'splats (left)' do
     let(:args) { %w(args baz a b c d e) }
+    it { expect(cmd).to be_a baz }
     it { expect(cmd.a).to eq %w(a b c) }
     it { expect(cmd.b).to eq 'd' }
     it { expect(cmd.c).to eq 'e' }
@@ -69,6 +71,7 @@ describe Cl, 'args' do
 
   describe 'splats (middle)' do
     let(:args) { %w(args buz a b c d e) }
+    it { expect(cmd).to be_a buz }
     it { expect(cmd.a).to eq 'a' }
     it { expect(cmd.b).to eq %w(b c d) }
     it { expect(cmd.c).to eq 'e' }
@@ -76,12 +79,13 @@ describe Cl, 'args' do
 
   describe 'splats (right)' do
     let(:args) { %w(args bum a b c d e) }
+    it { expect(cmd).to be_a bum }
     it { expect(cmd.a).to eq 'a' }
     it { expect(cmd.b).to eq 'b' }
     it { expect(cmd.c).to eq %w(c d e) }
   end
 
-  describe 'raises on arguments missing' do
+  describe 'raises on missing arguments' do
     let(:args) { %w(args foo) }
     it { expect { cmd }.to raise_error(Cl::ArgumentError, 'Missing arguments (given: 0, required: 1)') }
   end

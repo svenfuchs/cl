@@ -1,13 +1,35 @@
+require 'registry'
 require 'cl/args'
-require 'cl/registry'
+require 'cl/helper'
+require 'cl/opts'
+# require 'cl/registry'
 
-module Cl
-  class Cmd < Struct.new(:args, :opts)
+class Cl
+  class Cmd
     include Registry
 
     class << self
-      def inherited(cmd)
-        cmd.register underscore(cmd.name.split('::').last)
+      include Merge
+
+      inherited = ->(const) do
+        const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
+        const.define_singleton_method(:inherited, &inherited)
+      end
+
+      define_method(:inherited, &inherited)
+
+      def cmds
+        registry.values
+      end
+
+      def parse(ctx, args)
+        opts = Parser.new(self.opts, args).opts unless self == Help
+        opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
+        [args, opts || {}]
+      end
+
+      def abstract
+        unregister
       end
 
       def args(*args)
@@ -16,21 +38,34 @@ module Cl
         args.each { |arg| arg(arg, opts) }
       end
 
-      def arg(name, opts = {})
-        args.define(self, name, opts)
-      end
-
-      def purpose(purpose = nil)
-        purpose ? @purpose = purpose : @purpose
+      def arg(*args)
+        self.args.define(self, *args)
       end
 
       def opt(*args, &block)
-        opts << [args, block]
+        self.opts.define(self, *args, &block)
       end
 
       def opts
-        @opts ||= superclass != Cmd && superclass.respond_to?(:opts) ? superclass.opts.dup : []
+        @opts ||= self == Cmd ? Opts.new : superclass.opts.dup
       end
+
+      def description(description = nil)
+        description ? @description = description : @description
+      end
+
+      def required?
+        !!@required
+      end
+
+      def required(*required)
+        required.any? ? self.required << required : @required ||= []
+      end
+
+      def summary(summary = nil)
+        summary ? @summary = summary : @summary
+      end
+      alias purpose summary
 
       def underscore(string)
         string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
@@ -39,10 +74,25 @@ module Cl
       end
     end
 
-    def initialize(args, opts)
-      args = self.class.args.apply(self, args)
-      opts = self.class::OPTS.merge(opts) if self.class.const_defined?(:OPTS)
-      super
+    opt '--help', 'Get help on this command'
+
+    attr_reader :ctx, :args
+
+    def initialize(ctx, args)
+      args, opts = self.class.parse(ctx, args)
+      @ctx = ctx
+      @opts = self.class.opts.apply(self, self.opts.merge(opts))
+      @args = self.class.args.apply(self, args, opts)
+    end
+
+    def opts
+      @opts ||= {}
+    end
+
+    def deprecated_opts
+      opts = self.class.opts.select(&:deprecated?)
+      opts = opts.select { |opt| self.opts.key?(opt.deprecated[0]) }
+      opts.map(&:deprecated)
     end
   end
 end

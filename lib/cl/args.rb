@@ -1,17 +1,20 @@
 require 'cl/arg'
 
-module Cl
+class Cl
   class Args
     include Enumerable
 
-    def define(const, name, opts = {})
+    def define(const, name, *args)
+      opts = args.last.is_a?(Hash) ? args.pop.dup : {}
+      opts[:description] = args.shift if args.any?
+
       arg = Arg.new(name, opts)
       arg.define(const)
-      args << arg
+      self.args << arg
     end
 
-    def apply(cmd, args)
-      return args unless self.args.any?
+    def apply(cmd, args, opts)
+      return args if self.args.empty? || opts[:help]
       args = grouped(args)
       validate(args)
       args.map { |(arg, value)| arg.set(cmd, value) }.flatten(1)
@@ -41,11 +44,11 @@ module Cl
       end
 
       def splat?
-        args.any?(&:splat?)
+        any?(&:splat?)
       end
 
       def required
-        args.select { |arg| arg.required? }.size
+        select(&:required?).size
       end
 
       def grouped(values)

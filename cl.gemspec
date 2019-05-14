@@ -15,4 +15,6 @@ Gem::Specification.new do |s|
   s.files        = Dir.glob('{examples/**/*,lib/**/*,[A-Z]*}')
   s.platform     = Gem::Platform::RUBY
   s.require_path = 'lib'
+
+  s.add_dependency 'regstry', '~> 1.0.3'
 end

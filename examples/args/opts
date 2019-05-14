@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Opts < Cl::Cmd
+  opt '-p', '--path PATH'
+  opt '-v', '--verbose'
+
+  def run
+    [registry_key, args, opts]
+  end
+end
+
+def output(cmd, args, opts)
+  puts "Called #{cmd} with args=#{args} opts=#{opts}\n\n"
+end
+
+output *Cl.new($0).run(%w(opts -p path -v))
+
+# Output:
+#
+#   Called cast with args=[] opts={:path=>"path", :verbose=>true}
+
+output *Cl.new($0).run(%w(opts --path path --verbose))
+
+# Output:
+#
+#   Called cast with args=[] opts={:path=>"path", :verbose=>true}
+
+output *Cl.new($0).run(%w(opts one -p path two -v three))
+
+# Output:
+#
+#   Called cast with args=["one", "two", "three"] opts={:path=>"path", :verbose=>true}
+

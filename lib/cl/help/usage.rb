@@ -1,9 +1,15 @@
-module Cl
-  class Format
-    class Usage < Struct.new(:cmd)
+class Cl
+  class Help
+    class Usage
+      attr_reader :cmd
+
+      def initialize(cmd)
+        @cmd = cmd
+      end
+
       def format
         usage = [$0.split('/').last, name]
-        usage += cmd.args.map(&:to_s)
+        usage += cmd.args.map(&:to_s) # { |arg| "[#{arg}]" }
         usage << '[options]' if opts?
         usage.join(' ')
       end
