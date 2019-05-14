@@ -1,5 +1,4 @@
-dist: trusty
-
+language: ruby
 
 rvm:
   - 2.0.0
@@ -9,11 +8,5 @@ rvm:
   - 2.4.5
   - 2.5.5
   - 2.6.2
-  - 2.7.0-dev
 
-matrix:
-  allow_failures:
-    - rvm: 2.7.0-dev
-
-before_install: rvm list
 script: bundle exec rspec
