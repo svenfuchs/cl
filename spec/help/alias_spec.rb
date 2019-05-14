@@ -14,7 +14,7 @@ describe Cl, 'help' do
     before { run }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:

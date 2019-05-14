@@ -15,5 +15,10 @@ module Support
     def run
       runner.run
     end
+
+    def unindent(str)
+      width = str =~ /( *)\S/ && $1.size
+      str.lines.map { |line| line.gsub(/^ {#{width}}/, '') }.join
+    end
   end
 end

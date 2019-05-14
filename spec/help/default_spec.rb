@@ -12,7 +12,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', default: 'str' } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:
@@ -27,7 +27,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa AAA', default: :foo_bar } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:
@@ -42,7 +42,7 @@ describe Cl, 'help' do
     let(:opts) { ->(*) { opt '--aaa', default: true } }
 
     it do
-      expect(ctx.stdout.string).to eq <<~str
+      expect(ctx.stdout.string).to eq unindent(<<-str)
         Usage: rspec a [options]
 
         Options:

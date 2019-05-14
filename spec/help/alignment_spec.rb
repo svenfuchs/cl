@@ -19,7 +19,7 @@ describe Cl, 'help' do
       let(:args) { ['help', 'test:a'] }
 
       it do
-        expect(ctx.stdout.string).to eq <<~str
+        expect(ctx.stdout.string).to eq unindent(<<-str)
           Usage: rspec test a [options]
 
           Options:
@@ -55,7 +55,7 @@ describe Cl, 'help' do
       let(:args) { ['help', 'test:a'] }
 
       it do
-        expect(ctx.stdout.string).to eq <<~str
+        expect(ctx.stdout.string).to eq unindent(<<-str)
           Usage: rspec test a [options]
 
           Options:
