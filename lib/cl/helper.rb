@@ -27,3 +27,11 @@ class Cl
 
   extend Merge, Regex, Wrap
 end
+
+if RUBY_VERSION == '2.0.0'
+  Array.class_eval do
+    def to_h
+      Hash[self]
+    end
+  end
+end
