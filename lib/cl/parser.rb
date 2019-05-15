@@ -9,7 +9,7 @@ class Cl
 
       super do
         opts.each do |opt|
-          on(*opt.strs) do |value|
+          on(*underscore!(opt.strs)) do |value|
             set(opt, value)
           end
 
@@ -21,6 +21,7 @@ class Cl
         end
       end
 
+      underscore!(args)
       parse!(args)
     end
 
@@ -34,6 +35,17 @@ class Cl
       args = [opts, opt.type, opt.name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
+    end
+
+    # OptionParser has started accepting dasherized options in 2.4.
+    # We want to support them on any Ruby >= 2.0 version, so we'll
+    # need to normalize things ourselves.
+
+    PATTERN = /^(-{1,2})(\[?no-\]?)?(.*)$/
+
+    def underscore!(strs)
+      return strs if RUBY_VERSION >= '2.4'
+      strs.each { |str| str.gsub!(PATTERN) { "#{$1}#{$2}#{$3.tr('-', '_')}" } }
     end
   end
 end
