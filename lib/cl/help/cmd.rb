@@ -54,6 +54,7 @@ class Cl
       def opts
         @opts ||= begin
           opts = cmd.opts.to_a
+          opts = opts.reject(&:internal?)
           opts = opts - cmd.superclass.opts.to_a if common?
           strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
           opts = opts.map { |opt| format_obj(opt) }

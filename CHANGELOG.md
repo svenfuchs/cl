@@ -17,6 +17,7 @@
 * Add `opt '--one STR', format: /.+/`
 * Add `opt '--one STR', enum: ['one', /\w+/]`
 * Add `opt '--one STR', downcase: true`
+* Add `opt '--one STR', internal: true`, hide internal options from help output
 * Add `opt '--one STR', example: 'foo'`
 * Add `opt '--one STR', see: 'https://provider.com/docs'
 

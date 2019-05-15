@@ -108,6 +108,13 @@ describe Cl, 'opts' do
     it { expect { cmd(%w(cmd --one two)) }.to raise_error 'Invalid format: one (format: /^one$/)' }
   end
 
+  describe 'string, internal' do
+    let(:opts) { ->(*) { opt('--one STR', internal: true) } }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(const.opts[:one]).to be_internal }
+  end
+
   describe 'string, required' do
     let(:opts) { ->(*) { opt('--str STR', required: true) } }
 

@@ -115,6 +115,10 @@ class Cl
       opts[:format] =~ value
     end
 
+    def internal?
+      !!opts[:internal]
+    end
+
     def max?
       int? && !!opts[:max]
     end
