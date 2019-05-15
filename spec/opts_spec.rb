@@ -218,6 +218,16 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd -f)).opts[:unflag]).to be false }
   end
 
+  describe 'dashed opts' do
+    let(:opts) { ->(*) { opt('--one_two') } }
+
+    it { expect(cmd(%w(cmd --one_two)).opts[:one_two]).to be true }
+    it { expect(cmd(%w(cmd --one_two)).one_two?).to be true }
+
+    it { expect(cmd(%w(cmd --one-two)).opts[:one_two]).to be true }
+    it { expect(cmd(%w(cmd --one-two)).one_two?).to be true }
+  end
+
   # describe 'casts' do
   #   let(:args) { %w(args bar a,b,c true 1 1.2) }
   #   it { expect(cmd).to be_a bar }
