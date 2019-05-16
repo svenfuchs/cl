@@ -65,6 +65,7 @@ class Cl
       def cmmn
         @cmmn ||= begin
           opts = cmd.superclass.opts
+          opts = opts.reject(&:internal?)
           strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
           opts = opts.map { |opt| format_obj(opt) }
           Table.new(strs.rows.zip(opts))

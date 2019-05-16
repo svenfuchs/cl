@@ -2,7 +2,7 @@ require 'registry'
 require 'cl/args'
 require 'cl/helper'
 require 'cl/opts'
-# require 'cl/registry'
+require 'cl/parser'
 
 class Cl
   class Cmd

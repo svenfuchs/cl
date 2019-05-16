@@ -1,6 +1,5 @@
 require 'forwardable'
 require 'cl/ctx'
-require 'cl/parser'
 require 'cl/helper'
 
 class Cl
@@ -16,7 +15,6 @@ class Cl
       def initialize(ctx, args)
         @ctx = ctx
         @const, @args = lookup(args)
-        # @opts, @args = parse(args)
       end
 
       def run
