@@ -34,24 +34,17 @@ class Cl
       private
 
         def lookup(args)
-          keys = expand(args) & Cmd.registry.keys.map(&:to_s)
-          cmd = Cmd[keys.last] || abort("Unknown command: #{args.join(' ')}")
-          [cmd, args - keys(cmd)]
+          keys = expand(args)
+          keys = keys & Cmd.registry.keys.map(&:to_s)
+          cmd  = Cmd[keys.last] || abort("Unknown command: #{args.join(' ')}")
+          args = args[keys.last.split(':').size..-1]
+          [cmd, args]
         end
 
-        def name
-          const.registry_key
-        end
-
-        def keys(cmd)
-          keys = cmd.registry_key.to_s.split(':')
-          keys.concat(expand(keys)).uniq
-        end
-
-        def expand(strs)
-          # strs = strs.reject { |str| str.start_with?('-') }
-          strs = strs.take_while { |str| !str.start_with?('-') }
-          strs.inject([]) { |strs, str| strs << [strs.last, str].compact.join(':') }
+        def expand(args)
+          keys = args.take_while { |str| !str.start_with?('-') }
+          args = args[keys.size..-1]
+          keys.inject([]) { |strs, str| strs << [strs.last, str].compact.join(':') }
         end
     end
   end
