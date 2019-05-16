@@ -73,7 +73,7 @@ class Cl
   end
 
   def run(args)
-    runner(args).run
+    runner(args.map(&:dup)).run
   rescue Error => e
     abort [e.message, runner(['help', args.first]).cmd.help].join("\n\n")
   end
