@@ -31,18 +31,21 @@ class Cl
 
       private
 
+        # stopping at any arg that starts with a dash, find the command
+        # with the key matching the most args when joined with ":", and
+        # remove these used args from the array
         def lookup(args)
-          keys = expand(args)
-          keys = keys & Cmd.registry.keys.map(&:to_s)
-          cmd  = Cmd[keys.last] || abort("Unknown command: #{args.join(' ')}")
-          args = args[keys.last.split(':').size..-1]
-          [cmd, args]
-        end
+          keys = args.take_while { |key| !key.start_with?('-') }
 
-        def expand(args)
-          keys = args.take_while { |str| !str.start_with?('-') }
-          args = args[keys.size..-1]
-          keys.inject([]) { |strs, str| strs << [strs.last, str].compact.join(':') }
+          keys = keys.inject([[], []]) do |keys, key|
+            keys[1] << key
+            keys[0] << [Cmd[keys[1].join(':')], keys[1].dup] if Cmd.registered?(keys[1].join(':'))
+            keys
+          end
+
+          cmd, keys = keys[0].last
+          keys.each { |key| args.delete_at(args.index(key)) }
+          [cmd, args]
         end
     end
   end
