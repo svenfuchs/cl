@@ -3,10 +3,10 @@ class Cl
     class Multi
       Runner.register :multi, self
 
-      attr_reader :name, :cmds
+      attr_reader :ctx, :cmds
 
-      def initialize(name, *args)
-        @name = name
+      def initialize(ctx, *args)
+        @ctx = ctx
         @cmds = build(group(args))
       end
 
@@ -26,7 +26,7 @@ class Cl
 
         def build(cmds)
           cmds.map do |(cmd, *args)|
-            cmd.new(name, args)
+            cmd.new(ctx, args)
           end
         end
     end
