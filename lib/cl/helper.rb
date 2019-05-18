@@ -25,6 +25,14 @@ class Cl
     end
   end
 
+  module Underscore
+    def underscore(string)
+      string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+      gsub(/([a-z\d])([A-Z])/,'\1_\2').
+      downcase
+    end
+  end
+
   extend Merge, Regex, Wrap
 end
 

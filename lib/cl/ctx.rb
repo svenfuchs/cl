@@ -13,13 +13,11 @@ class Cl
 
     def initialize(name, opts = {})
       @config = Config.new(name).to_h
-      @ui = Ui.new(self, opts)
+      @ui = opts[:ui] || Ui.new(self, opts)
     end
 
-    def abort(str)
-      fail(str) if test?
-      ui.error(str)
-      exit 1
+    def abort(error, *strs)
+      ui.abort(error, *strs)
     end
 
     def test?

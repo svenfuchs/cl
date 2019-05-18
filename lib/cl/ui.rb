@@ -17,8 +17,13 @@ class Cl
         @stdout ||= opts[:stdout] || $stdout
       end
 
-      def puts(*str)
-        stdout.puts(*str)
+      def puts(*strs)
+        stdout.puts(*strs)
+      end
+
+      def abort(error, *strs)
+        self.error [error.message, *strs].join("\n\n")
+        exit 1
       end
     end
 
@@ -37,6 +42,10 @@ class Cl
 
       def stdout
         @stdout ||= StringIO.new
+      end
+
+      def abort(error, *strs)
+        raise error
       end
     end
 

@@ -1,65 +1,29 @@
 require 'registry'
 require 'cl/args'
-require 'cl/helper'
+require 'cl/dsl'
 require 'cl/opts'
 require 'cl/parser'
 
 class Cl
+  # Base class for all command classes that can be run.
+  #
+  # Inherit your command classes from this class, use the {Cl::Cmd::Dsl} to
+  # declare arguments, options, summary, description, examples etc., and
+  # implement the method #run.
+  #
+  # See {Cl::Cmd::Dsl} for details on the DSL methods.
   class Cmd
     include Registry
+    extend Dsl
 
     class << self
-      include Merge
+      include Merge, Underscore
 
       inherited = ->(const) do
         const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
         const.define_singleton_method(:inherited, &inherited)
       end
-
       define_method(:inherited, &inherited)
-
-      def args(*args)
-        return @args ||= Args.new unless args.any?
-        opts = args.last.is_a?(Hash) ? args.pop : {}
-        args.each { |arg| arg(arg, opts) }
-      end
-
-      def arg(*args)
-        self.args.define(self, *args)
-      end
-
-      def opt(*args, &block)
-        self.opts.define(self, *args, &block)
-      end
-
-      def opts
-        @opts ||= self == Cmd ? Opts.new : superclass.opts.dup
-      end
-
-      def abstract
-        unregister
-      end
-
-      def description(description = nil)
-        description ? @description = description : @description
-      end
-
-      def examples(examples = nil)
-        examples ? @examples = examples : @examples
-      end
-
-      def required?
-        !!@required
-      end
-
-      def required(*required)
-        required.any? ? self.required << required : @required ||= []
-      end
-
-      def summary(summary = nil)
-        summary ? @summary = summary : @summary
-      end
-      alias purpose summary
 
       def cmds
         registry.values
@@ -69,12 +33,6 @@ class Cl
         opts = Parser.new(self.opts, args).opts unless self == Help
         opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
         [args, opts || {}]
-      end
-
-      def underscore(string)
-        string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        downcase
       end
     end
 

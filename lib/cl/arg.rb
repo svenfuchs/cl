@@ -20,16 +20,16 @@ class Cl
       opts[:description]
     end
 
+    def required?
+      !!opts[:required]
+    end
+
     def separator
       opts[:sep]
     end
 
     def splat?
       opts[:splat] && type == :array
-    end
-
-    def required?
-      !!opts[:required]
     end
 
     def to_s

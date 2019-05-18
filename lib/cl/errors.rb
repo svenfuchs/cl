@@ -22,6 +22,12 @@ class Cl
   ArgumentError = Class.new(Error)
   OptionError = Class.new(Error)
 
+  class UnknownCmd < Error
+    def initialize(args)
+      super(:unknown_cmd, args.join(' '))
+    end
+  end
+
   class RequiredOpts < OptionError
     def initialize(opts)
       msg = opts.size == 1 ? :required_opt : :required_opts
