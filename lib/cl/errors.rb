@@ -20,7 +20,13 @@ class Cl
 
   ArgumentError = Class.new(Error)
   OptionError = Class.new(Error)
-  RequiredOpts = Class.new(OptionError)
+
+  class RequiredOpts < OptionError
+    def initialize(opts)
+      msg = opts.size == 1 ? :required_opt : :required_opts
+      super(msg, opts.join(', '))
+    end
+  end
 
   class RequiredsOpts < OptionError
     def initialize(opts)
