@@ -1,4 +1,4 @@
-describe Cl, 'default' do
+describe Cl, 'inheriting opts' do
   let!(:a) do
     Class.new(Cl::Cmd) do
       register 'a'
