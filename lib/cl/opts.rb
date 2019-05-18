@@ -65,7 +65,7 @@ class Cl
         validate_requireds(cmd, opts)
         validate_required(opts)
         validate_requires(opts)
-        validate_max(opts)
+        validate_range(opts)
         validate_format(opts)
         validate_enum(opts)
       end
@@ -86,9 +86,9 @@ class Cl
         raise RequiresOpts.new(invert(opts)) if opts.any?
       end
 
-      def validate_max(opts)
-        opts = exceeding_max(opts)
-        raise ExceedingMax.new(opts) if opts.any?
+      def validate_range(opts)
+        opts = out_of_range(opts)
+        raise OutOfRange.new(opts) if opts.any?
       end
 
       def validate_format(opts)
@@ -119,11 +119,17 @@ class Cl
         end.compact
       end
 
-      def exceeding_max(opts)
-        select(&:max?).map do |opt|
-          value = opts[opt.name]
-          [opt.name, opt.max] if value && value > opt.max
+      def out_of_range(opts)
+        self.opts.map do |opt|
+          next unless value = opts[opt.name]
+          range = only(opt.opts, :min, :max)
+          [opt.name, compact(range)] if out_of_range?(range, value)
         end.compact
+      end
+
+      def out_of_range?(range, value)
+        min, max = range.values_at(:min, :max)
+        min && value < min || max && value > max
       end
 
       def invalid_format(opts)
@@ -166,6 +172,14 @@ class Cl
         opts.map do |key, value|
           [key, self[key] ? self[key].cast(value) : value]
         end.to_h
+      end
+
+      def compact(hash, *keys)
+        hash.reject { |_, value| value.nil? }.to_h
+      end
+
+      def only(hash, *keys)
+        hash.select { |key, _| keys.include?(key) }.to_h
       end
 
       def invert(hash)

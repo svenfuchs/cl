@@ -13,7 +13,7 @@ class Cl
       end
 
       def format
-        [usage, summary, description, arguments, options, common].compact.join("\n\n")
+        [usage, summary, description, arguments, options, common, examples].compact.join("\n\n")
       end
 
       def usage
@@ -38,6 +38,10 @@ class Cl
 
       def common
         ['Common Options:', table(:cmmn)] if common?
+      end
+
+      def examples
+        ['Examples:', indent(cmd.examples)] if cmd.examples
       end
 
       def table(name)
@@ -107,6 +111,7 @@ class Cl
         opts << "known values: #{format_enum(opt)}" if opt.enum?
         opts << "format: #{opt.format}" if opt.format?
         opts << "downcase: true" if opt.downcase?
+        opts << "min: #{opt.min}" if opt.min?
         opts << "max: #{opt.max}" if opt.max?
         opts << "e.g.: #{opt.example}" if opt.example?
         opts << "see: #{opt.see}" if opt.see?

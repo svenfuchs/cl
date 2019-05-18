@@ -4,9 +4,11 @@ This library wraps Ruby's `OptionParser` in order to make it easier to use it
 in an object oriented context.
 
 It uses `OptionParser` for parsing your options, so you get all the goodness that
-this true gem from Ruby's stoneage provides. But on top of that it also provides
-a rich DSL for defining, validating, and normalizing options, and automatic and
-gorgeous help output (modelled after Rubygem's `gem --help` output).
+this gem from Ruby's stoneage provides.
+
+But on top of that it also provides a rich DSL for defining, validating, and
+normalizing options, as well as automatic and gorgeous help output (modelled
+after Rubygem's `gem --help` output).
 
 ## Basic Usage
 
@@ -201,7 +203,7 @@ this command.
 For example:
 
 ```ruby
-<%= example('readme/see') %>
+<%= example('readme/range') %>
 ```
 
 #### See also
@@ -263,5 +265,12 @@ This requires either the option `--api_key` or both options `--username` and
 
 ### Config files and environment variables
 
-* Add config, reading from env vars and yml files (inspired by gem-release)
-* Add `abstract` in order to signal a cmd is a base class that is not meant to be executed
+TBD config, reading from env vars and yml files (inspired by gem-release)
+
+### Command registry
+
+TBD
+
+### Runners
+
+TBD

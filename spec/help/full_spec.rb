@@ -13,6 +13,7 @@ describe Cl, 'help' do
 
         summary 'Use this to a the a'
         description 'Description of the a'
+        examples 'Examples for using the a'
 
         arg :foo, 'The foo', required: true, type: :integer
         args :bar, :baz
@@ -79,6 +80,10 @@ describe Cl, 'help' do
             -d --ddd DDD      the inherited D (type: string)
                --eee EEE      the inherited E (type: string)
                --help         Get help on this command
+
+          Examples:
+
+            Examples for using the a
         str
       end
     end

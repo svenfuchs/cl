@@ -54,6 +54,10 @@ class Cl
         description ? @description = description : @description
       end
 
+      def examples(examples = nil)
+        examples ? @examples = examples : @examples
+      end
+
       def required?
         !!@required
       end

@@ -120,6 +120,14 @@ class Cl
       !!opts[:internal]
     end
 
+    def min?
+      int? && !!opts[:min]
+    end
+
+    def min
+      opts[:min]
+    end
+
     def max?
       int? && !!opts[:max]
     end
