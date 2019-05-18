@@ -135,6 +135,16 @@ For example:
 <%= example('readme/opts') %>
 ```
 
+Options optionally accept a block in case custom normalization is needed.
+
+Depending on the block's arity the following arguments are passed to the block:
+option value, option name, option type, collection of all options defined on
+the command.
+
+```ruby
+<%= example('readme/opts_block') %>
+```
+
 #### Aliases
 
 Options can have one or many alias names, given as a Symbol or Array of Symbols:

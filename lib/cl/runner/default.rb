@@ -5,6 +5,8 @@ require 'cl/helper'
 class Cl
   module Runner
     class Default
+      Runner.register :default, self
+
       extend Forwardable
       include Merge
 
@@ -31,7 +33,7 @@ class Cl
 
       private
 
-        # stopping at any arg that starts with a dash, find the command
+        # Stopping at any arg that starts with a dash, find the command
         # with the key matching the most args when joined with ":", and
         # remove these used args from the array
         def lookup(args)
@@ -44,6 +46,7 @@ class Cl
           end
 
           cmd, keys = keys[0].last
+          cmd || raise(Error.new(:unknown_cmd, args.join(' ')))
           keys.each { |key| args.delete_at(args.index(key)) }
           [cmd, args]
         end

@@ -1,7 +1,6 @@
 require 'cl/cmd'
 require 'cl/help'
-require 'cl/runner/default'
-require 'cl/runner/multi'
+require 'cl/runner'
 require 'cl/errors'
 
 class Cl
@@ -17,16 +16,16 @@ class Cl
   def run(args)
     runner(args.map(&:dup)).run
   rescue Error => e
-    abort [e.message, runner(['help', args.first]).cmd.help].join("\n\n")
+    abort [e.message, help(args.first)].join("\n\n")
   end
 
   def runner(args)
     runner = :default if args.first.to_s == 'help'
     runner ||= opts[:runner] || :default
-    Runner.const_get(runner.to_s.capitalize).new(ctx, args)
+    Runner[runner].new(ctx, args)
   end
 
-  # def help(*args)
-  #   runner(:help, *args).run
-  # end
+  def help(*args)
+    runner(['help', *args]).cmd.help
+  end
 end

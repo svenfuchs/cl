@@ -1,6 +1,7 @@
 class Cl
   class Error < StandardError
     MSGS = {
+      unknown_cmd:    'Unknown command: %s',
       missing_args:   'Missing arguments (given: %s, required: %s)',
       too_many_args:  'Too many arguments (given: %s, allowed: %s)',
       wrong_type:     'Wrong argument type (given: %s, expected: %s)',

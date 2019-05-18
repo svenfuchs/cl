@@ -5,7 +5,6 @@ describe Cl, 'multi' do
       arg :a, type: :int
       arg :b, type: :int
       opt('-c') { opts[:c] = true }
-      def run; [args, opts] end
     end
   end
 
@@ -14,7 +13,6 @@ describe Cl, 'multi' do
       register 'rakeish:bar'
       arg :d, type: :int
       opt('-e') { opts[:e] = true }
-      def run; [args, opts] end
     end
   end
 
@@ -23,11 +21,9 @@ describe Cl, 'multi' do
 
   it { expect(runner.cmds[0]).to be_a a }
   it { expect(runner.cmds[0].args).to eq [1, 2] }
-  it { expect(runner.run[0][0]).to eq [1, 2] }
-  it { expect(runner.run[0][1]).to eq c: true }
+  it { expect(runner.cmds[0].opts).to eq c: true }
 
   it { expect(runner.cmds[1]).to be_a b }
   it { expect(runner.cmds[1].args).to eq [3] }
-  it { expect(runner.run[1][0]).to eq [3] }
-  it { expect(runner.run[1][1]).to eq e: true }
+  it { expect(runner.cmds[1].opts).to eq e: true }
 end

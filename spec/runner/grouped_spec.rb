@@ -2,26 +2,32 @@ describe Cl, 'grouped' do
   let!(:a) do
     Class.new(Cl::Cmd) do
       register 'grouped:a'
-      opt('-z') { opts[:z] = true }
-      def run; [args, opts] end
+      opt('-a') { opts[:a] = true }
     end
   end
 
   let!(:b) do
     Class.new(Cl::Cmd) do
       register 'grouped:b'
-      opt('-a') { opts[:a] = true }
       opt('-b') { opts[:b] = true }
       opt('-c') { opts[:c] = true }
-      def run; [args, opts] end
+      opt('-d') { opts[:d] = true }
     end
   end
 
-  let(:args) { %w(grouped b c d -a -b -c) }
+  describe 'args (1)' do
+    let(:args) { %w(grouped a b c -a) }
+    it { expect(a.opts.map(&:first).flatten).to eq %w(-a --help) }
+    it { expect(cmd).to be_a a }
+    it { expect(cmd.args).to eq %w(b c) }
+    it { expect(cmd.opts).to eq a: true }
+  end
 
-  it { expect(b.opts.map(&:first).flatten).to eq %w(-a -b -c --help) }
-
-  it { expect(cmd).to be_a b }
-  it { expect(cmd.run[0]).to eq %w(c d) }
-  it { expect(cmd.run[1]).to eq a: true, b: true, c: true }
+  describe 'args (2)' do
+    let(:args) { %w(grouped b c d -b -c -d) }
+    it { expect(b.opts.map(&:first).flatten).to eq %w(-b -c -d --help) }
+    it { expect(cmd).to be_a b }
+    it { expect(cmd.args).to eq %w(c d) }
+    it { expect(cmd.opts).to eq b: true, c: true, d: true }
+  end
 end

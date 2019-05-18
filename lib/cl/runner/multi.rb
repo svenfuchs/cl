@@ -1,6 +1,8 @@
 class Cl
   module Runner
     class Multi
+      Runner.register :multi, self
+
       attr_reader :name, :cmds
 
       def initialize(name, *args)
