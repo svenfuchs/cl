@@ -13,7 +13,7 @@ class Cl
       end
 
       def format
-        [usage, arguments, options, common, summary, description].compact.join("\n\n")
+        [usage, summary, description, arguments, options, common].compact.join("\n\n")
       end
 
       def usage

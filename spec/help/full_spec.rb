@@ -54,6 +54,14 @@ describe Cl, 'help' do
         expect(ctx.stdout.string).to eq unindent(<<-str)
           Usage: rspec test a foo:int [bar] [baz] [options]
 
+          Summary:
+
+            Use this to a the a
+
+          Description:
+
+            Description of the a
+
           Arguments:
 
             foo               The foo (type: integer, required: true)
@@ -71,14 +79,6 @@ describe Cl, 'help' do
             -d --ddd DDD      the inherited D (type: string)
                --eee EEE      the inherited E (type: string)
                --help         Get help on this command (type: flag)
-
-          Summary:
-
-            Use this to a the a
-
-          Description:
-
-            Description of the a
         str
       end
     end

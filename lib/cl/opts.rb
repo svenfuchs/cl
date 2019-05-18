@@ -24,6 +24,7 @@ class Cl
     end
 
     def <<(opt)
+      delete(opt)
       # keep the --help option at the end for help output
       opts.empty? ? opts << opt : opts.insert(-2, opt)
     end
@@ -34,6 +35,10 @@ class Cl
 
     def each(&block)
       opts.each(&block)
+    end
+
+    def delete(opt)
+      opts.delete(opts.detect { |o| o.strs == opt.strs })
     end
 
     def to_a
