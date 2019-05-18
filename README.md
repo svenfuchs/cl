@@ -10,6 +10,32 @@ But on top of that it also provides a rich DSL for defining, validating, and
 normalizing options, as well as automatic and gorgeous help output (modeled
 after Rubygem's `gem --help` output).
 
+## Table of Contents
+
+* [Basic Usage](#basic-usage)
+* [Command Registry](#command-registry)
+* [Runners](#runners)
+* [Command DSL](#command-dsl)
+  * [Description, Summary, Examples](#description-summary-examples)
+  * [Arguments](#arguments)
+    * [Types](#types)
+    * [Splat](#splat)
+  * [Options](#options)
+    * [Aliases](#aliases)
+    * [Defaults](#defaults)
+    * [Deprecations](#deprecations)
+    * [Downcase](#downcase)
+    * [Enum](#enum)
+    * [Example](#example)
+    * [Format](#format)
+    * [Internal](#internal)
+    * [Min and Max](#min-and-max)
+    * [See Also](#see-also)
+    * [Types](#types)
+    * [Required Options](#required-options)
+* [Config Files](#config-files)
+* [Environment Variables](#environment-variables)
+
 ## Basic Usage
 
 ```ruby
@@ -69,7 +95,7 @@ Options:
      --help       Get help on this command (type: flag)
 ```
 
-### Command registry
+### Command Registry
 
 Commands are Ruby classes that extend the class `Cl::Cmd`.
 
@@ -185,11 +211,11 @@ bin/rake db:drop production -f db:create db:migrate production -v 1
 
 See the example [rakeish](blob/master/examples/rakeish) for more details.
 
-## DSL
+## Command DSL
 
 The DSL is defined on the class body.
 
-## Description, summary, examples
+## Description, Summary, Examples
 
 The description, summary, and examples are used in the help output.
 
@@ -611,7 +637,7 @@ Cl.new('owners').run(%w(add --help))
 
 ```
 
-#### Min and max
+#### Min and Max
 
 Options can have mininum and/or maximum values.
 
@@ -649,7 +675,7 @@ Cl.new('owners').run(%w(add --retries 10))
 
 ```
 
-#### See also
+#### See Also
 
 Options can refer to documentation using the `see` option. This will be printed
 in the help output.
@@ -725,7 +751,7 @@ Cl.new('owners').run(%w(add --active yes --retries 1 --sleep 0.1))
 
 ```
 
-#### Required options
+#### Required Options
 
 There are three ways options can be required:
 
@@ -834,7 +860,7 @@ Cl.new('owners').run(%w(add --retries 1))
 
 ```
 
-### Config files
+### Config Files
 
 Cl automatically reads config files that match the given executable name (inspired by
 [gem-release](https://github.com/svenfuchs/gem-release)), stored either in the
@@ -880,7 +906,7 @@ as `opts`.
 Options passed by the user take precedence over defaults defined in config
 files.
 
-### Environment variables
+### Environment Variables
 
 Cl automatically defaults options to environment variables that are prefixed
 with the given executable name (inspired by [gem-release](https://github.com/svenfuchs/gem-release)).
