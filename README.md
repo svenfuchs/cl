@@ -111,7 +111,7 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
-  opt '--to GROUP'
+  opt '--to GROUP', 'Target group to add owners to'
 
   def run
     p opts, to, to?
@@ -125,6 +125,15 @@ Cl.new('owners').run(%w(add --to one))
 #   {"to" => "one"}
 #   "one"
 #   true
+
+Cl.new('owners').run(%w(add --help))
+
+# Usage: opts add [options]
+#
+# Options:
+#
+#   --to GROUP      Target group to add owners to (type: string)
+#   --help          Get help on this command
 
 ```
 
