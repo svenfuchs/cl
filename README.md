@@ -69,11 +69,152 @@ Options:
      --help       Get help on this command (type: flag)
 ```
 
+### Command registry
+
+Commands are Ruby classes that extend the class `Cl::Cmd`.
+
+They register to a [Ruby class registry](https://github.com/svenfuchs/registry) in order
+to decouple looking up command classes from their Ruby namespace.
+
+For example:
+
+```ruby
+module One
+  class Cmd < Cl::Cmd
+    register :one
+  end
+end
+
+module Two
+  class Cmd < Cl::Cmd
+    register :two
+  end
+end
+
+Cl::Cmd[:one] # => One::Cmd
+Cl::Cmd[:two] # => Two::Cmd
+```
+
+Commands auto register themselves with the underscored name of the last part of
+their class name (as seen in the example above). It is possible to ovewrite this
+key by manually registering the class, like so:
+
+```ruby
+module One
+  class Cmd < Cl::Cmd
+    register :'cmd:one'
+  end
+end
+```
+
+### Runners
+
+Runners lookup the command to execute from the registry, by checking the
+arguments given by the user for registered command keys.
+
+With the two command classes `One` and `Two` from the example above (and
+assuming that the executable that calls `Cl` is `bin/run`) the default runner
+would recognize and run the following commands:
+
+```
+$ bin/run one something else
+# instantiates One, passing the args array `["something", "else"]`, and calls `run`
+
+$ bin/run two something else
+# instantiates One, passing an empty args arry `[]`, and calls `run`
+```
+
+The default runner also supports nested namespaces, and checks for command classes
+with keys separated by colons. For instance:
+
+```ruby
+module Git
+  class Pull < Cl::Cmd
+    register :'git:pull'
+  end
+end
+
+module Git
+  class Push < Cl::Cmd
+    register :'git:push'
+  end
+end
+```
+
+With these classes registered (and assuming the executable that calls `Cl` is
+`bin/git`) the default runner would recognize and run the following commands:
+
+```
+$ bin/git pull:master # instantiates Git::Pull, and passes ["master"] as args
+$ bin/git pull master # does the same
+
+$ bin/git push:master # instantiates Git::Push, and passes ["master"] as args
+$ bin/git push master # does the same
+```
+
+Runners are registered on the module `Cl::Runner`. It is possible to register custom
+runners, and use them by passing the option `runner` to `Cl.new`:
+
+```
+# in bin/run
+Cli.new('run', runner: :custom).run(ARGV)
+
+# anywhere in your library
+class Runner
+  Cl::Runner.register :custom, self
+
+  def initialize(ctx, args)
+    # ...
+  end
+
+  def run
+    const = identify_cmd_class_from_args
+    const.new(ctx, args).run
+  end
+end
+```
+
+See `Cl::Runner::Default` for more details.
+
+There also is an experimental runner `:multi`, which supports rake-style
+execution of multiple commands at once, like so:
+
+```
+bin/rake db:drop production -f db:create db:migrate production -v 1
+```
+
+See the example [rakeish](blob/master/examples/rakeish) for more details.
+
 ## DSL
 
 The DSL is defined on the class body.
 
 ## Description, summary, examples
+
+The description, summary, and examples are used in the help output.
+
+```
+module Owners
+  class Add < Cl::Cmd
+    summary 'Add one or more owners to an existing owner group'
+
+    description <<~str
+      Use this command to add one or more owners to an existing
+      owner group.
+    str
+
+    examples <<~str
+      Adding a single user to the group admins:
+
+        ./bin/owners add user --to admins
+
+      Adding a several users at once:
+
+        ./bin/owners add one two three --to admins
+    str
+  end
+end
+```
 
 ### Arguments
 
@@ -204,6 +345,37 @@ Cl.new('owners').run(%w(add --help))
 #
 #   --to GROUP      Target group to add owners to (type: string)
 #   --help          Get help on this command
+
+```
+
+Options optionally accept a block in case custom normalization is needed.
+
+Depending on the block's arity the following arguments are passed to the block:
+option value, option name, option type, collection of all options defined on
+the command.
+
+```ruby
+class Add < Cl::Cmd
+  # depending on its arity the block can receive:
+  #
+  # * value
+  # * value, name
+  # * value, name, type
+  # * value, name, type, opts
+  opt '--to GROUP' do |value|
+    opts[:to] = "#{value.upcase}!"
+  end
+
+  def run
+    p to
+  end
+end
+
+Cl.new('owners').run(%w(add --to one))
+
+# Output:
+#
+#   "ONE!"
 
 ```
 
@@ -662,14 +834,81 @@ Cl.new('owners').run(%w(add --retries 1))
 
 ```
 
-### Config files and environment variables
+### Config files
 
-TBD config, reading from env vars and yml files (inspired by gem-release)
+Cl automatically reads config files that match the given executable name (inspired by
+[gem-release](https://github.com/svenfuchs/gem-release)), stored either in the
+user directory or the current working directory.
 
-### Command registry
+For example:
 
-TBD
+```ruby
+module Api
+  class Login < Cl::Cmd
+    opt '--username USER'
+    opt '--password PASS'
+  end
+end
 
-### Runners
+# bin/api
+CL.new('api').run(ARGV)
 
-TBD
+# ~/api.yml
+login:
+  username: 'someone'
+  password: 'password'
+
+# ./api.yml
+login:
+  username: 'someone else'
+```
+
+then running
+
+```
+$ bin/api login
+```
+
+instantiates `Api::Login`, and passes the hash
+
+```ruby
+{ username: 'someone else', password: 'password' }
+```
+
+as `opts`.
+
+Options passed by the user take precedence over defaults defined in config
+files.
+
+### Environment variables
+
+Cl automatically defaults options to environment variables that are prefixed
+with the given executable name (inspired by [gem-release](https://github.com/svenfuchs/gem-release)).
+
+```ruby
+module Api
+  class Login < Cl::Cmd
+    opt '--username USER'
+    opt '--password PASS'
+  end
+end
+
+# bin/api
+CL.new('api').run(ARGV)
+```
+
+then running
+
+```
+$ API_USERNAME=someone API_PASSWORD=password bin/api login
+```
+
+instantiates `Api::Login`, and passes the hash
+
+```ruby
+{ username: 'someone', password: 'password' }
+```
+
+Options passed by the user take precedence over defaults given as environment
+variables, and environment variables take precedence over defaults defined in
+config files.
