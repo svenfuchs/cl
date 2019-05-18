@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--active BOOL', type: :boolean
+  opt '--retries INT', type: :integer
+  opt '--sleep FLOAT', type: :float
+
+  def run
+    p active.class, retries.class, sleep.class
+  end
+end
+
+Cl.new('owners').run(%w(add --active yes --retries 1 --sleep 0.1))
+
+# Output:
+#
+#   TrueClass
+#   Integer
+#   Float

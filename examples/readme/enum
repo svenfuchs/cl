@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', enum: %w(one two)
+
+  def run
+    p to
+  end
+end
+
+Cl.new('owners').run(%w(add --to one))
+
+# Output:
+#
+#   "one"
+
+Cl.new('owners').run(%w(add --to unknown))
+
+# Unknown value: to=unknown (known values: one, two)
+#
+# Usage: enum add [options]
+#
+# Options: ...

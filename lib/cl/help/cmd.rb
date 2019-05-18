@@ -77,7 +77,7 @@ class Cl
         opts = cmd.required
         strs = opts.map { |alts| alts.map { |alt| Array(alt).join(' and ') }.join(', or ' ) }
         strs = strs.map { |str| "Either #{str} are required." }.join("\n")
-        indent(strs)
+        indent(strs) unless strs.empty?
       end
 
       def common?
@@ -90,7 +90,7 @@ class Cl
 
       def format_obj(obj)
         opts = []
-        opts << "type: #{format_type(obj)}"
+        opts << "type: #{format_type(obj)}" unless obj.type == :flag
         opts << 'required: true' if obj.required?
         opts += format_opt(obj) if obj.is_a?(Opt)
         opts = opts.join(', ')

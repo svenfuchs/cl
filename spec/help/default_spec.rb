@@ -18,7 +18,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, default: str
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end
@@ -33,7 +33,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, default: foo bar
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end
@@ -47,8 +47,8 @@ describe Cl, 'help' do
 
         Options:
 
-          --[no-]aaa      type: flag, default: true
-          --help          Get help on this command (type: flag)
+          --[no-]aaa      default: true
+          --help          Get help on this command
       str
     end
   end

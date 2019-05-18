@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', alias: :group
+
+  def run
+    p opts, to, to?, group, group?
+  end
+end
+
+Cl.new('owners').run(%w(add --to one))
+
+# Output:
+#
+#   {"to" => "one"}
+#   "one"
+#   true
+#   "one"
+#   true

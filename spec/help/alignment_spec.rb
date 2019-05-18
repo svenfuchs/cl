@@ -29,7 +29,7 @@ describe Cl, 'help' do
           Common Options:
 
             --bbbbbbbbb bbbbbbbbb      The long B (type: string)
-            --help                     Get help on this command (type: flag)
+            --help                     Get help on this command
         str
       end
     end
@@ -65,7 +65,7 @@ describe Cl, 'help' do
           Common Options:
 
             --bbb bbb                     The short B (type: string)
-            --help                        Get help on this command (type: flag)
+            --help                        Get help on this command
         str
       end
     end

@@ -70,7 +70,7 @@ describe Cl, 'help' do
 
           Options:
 
-            -a --aaa          the flag A (type: flag)
+            -a --aaa          the flag A
             -b --bbb BBB      the value B (type: string, e.g.: B, see: http://docs.com/b)
                --ccc CCC      the extra C (type: string)
 
@@ -78,7 +78,7 @@ describe Cl, 'help' do
 
             -d --ddd DDD      the inherited D (type: string)
                --eee EEE      the inherited E (type: string)
-               --help         Get help on this command (type: flag)
+               --help         Get help on this command
         str
       end
     end

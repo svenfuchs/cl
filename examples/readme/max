@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--retries COUNT', max: 5, type: :integer
+
+  def run
+    p retries
+  end
+end
+
+Cl.new('owners').run(%w(add --retries 1))
+
+# Output:
+#
+#   1
+
+Cl.new('owners').run(%w(add --retries 10))
+
+# Exceeds max value: retries (max: 5)
+#
+# Usage: max add [options]
+#
+# Options:
+#
+#   --retries COUNT      type: integer, max: 5
+#   --help               Get help on this command

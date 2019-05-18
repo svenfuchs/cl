@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  args :owners
+
+  def run
+    p owners
+  end
+end
+
+Cl.new('owners').run(%w(add one,two))
+
+# => ["one,two"]

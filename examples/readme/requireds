@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  # read DNF, i.e. "apikey OR username AND password
+  required :api_key, [:username, :password]
+
+  opt '--api_key KEY'
+  opt '--username NAME'
+  opt '--password PASS'
+
+  def run
+    p to, retries
+  end
+end
+
+Cl.new('owners').run(%w(add --to one --retries 1))
+
+# Output:
+#
+#   "one"
+#   1
+
+Cl.new('owners').run(%w(add --retries 1))
+
+# Missing option: to (required by retries)
+#
+# Usage: requires add [options]
+#
+# Options:
+#
+#   --to GROUP         type: string
+#   --retries INT      type: string, requires: to
+#   --help             Get help on this command

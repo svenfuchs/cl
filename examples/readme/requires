@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP'
+  opt '--retries INT', requires: :to
+
+  def run
+    p to, retries
+  end
+end
+
+Cl.new('owners').run(%w(add --to one --retries 1))
+
+# Output:
+#
+#   "one"
+#   1
+
+Cl.new('owners').run(%w(add --retries 1))
+
+# Missing option: to (required by retries)
+#
+# Usage: requires add [options]
+#
+# Options:
+#
+#   --to GROUP         type: string
+#   --retries INT      type: string, requires: to
+#   --help             Get help on this command

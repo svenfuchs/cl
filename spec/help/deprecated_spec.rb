@@ -18,7 +18,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, deprecated (msg)
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end
@@ -33,7 +33,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, alias: bbb (deprecated, please use aaa)
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end

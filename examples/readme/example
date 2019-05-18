@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', example: 'group-one'
+end
+
+Cl.new('owners').run(%w(add --help))
+
+# Usage: example add [options]
+#
+# Options:
+#
+#   --to GROUP      type: string, e.g.: group-one
+#   --help          Get help on this command

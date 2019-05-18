@@ -32,8 +32,8 @@ class Cl
       str = name
       case type
       when :array          then str = "#{str}.."
-      when :integer, :int  then str = "#{str}:int"
       when :boolean, :bool then str = "#{str}:bool"
+      when :integer, :int  then str = "#{str}:int"
       when :float          then str = "#{str}:float"
       end
       required? ? str : "[#{str}]"

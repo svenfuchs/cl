@@ -28,7 +28,7 @@ describe Cl, 'help' do
             --aaa AAA      type: string
             --bbb BBB      type: string
             --ccc CCC      type: string
-            --help         Get help on this command (type: flag)
+            --help         Get help on this command
         str
       end
     end
@@ -64,7 +64,7 @@ describe Cl, 'help' do
           Common Options:
 
             --bbb BBB      type: string, required: true
-            --help         Get help on this command (type: flag)
+            --help         Get help on this command
         str
       end
     end
@@ -102,7 +102,7 @@ describe Cl, 'help' do
           Common Options:
 
             --ccc CCC      type: string
-            --help         Get help on this command (type: flag)
+            --help         Get help on this command
         str
       end
     end

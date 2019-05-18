@@ -17,7 +17,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, known values: one, /two/
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end
@@ -34,7 +34,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: string, known values: one, downcase: true
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end

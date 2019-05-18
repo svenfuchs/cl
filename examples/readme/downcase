@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', downcase: true
+
+  def run
+    p to
+  end
+end
+
+Cl.new('owners').run(%w(add --to ONE))
+
+# Output:
+#
+#   "one"

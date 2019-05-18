@@ -19,7 +19,7 @@ describe Cl, 'help' do
           --aaa AAA      The quick brown fox jumps over the lazy dog The quick brown fox jumps over the
                          lazy dog The quick brown fox jumps over the lazy dog The quick brown fox jumps
                          over the lazy dog The quick brown fox jumps over the lazy dog (type: string)
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end

@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', format: /^\w+$/
+
+  def run
+    p to
+  end
+end
+
+Cl.new('owners').run(%w(add --to one))
+
+# Output:
+#
+#   "one"
+
+Cl.new('owners').run(['add', '--to', 'does not match!'])
+
+Invalid format: to (format: /^\w+$/)
+
+Usage: format add [options]
+
+Options:
+
+  --to GROUP      type: string, format: /^\w+$/
+  --help          Get help on this command

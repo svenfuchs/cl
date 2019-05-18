@@ -64,6 +64,7 @@ class Cl
     def deprecated
       return [name, opts[:deprecated]] unless opts[:deprecated].is_a?(Symbol)
       [opts[:deprecated], name] if opts[:deprecated]
+      # [name, opts[:deprecated]] if opts[:deprecated]
     end
 
     def downcase?

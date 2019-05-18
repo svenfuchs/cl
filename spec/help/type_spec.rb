@@ -19,7 +19,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: integer
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end
@@ -34,7 +34,7 @@ describe Cl, 'help' do
         Options:
 
           --aaa AAA      type: array (string, can be given multiple times)
-          --help         Get help on this command (type: flag)
+          --help         Get help on this command
       str
     end
   end

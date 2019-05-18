@@ -21,7 +21,7 @@ describe Cl, 'help' do
           Options:
 
             --aaa AAA      type: integer, max: 5
-            --help         Get help on this command (type: flag)
+            --help         Get help on this command
         str
       end
     end

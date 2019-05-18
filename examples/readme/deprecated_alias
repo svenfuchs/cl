@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--to GROUP', alias: :target, deprecated: :target
+
+  def run
+    p to, deprecated_opts
+  end
+end
+
+Cl.new('owners').run(%w(add --target one))
+
+# Output:
+#
+#   "one"
+#   {:target=>:to}
+

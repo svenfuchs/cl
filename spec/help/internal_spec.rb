@@ -22,7 +22,7 @@ describe Cl, 'help' do
           Options:
 
             --aaa AAA      type: string
-            --help         Get help on this command (type: flag)
+            --help         Get help on this command
         str
       end
     end
