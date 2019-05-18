@@ -10,6 +10,8 @@ But on top of that it also provides a rich DSL for defining, validating, and
 normalizing options, as well as automatic and gorgeous help output (modeled
 after Rubygem's `gem --help` output).
 
+Further documentation is available on [rubydoc.info](https://www.rubydoc.info/github/svenfuchs/cl)
+
 ## Table of Contents
 
 * [Basic Usage](#basic-usage)
