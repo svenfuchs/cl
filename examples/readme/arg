@@ -4,13 +4,13 @@ $: << File.expand_path('lib')
 require 'cl'
 
 class Add < Cl::Cmd
-  args :owners
+  arg :owner
 
   def run
-    p owners
+    p owner
   end
 end
 
-Cl.new('owners').run(%w(add one,two))
+Cl.new('owners').run(%w(add one))
 
-# => ["one,two"]
+# => "one"

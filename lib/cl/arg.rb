@@ -20,8 +20,12 @@ class Cl
       opts[:description]
     end
 
+    def separator
+      opts[:sep]
+    end
+
     def splat?
-      type == :array
+      opts[:splat] && type == :array
     end
 
     def required?

@@ -156,6 +156,10 @@ class Cl
       opts[:see]
     end
 
+    def separator
+      opts[:sep]
+    end
+
     def block
       # raise if no block was given, and the option's name cannot be inferred
       super || method(:assign)

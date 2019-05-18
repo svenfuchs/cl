@@ -8,7 +8,7 @@ class Cl
       when nil
         value
       when :array
-        Array(value).compact.flatten.map { |value| value.to_s.split(',') }.flatten
+        Array(value).compact.flatten.map { |value| split(value) }.flatten
       when :string, :str
         value.to_s unless value.to_s.empty?
       when :flag, :boolean, :bool
@@ -24,6 +24,10 @@ class Cl
       end
     rescue ::ArgumentError => e
       raise ArgumentError.new(:wrong_type, value.inspect, type)
+    end
+
+    def split(value)
+      separator ? value.to_s.split(separator) : value
     end
   end
 end

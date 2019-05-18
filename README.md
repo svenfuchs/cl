@@ -4,9 +4,11 @@ This library wraps Ruby's `OptionParser` in order to make it easier to use it
 in an object oriented context.
 
 It uses `OptionParser` for parsing your options, so you get all the goodness that
-this true gem from Ruby's stoneage provides. But on top of that it also provides
-a rich DSL for defining, validating, and normalizing options, and automatic and
-gorgeous help output (modelled after Rubygem's `gem --help` output).
+this gem from Ruby's stoneage provides.
+
+But on top of that it also provides a rich DSL for defining, validating, and
+normalizing options, as well as automatic and gorgeous help output (modeled
+after Rubygem's `gem --help` output).
 
 ## Basic Usage
 
@@ -71,6 +73,8 @@ Options:
 
 The DSL is defined on the class body.
 
+## Description, summary, examples
+
 ### Arguments
 
 Arguments can be declared like so:
@@ -84,7 +88,33 @@ example the method `ownsers` will be available on the `Cmd` instance:
 
 ```ruby
 class Add < Cl::Cmd
-  args :owners
+  arg :owner
+
+  def run
+    p owner
+  end
+end
+
+Cl.new('owners').run(%w(add one))
+
+# => "one"
+
+```
+
+#### Types
+
+Arguments can have a type. Known types are: `:array`, `:string`, `:integer`,
+`:float`, `:boolean`.
+
+The type `:array` makes sure the argument accessible on the `Cmd` instance is a
+Ruby Array. (This currently only supports arrays of strings).
+
+If the option `sep` is given on the argument, then the argument value is split
+using this separator.
+
+```ruby
+class Add < Cl::Cmd
+  arg :owners, type: :array, sep: ','
 
   def run
     p owners
@@ -93,11 +123,51 @@ end
 
 Cl.new('owners').run(%w(add one,two))
 
-# => ["one,two"]
+# => ["one", "two"]
 
 ```
 
-TODO splats, casts
+Other types cast the given argument to the expected Ruby type.
+
+```ruby
+class Cmd < Cl::Cmd
+  arg :one, type: :integer
+  arg :two, type: :float
+  arg :three, type: :boolean
+
+  def run
+    p [one.class, two.class, three.class]
+  end
+end
+
+Cl.new('owners').run(%w(cmd 1 2.1 yes))
+
+# => [Integer, Float, TrueClass]
+
+```
+
+#### Splat
+
+Array arguments support splats, modeled after Ruby argument splats.
+
+For example:
+
+```ruby
+class Cmd < Cl::Cmd
+  arg :one, type: :integer
+  arg :two, type: :float
+  arg :three, type: :boolean
+
+  def run
+    p [one.class, two.class, three.class]
+  end
+end
+
+Cl.new('owners').run(%w(cmd 1 2.1 yes))
+
+# => [Integer, Float, TrueClass]
+
+```
 
 ### Options
 
@@ -381,21 +451,29 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
-  opt '--to GROUP', see: 'https://docs.io/cli/owners/add'
+  opt '--retries COUNT', type: :integer, min: 1, max: 5
 
   def run
     p retries
   end
 end
 
-Cl.new('owners').run(%w(add --help))
+Cl.new('owners').run(%w(add --retries 1))
 
-# Usage: see add [options]
+# Output:
+#
+#   1
+
+Cl.new('owners').run(%w(add --retries 10))
+
+# Out of range: retries (max: 5)
+#
+# Usage: max add [options]
 #
 # Options:
 #
-#   --to GROUP      type: string, see: https://docs.io/cli/owners/add
-#   --help          Get help on this command
+#   --retries COUNT      type: integer, min: 1, max: 5
+#   --help               Get help on this command
 
 ```
 
@@ -586,5 +664,12 @@ Cl.new('owners').run(%w(add --retries 1))
 
 ### Config files and environment variables
 
-* Add config, reading from env vars and yml files (inspired by gem-release)
-* Add `abstract` in order to signal a cmd is a base class that is not meant to be executed
+TBD config, reading from env vars and yml files (inspired by gem-release)
+
+### Command registry
+
+TBD
+
+### Runners
+
+TBD

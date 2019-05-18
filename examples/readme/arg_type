@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Cmd < Cl::Cmd
+  arg :one, type: :integer
+  arg :two, type: :float
+  arg :three, type: :boolean
+
+  def run
+    p [one.class, two.class, three.class]
+  end
+end
+
+Cl.new('owners').run(%w(cmd 1 2.1 yes))
+
+# => [Integer, Float, TrueClass]

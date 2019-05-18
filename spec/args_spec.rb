@@ -10,7 +10,7 @@ describe Cl, 'args' do
   let!(:bar) do
     Class.new(Cl::Cmd) do
       register 'args:bar'
-      arg :a, type: :array
+      arg :a, type: :array, sep: ','
       arg :b, type: :bool
       arg :c, type: :int
       arg :d, type: :float
@@ -20,7 +20,7 @@ describe Cl, 'args' do
   let!(:baz) do
     Class.new(Cl::Cmd) do
       register 'args:baz'
-      arg :a, type: :array
+      arg :a, type: :array, splat: true
       arg :b
       arg :c
     end
@@ -30,7 +30,7 @@ describe Cl, 'args' do
     Class.new(Cl::Cmd) do
       register 'args:buz'
       arg :a
-      arg :b, type: :array
+      arg :b, type: :array, splat: true
       arg :c
     end
   end
@@ -40,7 +40,7 @@ describe Cl, 'args' do
       register 'args:bum'
       arg :a
       arg :b
-      arg :c, type: :array
+      arg :c, type: :array, splat: true
     end
   end
 

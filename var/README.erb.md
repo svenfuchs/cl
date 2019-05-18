@@ -7,7 +7,7 @@ It uses `OptionParser` for parsing your options, so you get all the goodness tha
 this gem from Ruby's stoneage provides.
 
 But on top of that it also provides a rich DSL for defining, validating, and
-normalizing options, as well as automatic and gorgeous help output (modelled
+normalizing options, as well as automatic and gorgeous help output (modeled
 after Rubygem's `gem --help` output).
 
 ## Basic Usage
@@ -73,6 +73,8 @@ Options:
 
 The DSL is defined on the class body.
 
+## Description, summary, examples
+
 ### Arguments
 
 Arguments can be declared like so:
@@ -85,10 +87,39 @@ This will define an `attr_accessor` on the `Cmd` class. I.e. in the following
 example the method `ownsers` will be available on the `Cmd` instance:
 
 ```ruby
-<%= example('readme/args') %>
+<%= example('readme/arg') %>
 ```
 
-TODO splats, casts
+#### Types
+
+Arguments can have a type. Known types are: `:array`, `:string`, `:integer`,
+`:float`, `:boolean`.
+
+The type `:array` makes sure the argument accessible on the `Cmd` instance is a
+Ruby Array. (This currently only supports arrays of strings).
+
+If the option `sep` is given on the argument, then the argument value is split
+using this separator.
+
+```ruby
+<%= example('readme/arg_array') %>
+```
+
+Other types cast the given argument to the expected Ruby type.
+
+```ruby
+<%= example('readme/arg_type') %>
+```
+
+#### Splat
+
+Array arguments support splats, modeled after Ruby argument splats.
+
+For example:
+
+```ruby
+<%= example('readme/arg_type') %>
+```
 
 ### Options
 

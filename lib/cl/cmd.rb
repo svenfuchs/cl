@@ -18,20 +18,6 @@ class Cl
 
       define_method(:inherited, &inherited)
 
-      def cmds
-        registry.values
-      end
-
-      def parse(ctx, args)
-        opts = Parser.new(self.opts, args).opts unless self == Help
-        opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
-        [args, opts || {}]
-      end
-
-      def abstract
-        unregister
-      end
-
       def args(*args)
         return @args ||= Args.new unless args.any?
         opts = args.last.is_a?(Hash) ? args.pop : {}
@@ -48,6 +34,10 @@ class Cl
 
       def opts
         @opts ||= self == Cmd ? Opts.new : superclass.opts.dup
+      end
+
+      def abstract
+        unregister
       end
 
       def description(description = nil)
@@ -70,6 +60,16 @@ class Cl
         summary ? @summary = summary : @summary
       end
       alias purpose summary
+
+      def cmds
+        registry.values
+      end
+
+      def parse(ctx, args)
+        opts = Parser.new(self.opts, args).opts unless self == Help
+        opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
+        [args, opts || {}]
+      end
 
       def underscore(string)
         string.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
