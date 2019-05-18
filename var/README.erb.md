@@ -191,6 +191,31 @@ The DSL is defined on the class body.
 
 ## Description, summary, examples
 
+The description, summary, and examples are used in the help output.
+
+```
+module Owners
+  class Add < Cl::Cmd
+    summary 'Add one or more owners to an existing owner group'
+
+    description <<~str
+      Use this command to add one or more owners to an existing
+      owner group.
+    str
+
+    examples <<~str
+      Adding a single user to the group admins:
+
+        ./bin/owners add user --to admins
+
+      Adding a several users at once:
+
+        ./bin/owners add one two three --to admins
+    str
+  end
+end
+```
+
 ### Arguments
 
 Arguments can be declared like so:
