@@ -113,6 +113,7 @@ class Cl
     end
 
     def formatted?(value)
+      return value.all? { |value| formatted?(value) } if value.is_a?(Array)
       opts[:format] =~ value
     end
 
