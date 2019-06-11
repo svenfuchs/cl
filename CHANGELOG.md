@@ -21,6 +21,7 @@
 * Add `opt '--one STR', downcase: true`
 * Add `opt '--one STR', internal: true`, hide internal options from help output
 * Add `opt '--one STR', example: 'foo'`
+* Add `opt '--one STR', note: 'note'`
 * Add `opt '--one STR', see: 'https://provider.com/docs'
 
 ### Changed

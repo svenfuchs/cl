@@ -136,6 +136,14 @@ class Cl
       opts[:max]
     end
 
+    def note?
+      !!opts[:note]
+    end
+
+    def note
+      opts[:note]
+    end
+
     def required?
       !!opts[:required]
     end

@@ -114,6 +114,7 @@ class Cl
         opts << "min: #{opt.min}" if opt.min?
         opts << "max: #{opt.max}" if opt.max?
         opts << "e.g.: #{opt.example}" if opt.example?
+        opts << "note: #{opt.note}" if opt.note?
         opts << "see: #{opt.see}" if opt.see?
         opts << format_deprecated(opt) if opt.deprecated?
         opts.compact
