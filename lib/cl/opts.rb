@@ -16,6 +16,7 @@ class Cl
 
     def apply(cmd, opts)
       return opts if opts[:help]
+      cmd.deprecations = deprecations(cmd, opts)
       opts = with_defaults(cmd, opts)
       opts = downcase(opts)
       opts = cast(opts)
@@ -60,6 +61,12 @@ class Cl
     end
 
     private
+
+      def deprecations(cmd, opts)
+        defs = cmd.class.opts.select(&:deprecated?)
+        defs = defs.select { |opt| opts.key?(opt.deprecated[0]) }
+        defs.map(&:deprecated).to_h
+      end
 
       def validate(cmd, opts)
         validate_requireds(cmd, opts)

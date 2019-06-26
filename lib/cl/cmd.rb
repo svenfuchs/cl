@@ -39,6 +39,7 @@ class Cl
     opt '--help', 'Get help on this command'
 
     attr_reader :ctx, :args
+    attr_accessor :deprecations
 
     def initialize(ctx, args)
       args, opts = self.class.parse(ctx, args)
@@ -49,12 +50,6 @@ class Cl
 
     def opts
       @opts ||= {}
-    end
-
-    def deprecated_opts
-      opts = self.class.opts.select(&:deprecated?)
-      opts = opts.select { |opt| self.opts.key?(opt.deprecated[0]) }
-      opts.map(&:deprecated).to_h
     end
   end
 end

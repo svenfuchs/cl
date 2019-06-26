@@ -10,10 +10,24 @@ describe Cl, 'opts' do
     end
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq one: 'msg one' }
+    it { expect(cmd(%w(cmd --one one)).deprecations).to eq one: 'msg one' }
 
     it { expect(cmd(%w(cmd --two two)).opts[:two]).to eq 'two' }
-    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq two: 'msg two' }
+    it { expect(cmd(%w(cmd --two two)).deprecations).to eq two: 'msg two' }
+  end
+
+  describe 'deprecated with a default' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', deprecated: 'msg one', default: 'one'
+      end
+    end
+
+    it { expect(cmd(%w(cmd)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd)).deprecations).to be_empty }
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one one)).deprecations).to eq one: 'msg one' }
   end
 
   describe 'deprecated alias' do
@@ -24,8 +38,8 @@ describe Cl, 'opts' do
     end
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --one one)).deprecated_opts).to eq({}) }
+    it { expect(cmd(%w(cmd --one one)).deprecations).to eq({}) }
     it { expect(cmd(%w(cmd --two two)).opts[:one]).to eq 'two' }
-    it { expect(cmd(%w(cmd --two two)).deprecated_opts).to eq two: :one }
+    it { expect(cmd(%w(cmd --two two)).deprecations).to eq two: :one }
   end
 end
