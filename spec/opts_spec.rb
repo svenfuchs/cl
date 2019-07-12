@@ -43,6 +43,7 @@ describe Cl, 'opts' do
     let(:opts) { ->(*) { opt('-f', '--[no-]flag', 'A flag') } }
 
     it { expect(cmd(%w(cmd --no-flag)).opts[:flag]).to be false }
+    it { expect(cmd(%w(cmd --no_flag)).opts[:flag]).to be false }
     it { expect(cmd(%w(cmd --flag)).opts[:flag]).to be true }
     it { expect(cmd(%w(cmd -f)).opts[:flag]).to be true }
 

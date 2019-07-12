@@ -46,6 +46,7 @@ class Cl
     def underscore!(strs)
       return strs if RUBY_VERSION >= '2.4'
       strs.each { |str| str.gsub!(PATTERN) { "#{$1}#{$2}#{$3.tr('-', '_')}" } }
+      strs.each { |str| str.gsub!(/^--no_/, '--no-') } # ruby < 2.4
     end
   end
 end
