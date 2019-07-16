@@ -15,7 +15,7 @@ class Cl
 
     def initialize(*)
       super
-      noize(strs) if type == :flag
+      noize!(strs) if type == :flag
     end
 
     def define(const)
@@ -182,7 +182,7 @@ class Cl
       end
     end
 
-    def noize(strs)
+    def noize!(strs)
       strs = strs.select { |str| str.start_with?('--') }
       strs = strs.reject { |str| str.include?('[no-]') }
       strs.each { |str| str.replace(str.sub('--', '--[no-]')) unless str == '--help' }
