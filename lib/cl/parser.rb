@@ -38,7 +38,7 @@ class Cl
     end
 
     def dasherize(strs)
-      strs.map { |str| str.gsub('_', '-') }
+      strs.map { |str| str.gsub('_', '-') if str.start_with?('--') }
     end
 
     def dasherize!(strs)
