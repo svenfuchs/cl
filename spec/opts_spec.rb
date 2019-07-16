@@ -89,6 +89,26 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --no_flag)).no_flag?).to be true }
   end
 
+  describe 'flag with an alias, underscored' do
+    let(:opts) { ->(*) { opt('--a_flag', 'A flag', alias: 'b_flag') } }
+
+    it { expect(cmd(%w(cmd --a-flag)).a_flag?).to be true }
+    it { expect(cmd(%w(cmd --a_flag)).a_flag?).to be true }
+
+    it { expect(cmd(%w(cmd --b-flag)).a_flag?).to be true }
+    it { expect(cmd(%w(cmd --b_flag)).a_flag?).to be true }
+  end
+
+  describe 'flag with an alias, dasherized' do
+    let(:opts) { ->(*) { opt('--a-flag', 'A flag', alias: 'b-flag') } }
+
+    it { expect(cmd(%w(cmd --a-flag)).a_flag?).to be true }
+    it { expect(cmd(%w(cmd --a_flag)).a_flag?).to be true }
+
+    it { expect(cmd(%w(cmd --b-flag)).a_flag?).to be true }
+    it { expect(cmd(%w(cmd --b_flag)).a_flag?).to be true }
+  end
+
   describe 'dashed opts' do
     let(:opts) { ->(*) { opt('--one_two') } }
 

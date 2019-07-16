@@ -9,25 +9,26 @@ class Cl
 
       super do
         opts.each do |opt|
-          on(*dasherize(opt.strs)) do |value|
+          on(*dasherize(*opt.strs)) do |value|
             set(opt, value)
           end
 
           opt.aliases.each do |name|
-            on(aliased(opt, name)) do |value|
+            on(*dasherize(aliased(opt, name))) do |value|
               @opts[name] = set(opt, value)
             end
           end
         end
       end
 
-      dasherize!(args)
+      args.replace(dasherize(*args))
       parse!(args)
     end
 
     def aliased(opt, name)
       str = opt.strs.detect { |str| str.start_with?('--') } || raise
-      str.sub(opt.name.to_s, name.to_s)
+      str = str.sub(opt.name.to_s, name.to_s)
+      str.sub(opt.name.to_s.gsub('_', '-'), name.to_s)
     end
 
     # should consider negative arities (e.g. |one, *two|)
@@ -37,12 +38,8 @@ class Cl
       instance_exec(*args, &opt.block)
     end
 
-    def dasherize(strs)
+    def dasherize(*strs)
       strs.map { |str| str.start_with?('--') ? str.gsub('_', '-') : str }
-    end
-
-    def dasherize!(strs)
-      strs.replace(dasherize(strs))
     end
   end
 end
