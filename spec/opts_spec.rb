@@ -75,6 +75,20 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd -f)).opts[:unflag]).to be false }
   end
 
+  describe 'flag starting with --no, dasherized' do
+    let(:opts) { ->(*) { opt('--no-flag', 'No flag') } }
+
+    it { expect(cmd(%w(cmd --no-flag)).no_flag?).to be true }
+    it { expect(cmd(%w(cmd --no_flag)).no_flag?).to be true }
+  end
+
+  describe 'flag starting with --no, underscored' do
+    let(:opts) { ->(*) { opt('--no_flag', 'No flag') } }
+
+    it { expect(cmd(%w(cmd --no-flag)).no_flag?).to be true }
+    it { expect(cmd(%w(cmd --no_flag)).no_flag?).to be true }
+  end
+
   describe 'dashed opts' do
     let(:opts) { ->(*) { opt('--one_two') } }
 

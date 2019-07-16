@@ -15,7 +15,7 @@ class Cl
 
     def initialize(*)
       super
-      noize(strs) if type == :flag && default.is_a?(TrueClass)
+      noize(strs) if type == :flag
     end
 
     def define(const)
@@ -64,7 +64,6 @@ class Cl
     def deprecated
       return [name, opts[:deprecated]] unless opts[:deprecated].is_a?(Symbol)
       [opts[:deprecated], name] if opts[:deprecated]
-      # [name, opts[:deprecated]] if opts[:deprecated]
     end
 
     def downcase?
@@ -186,7 +185,7 @@ class Cl
     def noize(strs)
       strs = strs.select { |str| str.start_with?('--') }
       strs = strs.reject { |str| str.include?('[no-]') }
-      strs.each { |str| str.replace(str.sub('--', '--[no-]')) }
+      strs.each { |str| str.replace(str.sub('--', '--[no-]')) unless str == '--help' }
     end
   end
 end

@@ -65,21 +65,21 @@ describe Cl, 'help' do
 
           Arguments:
 
-            foo               The foo (type: integer, required: true)
-            bar               type: string
-            baz               type: string
+            foo                The foo (type: integer, required: true)
+            bar                type: string
+            baz                type: string
 
           Options:
 
-            -a --aaa          the flag A
-            -b --bbb BBB      the value B (type: string, e.g.: B, note: note, see: http://docs.com/b)
-               --ccc CCC      the extra C (type: string)
+            -a --[no-]aaa      the flag A
+            -b --bbb BBB       the value B (type: string, e.g.: B, note: note, see: http://docs.com/b)
+               --ccc CCC       the extra C (type: string)
 
           Common Options:
 
-            -d --ddd DDD      the inherited D (type: string)
-               --eee EEE      the inherited E (type: string)
-               --help         Get help on this command
+            -d --ddd DDD       the inherited D (type: string)
+               --eee EEE       the inherited E (type: string)
+               --help          Get help on this command
 
           Examples:
 
