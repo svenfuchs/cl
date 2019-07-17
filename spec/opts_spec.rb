@@ -118,4 +118,9 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --one-two)).opts[:one_two]).to be true }
     it { expect(cmd(%w(cmd --one-two)).one_two?).to be true }
   end
+
+  describe 'does not dasherize values' do
+    let(:opts) { ->(*) { opt('--str STR') } }
+    it { expect(cmd(%w(cmd --str one_two)).opts[:str]).to eq 'one_two' }
+  end
 end
