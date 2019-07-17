@@ -38,8 +38,10 @@ class Cl
       instance_exec(*args, &opt.block)
     end
 
+    DASHERIZE = /^--([^= ])*/
+
     def dasherize(*strs)
-      strs.map { |str| str.start_with?('--') ? str.gsub('_', '-') : str }
+      strs.map { |str| str.gsub(DASHERIZE) { |opt| opt.gsub('_', '-') } }
     end
   end
 end
