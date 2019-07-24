@@ -156,6 +156,10 @@ class Cl
       Array(opts[:requires])
     end
 
+    def secret?
+      !!opts[:secret]
+    end
+
     def see?
       !!opts[:see]
     end

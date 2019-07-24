@@ -23,6 +23,7 @@
 * Add `opt '--one STR', example: 'foo'`
 * Add `opt '--one STR', note: 'note'`
 * Add `opt '--one STR', see: 'https://provider.com/docs'
+* Add `opt '--one STR', secret: true`
 
 ### Changed
 
