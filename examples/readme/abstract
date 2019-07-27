@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Base < Cl::Cmd
+  abstract
+end
+
+class Add < Base
+end
+
+Cl.new('owners').help
+
+# Output:
+#
+#   Type "owners help COMMAND [SUBCOMMAND]" for more details:
+#
+#   owners add [options]
+
+Cl.new('owners').run(%w(base))
+
+# Error output:
+#
+#   Unknown command: base

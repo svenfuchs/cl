@@ -18,7 +18,9 @@ Further documentation is available on [rubydoc.info](https://www.rubydoc.info/gi
 * [Command Registry](#command-registry)
 * [Runners](#runners)
 * [Command DSL](#command-dsl)
-  * [Description, Summary, Examples](#description-summary-examples)
+  * [Commands](#commands)
+    * [Description, Summary, Examples](#description-summary-examples)
+    * [Abstract](#abstract)
   * [Arguments](#arguments)
     * [Types](#types)
     * [Splat](#splat)
@@ -32,6 +34,8 @@ Further documentation is available on [rubydoc.info](https://www.rubydoc.info/gi
     * [Format](#format)
     * [Internal](#internal)
     * [Min and Max](#min-and-max)
+    * [Note](#note)
+    * [Secret](#secret)
     * [See Also](#see-also)
     * [Types](#types)
     * [Required Options](#required-options)
@@ -135,6 +139,13 @@ module One
 end
 ```
 
+Be aware that if you derive a common base command class from `Cl::Cmd` it
+should be declared as `abstract` in order to unregister itself from the command
+registry.
+
+This will prevent the runner to consider it as a runnable command, and omit it
+from help output. See [abstract](#abstract) for details.
+
 ### Runners
 
 Runners lookup the command to execute from the registry, by checking the
@@ -217,7 +228,11 @@ See the example [rakeish](blob/master/examples/rakeish) for more details.
 
 The DSL is defined on the class body.
 
-## Description, Summary, Examples
+### Commands
+
+Commands are classes that are derived from the base class `Cl::Cmd`.
+
+#### Description, Summary, Examples
 
 The description, summary, and examples are used in the help output.
 
@@ -234,14 +249,26 @@ module Owners
     examples <<~str
       Adding a single user to the group admins:
 
-        ./bin/owners add user --to admins
+        owners add user --to admins
 
       Adding a several users at once:
 
-        ./bin/owners add one two three --to admins
+        owners add one two three --to admins
     str
   end
 end
+```
+
+#### Abstract
+
+Command base classes can be declared abstract in order to prevent them from
+being identified as a runnable command and to  omit them from help output.
+
+This is only relevant if a command base class is registered. See [Command
+Registry](#command-registry) for details.
+
+```ruby
+<%= example('readme/abstract') %>
 ```
 
 ### Arguments
@@ -414,6 +441,26 @@ For example:
 
 ```ruby
 <%= example('readme/range') %>
+```
+
+#### Note
+
+Options can have a note that will be printed in the help output.
+
+```ruby
+<%= example('readme/note') %>
+```
+
+#### Secret
+
+Options can be declared as secret.
+
+This makes it possible for client code to inspect if a given option is secret.
+Also, option values given by the user will be tainted, so client code can rely
+on this in order to, for example, obfuscate values from log output.
+
+```ruby
+<%= example('readme/secret') %>
 ```
 
 #### See Also
