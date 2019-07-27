@@ -7,7 +7,7 @@ class Cl
     end
 
     def help
-      args.any? ? Cmd.new(cmd).format : Cmds.new(cmds).format
+      args.any? ? Cmd.new(ctx, cmd).format : Cmds.new(ctx, cmds).format
     end
 
     private

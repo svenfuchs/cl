@@ -3,17 +3,15 @@ require 'cl/help/usage'
 
 class Cl
   class Help
-    class Cmds
-      HEAD = %(Type "#{$0.split('/').last} help COMMAND [SUBCOMMAND]" for more details:\n)
-
-      attr_reader :cmds
-
-      def initialize(cmds)
-        @cmds = cmds
-      end
+    class Cmds < Struct.new(:ctx, :cmds)
+      HEAD = %(Type "%s help COMMAND [SUBCOMMAND]" for more details:\n)
 
       def format
-        [HEAD, Table.new(list).format].join("\n")
+        [head, Table.new(list).format].join("\n")
+      end
+
+      def head
+        HEAD % ctx.name
       end
 
       def list
@@ -21,7 +19,7 @@ class Cl
       end
 
       def format_cmd(cmd)
-        ["#{Usage.new(cmd).format}", cmd.summary]
+        ["#{Usage.new(ctx, cmd).format}", cmd.summary]
       end
     end
   end

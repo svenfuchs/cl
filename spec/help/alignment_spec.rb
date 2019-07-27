@@ -20,7 +20,7 @@ describe Cl, 'help' do
 
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
-          Usage: rspec test a [options]
+          Usage: cl test a [options]
 
           Options:
 
@@ -56,7 +56,7 @@ describe Cl, 'help' do
 
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
-          Usage: rspec test a [options]
+          Usage: cl test a [options]
 
           Options:
 

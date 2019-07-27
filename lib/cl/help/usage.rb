@@ -1,17 +1,15 @@
 class Cl
   class Help
-    class Usage
-      attr_reader :cmd
-
-      def initialize(cmd)
-        @cmd = cmd
-      end
-
+    class Usage < Struct.new(:ctx, :cmd)
       def format
-        usage = [$0.split('/').last, name]
+        usage = [executable, name]
         usage += cmd.args.map(&:to_s) # { |arg| "[#{arg}]" }
         usage << '[options]' if opts?
         usage.join(' ')
+      end
+
+      def executable
+        ctx.name
       end
 
       def name

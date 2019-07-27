@@ -11,7 +11,7 @@ describe Cl, 'help' do
 
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
-         Type "rspec help COMMAND [SUBCOMMAND]" for more details:
+         Type "cl help COMMAND [SUBCOMMAND]" for more details:
 
          [no commands]
         str

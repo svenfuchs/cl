@@ -40,10 +40,10 @@ describe Cl, 'help' do
 
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
-         Type "rspec help COMMAND [SUBCOMMAND]" for more details:
+         Type "cl help COMMAND [SUBCOMMAND]" for more details:
 
-         rspec test a foo:int [bar] [baz] [options]         Use this to a the a
-         rspec test b [options]                             Use this to b the b
+         cl test a foo:int [bar] [baz] [options]         Use this to a the a
+         cl test b [options]                             Use this to b the b
         str
       end
     end
@@ -53,7 +53,7 @@ describe Cl, 'help' do
 
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
-          Usage: rspec test a foo:int [bar] [baz] [options]
+          Usage: cl test a foo:int [bar] [baz] [options]
 
           Summary:
 

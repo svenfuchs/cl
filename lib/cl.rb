@@ -8,14 +8,14 @@ class Cl
 
   # @overload initialize(ctx, name, opts)
   #   @param ctx  [Cl::Ctx] the current execution context (optional)
-  #   @param name [String] the program (executable) name (optional, defaults to $0)
+  #   @param name [String] the program (executable) name (optional, defaults to the last segment of $0)
   #   @param opts [Hash] options (optional)
   #   @option opts [Cl::Runner] :runner registry key for a runner (optional, defaults to :default)
   #   @option opts [Cl::Ui] :ui the ui for handling user interaction
   def initialize(*args)
     ctx   = args.shift if args.first.is_a?(Ctx)
     @opts = args.last.is_a?(Hash) ? args.pop : {}
-    @name = args.shift || $0
+    @name = args.shift || $0.split('/').last
     @ctx  = ctx || Ctx.new(name, opts)
   end
 

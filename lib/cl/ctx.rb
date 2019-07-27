@@ -9,11 +9,12 @@ class Cl
     def_delegators :ui, :puts, :stdout, :announce, :info, :notice, :warn,
       :error, :success, :cmd
 
-    attr_accessor :config, :ui
+    attr_accessor :config, :name, :ui
 
     def initialize(name, opts = {})
       @config = Config.new(name).to_h
       @ui = opts[:ui] || Ui.new(self, opts)
+      @name = name
     end
 
     def abort(error, *strs)

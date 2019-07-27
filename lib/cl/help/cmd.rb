@@ -3,21 +3,15 @@ require 'cl/help/usage'
 
 class Cl
   class Help
-    class Cmd
+    class Cmd < Struct.new(:ctx, :cmd)
       include Regex
-
-      attr_reader :cmd
-
-      def initialize(cmd)
-        @cmd = cmd
-      end
 
       def format
         [usage, summary, description, arguments, options, common, examples].compact.join("\n\n")
       end
 
       def usage
-        "Usage: #{Usage.new(cmd).format}"
+        "Usage: #{Usage.new(ctx, cmd).format}"
       end
 
       def summary
