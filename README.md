@@ -1,14 +1,17 @@
 # Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.org/svenfuchs/cl)
 
-This library wraps Ruby's `OptionParser` in order to make it easier to use it
-in an object oriented context.
+OptionParser based CLI support for rapid CLI development in an object-oriented
+context.
 
-It uses `OptionParser` for parsing your options, so you get all the goodness that
-this gem from Ruby's stoneage provides.
+This library wraps Ruby's OptionParser in order to make it easier to use it in
+an object oriented context.
+
+It uses OptionParser for parsing your options under the hood, so you get all
+the goodness that this library provides.
 
 But on top of that it also provides a rich DSL for defining, validating, and
 normalizing options, as well as automatic and gorgeous help output (modeled
-after Rubygem's `gem --help` output).
+after `gem --help`).
 
 Further documentation is available on [rubydoc.info](https://www.rubydoc.info/github/svenfuchs/cl)
 
