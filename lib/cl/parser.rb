@@ -9,20 +9,26 @@ class Cl
 
       super do
         opts.each do |opt|
-          on(*dasherize(*opt.strs)) do |value|
+          on(*args_for(opt, opt.strs)) do |value|
             set(opt, value)
           end
 
           opt.aliases.each do |name|
-            on(*dasherize(aliased(opt, name))) do |value|
+            on(*args_for(opt, [aliased(opt, name)])) do |value|
               @opts[name] = set(opt, value)
             end
           end
         end
       end
 
-      args.replace(dasherize(*args))
+      args.replace(dasherize(args))
       parse!(args)
+    end
+
+    def args_for(opt, strs)
+      args = dasherize(strs)
+      args = flagerize(args) if opt.flag?
+      args
     end
 
     def aliased(opt, name)
@@ -33,6 +39,7 @@ class Cl
 
     # should consider negative arities (e.g. |one, *two|)
     def set(opt, value)
+      value = true if value.nil? && opt.flag?
       args = [opts, opt.type, opt.name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
@@ -40,8 +47,15 @@ class Cl
 
     DASHERIZE = /^--([^= ])*/
 
-    def dasherize(*strs)
-      strs.map { |str| str.gsub(DASHERIZE) { |opt| opt.gsub('_', '-') } }
+    def dasherize(strs)
+      strs.map do |str|
+        str.is_a?(String) ? str.gsub(DASHERIZE) { |opt| opt.gsub('_', '-') } : str
+      end
+    end
+
+    def flagerize(strs)
+      strs = strs.map { |str| str.include?(' ') ? str : "#{str} [true|false|yes|no]" }
+      strs << TrueClass
     end
   end
 end

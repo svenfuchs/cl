@@ -41,6 +41,10 @@ class Cl
       strs.any? { |str| str.split(' ').size > 1 } ? :string : :flag
     end
 
+    def flag?
+      type == :flag
+    end
+
     def int?
       type == :int || type == :integer
     end
@@ -71,7 +75,7 @@ class Cl
     end
 
     def default?
-      !!default
+      opts.key?(:default)
     end
 
     def default
