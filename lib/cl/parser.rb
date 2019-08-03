@@ -59,7 +59,7 @@ class Cl
 
     def negation(opts, arg)
       opts.detect do |opt|
-        str = opt.negate.detect { |str| arg =~ /^--#{str}[-_]+/ }
+        str = opt.negate.detect { |str| arg =~ /^--#{str}[-_]+#{opt.name}/ }
         break str if str
       end
     end
