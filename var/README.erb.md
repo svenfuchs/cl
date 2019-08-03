@@ -37,6 +37,7 @@ Further documentation is available on [rubydoc.info](https://www.rubydoc.info/gi
     * [Format](#format)
     * [Internal](#internal)
     * [Min and Max](#min-and-max)
+    * [Negations](#negations)
     * [Note](#note)
     * [Secret](#secret)
     * [See Also](#see-also)
@@ -444,6 +445,17 @@ For example:
 
 ```ruby
 <%= example('readme/range') %>
+```
+
+#### Negations
+
+Flags (boolean options) automatically allow negation using `--no-*` and
+`--no_*` using OptionParser's support for these. However, sometimes it can be
+convenient to allow other terms for negating an option. Flags therefore accept
+an option `negate` like so:
+
+```ruby
+<%= example('readme/negate') %>
 ```
 
 #### Note

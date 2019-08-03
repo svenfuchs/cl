@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+require 'cl'
+
+class Add < Cl::Cmd
+  opt '--notifications', 'Send out notifications to the team', negate: %w(skip)
+
+  def run
+    p notifications?
+  end
+end
+
+Cl.new('owners').run(%w(add --notifications))
+# => true
+
+Cl.new('owners').run(%w(add --no_notifications))
+# => false
+
+Cl.new('owners').run(%w(add --no-notifications))
+# => false
+
+Cl.new('owners').run(%w(add --skip_notifications))
+# => false
+
+Cl.new('owners').run(%w(add --skip-notifications))
+# => false

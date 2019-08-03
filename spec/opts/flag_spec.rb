@@ -62,6 +62,18 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --no_flag)).no_flag?).to be true }
   end
 
+  describe 'flag with negtions' do
+    let(:opts) { ->(*) { opt('--flag', negate: %w(skip without)) } }
+
+    it { expect(cmd(%w(cmd --flag)).flag?).to be true }
+    it { expect(cmd(%w(cmd --no-flag)).flag?).to be false }
+    it { expect(cmd(%w(cmd --skip-flag)).flag?).to be false }
+    it { expect(cmd(%w(cmd --without-flag)).flag?).to be false }
+    it { expect(cmd(%w(cmd --no_flag)).flag?).to be false }
+    it { expect(cmd(%w(cmd --skip_flag)).flag?).to be false }
+    it { expect(cmd(%w(cmd --without_flag)).flag?).to be false }
+  end
+
   describe 'flag with an alias, underscored' do
     let(:opts) { ->(*) { opt('--a_flag', 'A flag', alias: 'b_flag') } }
 

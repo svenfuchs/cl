@@ -91,12 +91,7 @@ class Cl
     end
 
     def known?(value)
-      enum.include?(value)
-      enum.any? { |obj| matches?(obj, value) }
-    end
-
-    def matches?(obj, value)
-      obj.is_a?(Regexp) ? obj =~ value.to_s : obj == value
+      enum.any? { |obj| obj.is_a?(Regexp) ? obj =~ value.to_s : obj == value }
     end
 
     def example?
@@ -138,6 +133,14 @@ class Cl
 
     def max
       opts[:max]
+    end
+
+    def negate?
+      !!opts[:negate]
+    end
+
+    def negate
+      Array(opts[:negate])
     end
 
     def note?

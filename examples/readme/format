@@ -19,11 +19,11 @@ Cl.new('owners').run(%w(add --to one))
 
 Cl.new('owners').run(['add', '--to', 'does not match!'])
 
-Invalid format: to (format: /^\w+$/)
-
-Usage: format add [options]
-
-Options:
-
-  --to GROUP      type: string, format: /^\w+$/
-  --help          Get help on this command
+# Invalid format: to (format: /^\w+$/)
+#
+# Usage: format add [options]
+#
+# Options:
+#
+#   --to GROUP      type: string, format: /^\w+$/
+#   --help          Get help on this command

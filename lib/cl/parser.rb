@@ -21,7 +21,7 @@ class Cl
         end
       end
 
-      args.replace(dasherize(args))
+      args.replace(normalize(opts, args))
       parse!(args)
     end
 
@@ -43,6 +43,25 @@ class Cl
       args = [opts, opt.type, opt.name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
+    end
+
+    def normalize(opts, args)
+      args = noize(opts, args)
+      dasherize(args)
+    end
+
+    def noize(opts, args)
+      args.map do |arg|
+        str = negation(opts, arg)
+        str ? arg.sub(/^--#{str}[-_]+/, '--no-') : arg
+      end
+    end
+
+    def negation(opts, arg)
+      opts.detect do |opt|
+        str = opt.negate.detect { |str| arg =~ /^--#{str}[-_]+/ }
+        break str if str
+      end
     end
 
     DASHERIZE = /^--([^= ])*/

@@ -37,6 +37,7 @@ Further documentation is available on [rubydoc.info](https://www.rubydoc.info/gi
     * [Format](#format)
     * [Internal](#internal)
     * [Min and Max](#min-and-max)
+    * [Negations](#negations)
     * [Note](#note)
     * [Secret](#secret)
     * [See Also](#see-also)
@@ -655,14 +656,14 @@ Cl.new('owners').run(%w(add --to one))
 
 Cl.new('owners').run(['add', '--to', 'does not match!'])
 
-Invalid format: to (format: /^\w+$/)
-
-Usage: format add [options]
-
-Options:
-
-  --to GROUP      type: string, format: /^\w+$/
-  --help          Get help on this command
+# Invalid format: to (format: /^\w+$/)
+#
+# Usage: format add [options]
+#
+# Options:
+#
+#   --to GROUP      type: string, format: /^\w+$/
+#   --help          Get help on this command
 
 ```
 
@@ -724,6 +725,39 @@ Cl.new('owners').run(%w(add --retries 10))
 #
 #   --retries COUNT      type: integer, min: 1, max: 5
 #   --help               Get help on this command
+
+```
+
+#### Negations
+
+Flags (boolean options) automatically allow negation using `--no-*` and
+`--no_*` using OptionParser's support for these. However, sometimes it can be
+convenient to allow other terms for negating an option. Flags therefore accept
+an option `negate` like so:
+
+```ruby
+class Add < Cl::Cmd
+  opt '--notifications', 'Send out notifications to the team', negate: %w(skip)
+
+  def run
+    p notifications?
+  end
+end
+
+Cl.new('owners').run(%w(add --notifications))
+# => true
+
+Cl.new('owners').run(%w(add --no_notifications))
+# => false
+
+Cl.new('owners').run(%w(add --no-notifications))
+# => false
+
+Cl.new('owners').run(%w(add --skip_notifications))
+# => false
+
+Cl.new('owners').run(%w(add --skip-notifications))
+# => false
 
 ```
 
