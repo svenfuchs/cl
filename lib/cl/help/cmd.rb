@@ -140,6 +140,7 @@ class Cl
       end
 
       def rjust(objs)
+        return objs unless objs.any?
         width = objs.max_by(&:size).size
         objs.map { |objs| [*Array.new(width - objs.size) { '' }, *objs] }
       end
