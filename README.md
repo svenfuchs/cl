@@ -178,6 +178,7 @@ $ bin/run two
 The default runner also supports nested namespaces, and checks for command classes
 with keys separated by colons. For instance:
 
+```ruby
 module Git
   class Pull < Cl::Cmd
     register :'git:pull'
@@ -191,10 +192,8 @@ end
 # With this class registered (and assuming the executable that calls `Cl` is
 # `bin/run`) the default runner would recognize and run it:
 #
-# ```
 # $ bin/run git:pull master # instantiates Git::Pull, and passes ["master"] as args
 # $ bin/run git pull master # does the same
-# ```
 
 Cl.new('run').run(%w(git:pull master))
 # Output:
@@ -206,6 +205,7 @@ Cl.new('run').run(%w(git pull master))
 #
 #   {:cmd=>:"git:pull", :args=>["master"]}
 
+```
 
 Runners are registered on the module `Cl::Runner`. It is possible to register custom
 runners, and use them by passing the option `runner` to `Cl.new`:
@@ -224,10 +224,8 @@ end
 # With this class registered (and assuming the executable that calls `Cl` is
 # `bin/run`) the default runner would recognize and run it:
 #
-# ```
 # $ bin/run git:pull master # instantiates Git::Pull, and passes ["master"] as args
 # $ bin/run git pull master # does the same
-# ```
 
 Cl.new('run').run(%w(git:pull master))
 # Output:

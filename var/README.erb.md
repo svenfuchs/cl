@@ -106,7 +106,9 @@ $ bin/run two
 The default runner also supports nested namespaces, and checks for command classes
 with keys separated by colons. For instance:
 
+```ruby
 <%= example('readme/runner') %>
+```
 
 Runners are registered on the module `Cl::Runner`. It is possible to register custom
 runners, and use them by passing the option `runner` to `Cl.new`:
