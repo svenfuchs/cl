@@ -17,7 +17,7 @@ class Cl
       return values if args.empty? || opts[:help]
       values = splat(values) if splat?
       validate(values)
-      args.zip(values).map { |(arg, value)| arg.set(cmd, value) }.flatten(1)
+      args.zip(values).map { |(arg, value)| arg.set(cmd, value) }.flatten(1).compact
     end
 
     def each(&block)
@@ -55,7 +55,6 @@ class Cl
         args.each.with_index.inject([]) do |group, (arg, ix)|
           count = arg && arg.splat? ? [values.size - args.size + ix + 1] : []
           group << values.shift(*count)
-          group.compact
         end
       end
   end

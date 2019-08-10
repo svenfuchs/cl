@@ -104,4 +104,16 @@ describe Cl, 'args' do
     let(:args) { %w(args bar 1 2 3 a) }
     it { expect { cmd }.to raise_error(Cl::ArgumentError, 'Wrong argument type (given: "a", expected: float)') }
   end
+
+  let!(:none) do
+    Class.new(Cl::Cmd) do
+      register 'args:none'
+      arg :a
+    end
+  end
+
+  describe 'no args' do
+    let(:args) { %w(args none) }
+    it { expect(cmd.args).to eq [] }
+  end
 end

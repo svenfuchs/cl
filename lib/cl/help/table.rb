@@ -42,9 +42,12 @@ class Cl
       def widths
         cols.map.with_index do |col, ix|
           max = col.compact.max_by(&:size)
-          width = max ? max.size : 0
-          ix < cols.size - 2 ? width : width + padding.to_i
+          pad(max ? max.size : 0, ix)
         end
+      end
+
+      def pad(width, ix)
+        ix < cols.size - 2 ? width : width + padding.to_i
       end
 
       def cols

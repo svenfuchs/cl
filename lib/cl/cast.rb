@@ -14,7 +14,7 @@ class Cl
       private
 
         def array
-          Array(value).compact.flatten.map { |value| split(value) }.flatten
+          Array(value).compact.flatten.map { |value| split(value) }.flatten.compact
         end
 
         def string
@@ -49,7 +49,7 @@ class Cl
     end
 
     def cast(value)
-      value.nil? ? value : Cast.new(type, value, separator: separator).apply
+      type ? Cast.new(type, value, separator: separator).apply : value
     end
   end
 end
