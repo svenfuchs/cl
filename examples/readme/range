@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--retries COUNT', type: :integer, min: 1, max: 5
 
   def run
-    p retries
+    p retries: retries
   end
 end
 
@@ -15,15 +15,17 @@ Cl.new('owners').run(%w(add --retries 1))
 
 # Output:
 #
-#   1
+#   {:retries=>1}
 
 Cl.new('owners').run(%w(add --retries 10))
 
-# Out of range: retries (max: 5)
+# Output:
 #
-# Usage: max add [options]
+#   Out of range: retries (min: 1, max: 5)
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --retries COUNT      type: integer, min: 1, max: 5
-#   --help               Get help on this command
+#   Options:
+#
+#     --retries COUNT      type: integer, min: 1, max: 5
+#     --help               Get help on this command

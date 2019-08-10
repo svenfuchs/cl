@@ -5,7 +5,7 @@ require 'erb'
 
 def example(path)
   str = File.read("examples/#{path}")
-  str.lines[5..-1].join
+  str.lines.drop_while { |line| line !~ /(module|class)/ }.join
 end
 
 erb = ERB.new(File.read('var/README.erb.md'), nil, '-')

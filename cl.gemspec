@@ -14,13 +14,10 @@ Gem::Specification.new do |s|
     OptionParser based CLI support for rapid CLI development in an object-oriented
     context.
 
-    This library wraps Ruby's OptionParser in order to make it easier to use it in
-    an object oriented context.
+    This library wraps Ruby's OptionParser for parsing your options under the hood,
+    so you get all the goodness that the Ruby standard library provides.
 
-    It uses OptionParser for parsing your options under the hood, so you get all
-    the goodness that this library provides.
-
-    But on top of that it also provides a rich DSL for defining, validating, and
+    On top of that it adds a rich and powerful DSL for defining, validating, and
     normalizing options, as well as automatic and gorgeous help output (modeled
     after `gem --help`).
   str

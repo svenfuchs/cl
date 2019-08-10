@@ -7,10 +7,12 @@ class Add < Cl::Cmd
   arg :owners, type: :array, sep: ','
 
   def run
-    p owners
+    p owners: owners
   end
 end
 
 Cl.new('owners').run(%w(add one,two))
 
-# => ["one", "two"]
+# Output:
+#
+#   {:owners=>["one", "two"]}

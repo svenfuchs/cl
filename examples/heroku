@@ -12,7 +12,9 @@ module Heroku
 
       opt '-o', '--org ORG'
 
-      def run; [registry_key, args, opts] end
+      def run
+        p cmd: registry_key, args: args, opts: opts
+      end
     end
 
     class List < Cl::Cmd
@@ -20,30 +22,27 @@ module Heroku
 
       opt '-a', '--app APP'
 
-      def run; [registry_key, args, opts] end
+      def run
+        p cmd: registry_key, args: args, opts: opts
+      end
     end
   end
 end
 
-def output(cmd, args, opts)
-  puts "Called #{cmd} with args=#{args} opts=#{opts}\n\n"
-end
-
-output *Cl.new($0).run(%w(apps:create name -o org))
+Cl.new('heroku').run(%w(apps:create name -o org))
+# or:
+#
+#   Cl.new('heroku').run(%w(apps create name -o org))
 
 # Output:
 #
-#   Called apps:create with args=["name"] opts={:org=>"org"}
+#   {:cmd=>:"apps:create", :args=>["name"], :opts=>{:org=>"org"}}
 
-output *Cl.new($0).run(%w(apps create name -o org))
+Cl.new('heroku').run(%w(apps:info -a app))
+# or:
+#
+#   Cl.new('heroku').run(%w(apps info -a app))
 
 # Output:
 #
-#   Called apps:create with args=["name"] opts={:org=>"org"}
-
-output *Cl.new($0).run(%w(apps:info -a app))
-
-# Output:
-#
-#   Called apps:create with args=["app"] opts={}
-
+#   {:cmd=>:"apps:info", :args=>[], :opts=>{:app=>"app"}}

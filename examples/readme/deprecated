@@ -4,11 +4,10 @@ $: << File.expand_path('lib')
 require 'cl'
 
 class Add < Cl::Cmd
-  opt '--to GROUP'
-  opt '--target GROUP', deprecated: 'Deprecated: --target'
+  opt '--target GROUP', deprecated: 'Deprecated.'
 
   def run
-    p to, deprecated_opts
+    p target: target, deprecations: deprecations
   end
 end
 
@@ -16,6 +15,4 @@ Cl.new('owners').run(%w(add --target one))
 
 # Output:
 #
-#   "one"
-#   {:target=>'Deprecated: --target'}
-
+#   {:target=>"one", :deprecations=>{:target=>"Deprecated."}}

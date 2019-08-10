@@ -1,36 +1,44 @@
 #!/usr/bin/env ruby
 $: << File.expand_path('lib')
 
-require 'cl'
-
 class Add < Cl::Cmd
-  # read DNF, i.e. "apikey OR username AND password
-  required :api_key, [:username, :password]
+  # read DNF, i.e. "token OR user AND pass
+  required :token, [:user, :pass]
 
-  opt '--api_key KEY'
-  opt '--username NAME'
-  opt '--password PASS'
+  opt '--token TOKEN'
+  opt '--user NAME'
+  opt '--pass PASS'
 
   def run
-    p to, retries
+    p token: token, user: user, pass: pass
   end
 end
 
-Cl.new('owners').run(%w(add --to one --retries 1))
+Cl.new('owners').run(%w(add --token token))
 
 # Output:
 #
-#   "one"
-#   1
+#   {:token=>"token", :user=>nil, :pass=>nil}
 
-Cl.new('owners').run(%w(add --retries 1))
+Cl.new('owners').run(%w(add --user user --pass pass))
 
-# Missing option: to (required by retries)
+# Output:
 #
-# Usage: requires add [options]
+#   {:token=>nil, :user=>"user", :pass=>"pass"}
+
+Cl.new('owners').run(%w(add))
+
+# Output:
 #
-# Options:
+#   Missing options: token, or user and pass
 #
-#   --to GROUP         type: string
-#   --retries INT      type: string, requires: to
-#   --help             Get help on this command
+#   Usage: owners add [options]
+#
+#   Options:
+#
+#     Either token, or user and pass are required.
+#
+#     --token TOKEN      type: string
+#     --user NAME        type: string
+#     --pass PASS        type: string
+#     --help             Get help on this command

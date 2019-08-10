@@ -8,18 +8,19 @@ class Base < Cl::Cmd
 end
 
 class Add < Base
+  def run
+    puts 'Success'
+  end
 end
 
-Cl.new('owners').help
+Cl.new('owners').run(%w(add))
 
 # Output:
 #
-#   Type "owners help COMMAND [SUBCOMMAND]" for more details:
-#
-#   owners add [options]
+#   Success
 
 Cl.new('owners').run(%w(base))
 
-# Error output:
+# Output:
 #
 #   Unknown command: base

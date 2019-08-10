@@ -3,6 +3,8 @@ $: << File.expand_path('lib')
 
 require 'cl'
 
+require 'cl'
+
 class Add < Cl::Cmd
   opt '--to GROUP'
   opt '--hidden', internal: true
@@ -10,9 +12,11 @@ end
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: example add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, e.g.: group-one
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string
+#     --help          Get help on this command

@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', downcase: true
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -15,4 +15,4 @@ Cl.new('owners').run(%w(add --to ONE))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}

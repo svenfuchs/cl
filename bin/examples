@@ -1,0 +1,118 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('../../lib', __FILE__)
+
+require 'erb'
+
+class Example < Struct.new(:src)
+  attr_reader :actual, :expected, :num, :errors
+
+  def initialize(*)
+    super
+    @num = 0
+    @errors = []
+  end
+
+  def write
+    $stderr.puts "writing #{target}"
+    File.write(target, render)
+  end
+
+  private
+
+    def target
+      src.sub(%r(/src), '').sub('.erb.rb', '')
+    end
+
+    def render
+      ERB.new(File.read(src), nil, '-').result(binding)
+    end
+
+    def run(code)
+      @actual = capture { eval(code) }.strip
+      code
+    rescue Exception => e
+      puts e.message, e.backtrace unless e.message == 'exit'
+      @actual = @stdout.string.strip # Cl::Ui prints error messages to stdout? gotta fix that.
+      code
+    end
+
+    def out(expected)
+      @num += 1
+      @expected = expected.rstrip
+      errors << error unless actual.strip == expected.strip
+      comment ['Output:', indent(actual)].join("\n\n")
+    end
+
+    def indent(str)
+      map_lines(str) { |line| line.empty? ? line : "  #{line}" }
+    end
+
+    def comment(str)
+      map_lines(str) { |line| "# #{line}".strip }
+    end
+
+    def error
+      red sq(<<-msg)
+        Expected example output does not match its actual output in #{src}, example ##{num}.
+
+        Expected:
+
+        #{indent(expected)}
+
+        Actual:
+
+        #{indent(actual)}
+      msg
+    end
+
+    def map_lines(str, &block)
+      str.to_s.split("\n").map(&block).join("\n")
+    end
+
+    def capture
+      stdout, $stdout = $stdout, StringIO.new
+      @stdout = $stdout
+      yield
+      $stdout.string
+    ensure
+      $stdout = stdout
+    end
+
+    def sq(str)
+      width = str =~ /( *)\S/ && $1.size
+      str.lines.map { |line| line.gsub(/^ {#{width}}/, '') }.join
+    end
+end
+
+def red(str)
+  "\e[31m#{str}\e[0m"
+end
+
+def yellow(str)
+  "\e[33m#{str}\e[0m"
+end
+
+skip = %w()
+glob = ARGV.any? ? "{#{ARGV.join(',')}}" : '**/*'
+paths = Dir["examples/src/#{glob}.erb.rb"].sort
+# paths = paths[-1, 1]
+
+status = paths.inject(true) do |status, path|
+  if skip.include?(path)
+    $stderr.puts yellow("skipping #{path}")
+    next status
+  end
+
+  consts = Example.constants
+  example = Example.new(path)
+  example.write
+  example.errors.each { |msg| $stderr.puts msg }
+
+  Cl::Cmd.registry.objects.reject! { |key, _| key != :help } # ugh.
+  consts = Example.constants - consts
+  consts.each { |name| Example.send(:remove_const, name) }
+
+  status && example.errors.empty?
+end
+
+status ? puts('Ok.') : abort('Failed.')

@@ -7,10 +7,12 @@ class Add < Cl::Cmd
   arg :owner
 
   def run
-    p owner
+    p owner: owner
   end
 end
 
 Cl.new('owners').run(%w(add one))
 
-# => "one"
+# Output:
+#
+#   {:owner=>"one"}

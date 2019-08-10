@@ -3,59 +3,56 @@ $: << File.expand_path('lib')
 
 require 'cl'
 
-class SplatLeft < Cl::Cmd
-  register 'splat:left'
+module Splat
+  class Left < Cl::Cmd
+    register :left
 
-  arg :one, type: :array
-  args :two, :three
+    arg :one, type: :array, splat: true
+    args :two, :three
 
-  def run
-    [registry_key, one: one, two: two, three: three]
+    def run
+      p cmd: registry_key, one: one, two: two, three: three
+    end
+  end
+
+  class Middle < Cl::Cmd
+    register :middle
+
+    arg :one
+    arg :two, type: :array, splat: true
+    arg :three
+
+    def run
+      p cmd: registry_key, one: one, two: two, three: three
+    end
+  end
+
+  class Right < Cl::Cmd
+    register :right
+
+    args :one, :two
+    arg :three, type: :array, splat: true
+
+    def run
+      p cmd: registry_key, one: one, two: two, three: three
+    end
   end
 end
 
-class SplatMiddle < Cl::Cmd
-  register 'splat:middle'
-
-  arg :one
-  arg :two, type: :array
-  arg :three
-
-  def run
-    [registry_key, one: one, two: two, three: three]
-  end
-end
-
-class SplatRight < Cl::Cmd
-  register 'splat:right'
-
-  args :one, :two
-  arg :three, type: :array
-
-  def run
-    [registry_key, one: one, two: two, three: three]
-  end
-end
-
-def output(cmd, args)
-  args = args.map { |key, value| "#{key}=#{value.inspect}" }.join(' ')
-  puts "Called #{cmd} with #{args}\n\n"
-end
-
-output *Cl.new($0).run(%w(splat left foo bar baz buz))
+Cl.new('splat').run(%w(left foo bar baz buz))
 
 # Output:
 #
-#   Called splat:left with one=["foo", "bar"] two="baz" three="buz"
+#   {:cmd=>:left, :one=>["foo", "bar"], :two=>"baz", :three=>"buz"}
 
-output *Cl.new($0).run(%w(splat middle foo bar baz buz))
-
-# Output:
-#
-#   Called splat:middle with one="foo" two=["bar", "baz"] three="buz"
-
-output *Cl.new($0).run(%w(splat right foo bar baz buz))
+Cl.new('splat').run(%w(middle foo bar baz buz))
 
 # Output:
 #
-#   Called splat:middle with one="foo" two="bar" three=["baz", "buz"]
+#   {:cmd=>:middle, :one=>"foo", :two=>["bar", "baz"], :three=>"buz"}
+
+Cl.new('splat').run(%w(right foo bar baz buz))
+
+# Output:
+#
+#   {:cmd=>:right, :one=>"foo", :two=>"bar", :three=>["baz", "buz"]}

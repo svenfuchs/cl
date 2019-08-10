@@ -14,26 +14,23 @@ module Gem
         opt '-q', '--quiet',     'Silence output'
 
         def run
-          [registry_key, args, opts]
+          p cmd: registry_key, args: args, opts: opts
         end
       end
 
       class Bump < Cl::Cmd
-        defaults commit: true
-
         opt '-v', '--version VERSION', 'The version to bump to [1.1.1|major|minor|patch|pre|rc|release]'
         opt '--[no-]commit',           'Bump the version, but do not commit'
 
         def run
-          [registry_key, args, opts]
+          p cmd: registry_key, args: args, opts: opts
         end
       end
     end
   end
 end
 
-Cl.new($0).run(%w(help))
-puts
+Cl.new('gem').run(%w(help))
 
 # Output:
 #
@@ -42,13 +39,12 @@ puts
 #   gem release [gemspec] [options]
 #   gem bump [options]
 
-Cl.new($0).run(%w(help release))
-puts
 
+Cl.new('gem').run(%w(help release))
 # or:
 #
-#   Cl.new($0).run(%w(release --help)))
-#   Cl.new($0).run(%w(release -h)))
+#   Cl.new('gem').run(%w(release --help)))
+#   Cl.new('gem').run(%w(release -h)))
 #
 # Output:
 #
@@ -56,22 +52,21 @@ puts
 #
 #   Arguments:
 #
-#     gemspec
+#     gemspec              type: string
 #
 #   Options:
 #
-#     -h --host HOST      Push to a compatible host other than rubygems.org
-#     -k --key KEY        Rubygems API key to use
-#     -q --quiet          Silence output
-#        --help           Get help on this command
+#     -h --host HOST       Push to a compatible host other than rubygems.org (type: string)
+#     -k --key KEY         Rubygems API key to use (type: string)
+#     -q --[no-]quiet      Silence output
+#        --help            Get help on this command
 
-Cl.new($0).run(%w(help release))
-puts
 
+Cl.new('gem').run(%w(help bump))
 # or:
 #
-#   Cl.run($0, %w(release --help))
-#   Cl.run($0, %w(release -h))
+#   Cl.new('gem').run(%w(bump --help)))
+#   Cl.new('gem').run(%w(bump -h)))
 #
 # Output:
 #
@@ -79,26 +74,20 @@ puts
 #
 #   Options:
 #
-#     -v --version VERSION      The version to bump to [1.1.1|major|minor|patch|pre|rc|release]
-#        --no-commit            Bump the version, but do not commit
-#     -h --help                 Get help on this command
+#     -v --version VERSION      The version to bump to [1.1.1|major|minor|patch|pre|rc|release] (type: string)
+#        --[no-]commit          Bump the version, but do not commit
+#        --help                 Get help on this command
 
-cmds = [
-  Cl.new($0).run(%w(bump -v 1.1.1)),
-  Cl.new($0).run(%w(release foo.gemspec -h host -k key -q))
-]
 
-puts "Commands run:\n\n"
-puts cmds.map { |cmd, args, opts| "  cmd #{cmd} has run with:\n\n    args=#{args}\n    opts=#{opts}\n\n" }
+Cl.new('gem').run(%w(bump -v 1.1.1))
 
-# Commands run:
+# Output:
 #
-#   cmd bump has run with:
+#   {:cmd=>:bump, :args=>[], :opts=>{:version=>"1.1.1"}}
+
+
+Cl.new('gem').run(%w(release foo.gemspec -h host -k key -q))
+
+# Output:
 #
-#     args=[]
-#     opts={:version=>"1.1.1"}
-#
-#   cmd release has run with:
-#
-#     args=["foo.gemspec"]
-#     opts={:host=>"host", :key=>"key", :quiet=>true}
+#   {:cmd=>:release, :args=>["foo.gemspec"], :opts=>{:host=>"host", :key=>"key", :quiet=>true}}

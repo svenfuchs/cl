@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', enum: %w(one two)
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -15,12 +15,17 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}
 
 Cl.new('owners').run(%w(add --to unknown))
 
-# Unknown value: to=unknown (known values: one, two)
+# Output:
 #
-# Usage: enum add [options]
+#   Unknown value: to=unknown (known values: one, two)
 #
-# Options: ...
+#   Usage: owners add [options]
+#
+#   Options:
+#
+#     --to GROUP      type: string, known values: one, two
+#     --help          Get help on this command

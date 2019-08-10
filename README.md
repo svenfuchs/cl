@@ -1,15 +1,12 @@
-# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.org/svenfuchs/cl)
+# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.com/svenfuchs/cl) [![Rubydocs](http://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/github/svenfuchs/cl) [![Gem Version](https://badge.fury.io/rb/cl.png)](http://badge.fury.io/rb/cl)
 
 OptionParser based CLI support for rapid CLI development in an object-oriented
 context.
 
-This library wraps Ruby's OptionParser in order to make it easier to use it in
-an object oriented context.
+This library wraps Ruby's OptionParser for parsing your options under the hood,
+so you get all the goodness that the Ruby standard library provides.
 
-It uses OptionParser for parsing your options under the hood, so you get all
-the goodness that this library provides.
-
-But on top of that it also provides a rich DSL for defining, validating, and
+On top of that it adds a rich and powerful DSL for defining, validating, and
 normalizing options, as well as automatic and gorgeous help output (modeled
 after `gem --help`).
 
@@ -277,19 +274,20 @@ class Base < Cl::Cmd
 end
 
 class Add < Base
+  def run
+    puts 'Success'
+  end
 end
 
-Cl.new('owners').help
+Cl.new('owners').run(%w(add))
 
 # Output:
 #
-#   Type "owners help COMMAND [SUBCOMMAND]" for more details:
-#
-#   owners add [options]
+#   Success
 
 Cl.new('owners').run(%w(base))
 
-# Error output:
+# Output:
 #
 #   Unknown command: base
 
@@ -311,13 +309,15 @@ class Add < Cl::Cmd
   arg :owner
 
   def run
-    p owner
+    p owner: owner
   end
 end
 
 Cl.new('owners').run(%w(add one))
 
-# => "one"
+# Output:
+#
+#   {:owner=>"one"}
 
 ```
 
@@ -337,13 +337,15 @@ class Add < Cl::Cmd
   arg :owners, type: :array, sep: ','
 
   def run
-    p owners
+    p owners: owners
   end
 end
 
 Cl.new('owners').run(%w(add one,two))
 
-# => ["one", "two"]
+# Output:
+#
+#   {:owners=>["one", "two"]}
 
 ```
 
@@ -362,7 +364,9 @@ end
 
 Cl.new('owners').run(%w(cmd 1 2.1 yes))
 
-# => [Integer, Float, TrueClass]
+# Output:
+#
+#   [Integer, Float, TrueClass]
 
 ```
 
@@ -373,19 +377,53 @@ Array arguments support splats, modeled after Ruby argument splats.
 For example:
 
 ```ruby
-class Cmd < Cl::Cmd
-  arg :one, type: :integer
-  arg :two, type: :float
-  arg :three, type: :boolean
+class Lft < Cl::Cmd
+  arg :a, type: :array, splat: true
+  arg :b
+  arg :c
 
   def run
-    p [one.class, two.class, three.class]
+    p [a, b, c]
   end
 end
 
-Cl.new('owners').run(%w(cmd 1 2.1 yes))
+class Mid < Cl::Cmd
+  arg :a
+  arg :b, type: :array, splat: true
+  arg :c
 
-# => [Integer, Float, TrueClass]
+  def run
+    p [a, b, c]
+  end
+end
+
+class Rgt < Cl::Cmd
+  arg :a
+  arg :b
+  arg :c, type: :array, splat: true
+
+  def run
+    p [a, b, c]
+  end
+end
+
+Cl.new('splat').run(%w(lft 1 2 3 4 5))
+
+# Output:
+#
+#   [["1", "2", "3"], "4", "5"]
+
+Cl.new('splat').run(%w(mid 1 2 3 4 5))
+
+# Output:
+#
+#   ["1", ["2", "3", "4"], "5"]
+
+Cl.new('splat').run(%w(rgt 1 2 3 4 5))
+
+# Output:
+#
+#   ["1", "2", ["3", "4", "5"]]
 
 ```
 
@@ -404,7 +442,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', 'Target group to add owners to'
 
   def run
-    p opts, to, to?
+    p opts: opts, to: to, to?: to?
   end
 end
 
@@ -412,18 +450,18 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   {"to" => "one"}
-#   "one"
-#   true
+#   {:opts=>{:to=>"one"}, :to=>"one", :to?=>true}
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: opts add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      Target group to add owners to (type: string)
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      Target group to add owners to (type: string)
+#     --help          Get help on this command
 
 ```
 
@@ -442,11 +480,11 @@ class Add < Cl::Cmd
   # * value, name, type
   # * value, name, type, opts
   opt '--to GROUP' do |value|
-    opts[:to] = "#{value.upcase}!"
+    opts[:to] = "group-#{value}"
   end
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -454,7 +492,8 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   "ONE!"
+#   {:to=>"group-one"}
+
 
 ```
 
@@ -467,19 +506,16 @@ class Add < Cl::Cmd
   opt '--to GROUP', alias: :group
 
   def run
-    p opts, to, to?, group, group?
+    # p opts: opts, to: to, to?: to?, group: group, group?: group?
+    p opts: opts, to: to, to?: to?
   end
 end
 
-Cl.new('owners').run(%w(add --to one))
+Cl.new('owners').run(%w(add --group one))
 
 # Output:
 #
-#   {"to" => "one"}
-#   "one"
-#   true
-#   "one"
-#   true
+#   {:opts=>{:to=>"one", :group=>"one"}, :to=>"one", :to?=>true}
 
 ```
 
@@ -494,7 +530,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', default: 'default'
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -502,7 +538,7 @@ Cl.new('owners').run(%w(add))
 
 # Output:
 #
-#   "default"
+#   {:to=>"default"}
 
 ```
 
@@ -514,11 +550,10 @@ For a deprecated option:
 
 ```ruby
 class Add < Cl::Cmd
-  opt '--to GROUP'
-  opt '--target GROUP', deprecated: 'Deprecated: --target'
+  opt '--target GROUP', deprecated: 'Deprecated.'
 
   def run
-    p to, deprecated_opts
+    p target: target, deprecations: deprecations
   end
 end
 
@@ -526,9 +561,7 @@ Cl.new('owners').run(%w(add --target one))
 
 # Output:
 #
-#   "one"
-#   {:target=>'Deprecated: --target'}
-
+#   {:target=>"one", :deprecations=>{:target=>"Deprecated."}}
 
 ```
 
@@ -539,7 +572,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', alias: :target, deprecated: :target
 
   def run
-    p to, deprecated_opts
+    p to: to, deprecations: deprecations
   end
 end
 
@@ -547,9 +580,7 @@ Cl.new('owners').run(%w(add --target one))
 
 # Output:
 #
-#   "one"
-#   {:target=>:to}
-
+#   {:to=>"one", :deprecations=>{:target=>:to}}
 
 ```
 
@@ -564,7 +595,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', downcase: true
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -572,7 +603,7 @@ Cl.new('owners').run(%w(add --to ONE))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}
 
 ```
 
@@ -590,7 +621,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', enum: %w(one two)
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -598,15 +629,20 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}
 
 Cl.new('owners').run(%w(add --to unknown))
 
-# Unknown value: to=unknown (known values: one, two)
+# Output:
 #
-# Usage: enum add [options]
+#   Unknown value: to=unknown (known values: one, two)
 #
-# Options: ...
+#   Usage: owners add [options]
+#
+#   Options:
+#
+#     --to GROUP      type: string, known values: one, two
+#     --help          Get help on this command
 
 ```
 
@@ -621,12 +657,14 @@ end
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: example add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, e.g.: group-one
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string, e.g.: group-one
+#     --help          Get help on this command
 
 ```
 
@@ -644,7 +682,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', format: /^\w+$/
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -652,18 +690,20 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}
 
 Cl.new('owners').run(['add', '--to', 'does not match!'])
 
-# Invalid format: to (format: /^\w+$/)
+# Output:
 #
-# Usage: format add [options]
+#   Invalid format: to (format: /^\w+$/)
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, format: /^\w+$/
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string, format: /^\w+$/
+#     --help          Get help on this command
 
 ```
 
@@ -681,12 +721,14 @@ end
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: example add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, e.g.: group-one
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string
+#     --help          Get help on this command
 
 ```
 
@@ -705,7 +747,7 @@ class Add < Cl::Cmd
   opt '--retries COUNT', type: :integer, min: 1, max: 5
 
   def run
-    p retries
+    p retries: retries
   end
 end
 
@@ -713,18 +755,20 @@ Cl.new('owners').run(%w(add --retries 1))
 
 # Output:
 #
-#   1
+#   {:retries=>1}
 
 Cl.new('owners').run(%w(add --retries 10))
 
-# Out of range: retries (max: 5)
+# Output:
 #
-# Usage: max add [options]
+#   Out of range: retries (min: 1, max: 5)
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --retries COUNT      type: integer, min: 1, max: 5
-#   --help               Get help on this command
+#   Options:
+#
+#     --retries COUNT      type: integer, min: 1, max: 5
+#     --help               Get help on this command
 
 ```
 
@@ -745,19 +789,34 @@ class Add < Cl::Cmd
 end
 
 Cl.new('owners').run(%w(add --notifications))
-# => true
+
+# Output:
+#
+#   true
 
 Cl.new('owners').run(%w(add --no_notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --no-notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --skip_notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --skip-notifications))
-# => false
+
+# Output:
+#
+#   false
 
 ```
 
@@ -791,21 +850,21 @@ on this in order to, for example, obfuscate values from log output.
 
 ```ruby
 class Add < Cl::Cmd
-  opt '--to GROUP'
-  opt '--password PASS', secret: true
+  opt '--pass PASS', secret: true
 
   def run
-    puts [:secret?, self.class.opts[:password].secret?].join(' ')
-    puts [:tainted?, password.tainted?].join(' ')
+    p(
+      secret?: self.class.opts[:pass].secret?,
+      tainted?: pass.tainted?
+    )
   end
 end
 
-Cl.new('owners').run(%w(add --password pass))
+Cl.new('owners').run(%w(add --pass pass))
 
 # Output:
 #
-#   secret? true
-#   tainted? true
+#   {:secret?=>true, :tainted?=>true}
 
 ```
 
@@ -819,20 +878,18 @@ For example:
 ```ruby
 class Add < Cl::Cmd
   opt '--to GROUP', see: 'https://docs.io/cli/owners/add'
-
-  def run
-    p retries
-  end
 end
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: see add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, see: https://docs.io/cli/owners/add
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string, see: https://docs.io/cli/owners/add
+#     --help          Get help on this command
 
 ```
 
@@ -871,7 +928,7 @@ class Add < Cl::Cmd
   opt '--sleep FLOAT', type: :float
 
   def run
-    p active.class, retries.class, sleep.class
+    p active: active.class, retries: retries.class, sleep: sleep.class
   end
 end
 
@@ -879,9 +936,7 @@ Cl.new('owners').run(%w(add --active yes --retries 1 --sleep 0.1))
 
 # Output:
 #
-#   TrueClass
-#   Integer
-#   Float
+#   {:active=>TrueClass, :retries=>Integer, :sleep=>Float}
 
 ```
 
@@ -900,7 +955,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', required: true
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -908,18 +963,20 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   "one"
+#   {:to=>"one"}
 
 Cl.new('owners').run(%w(add))
 
-# Missing required option: to
+# Output:
 #
-# Usage: required add [options]
+#   Missing required option: to
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      type: string, required: true
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      type: string, required: true
+#     --help          Get help on this command
 
 ```
 
@@ -928,31 +985,32 @@ This will make the option `--retries` depend on the option `--to`:
 ```ruby
 class Add < Cl::Cmd
   opt '--to GROUP'
-  opt '--retries INT', requires: :to
+  opt '--other GROUP', requires: :to
 
   def run
-    p to, retries
+    p to: to, other: other
   end
 end
 
-Cl.new('owners').run(%w(add --to one --retries 1))
+Cl.new('owners').run(%w(add --to one --other two))
 
 # Output:
 #
-#   "one"
-#   1
+#   {:to=>"one", :other=>"two"}
 
-Cl.new('owners').run(%w(add --retries 1))
+Cl.new('owners').run(%w(add --other two))
 
-# Missing option: to (required by retries)
+# Output:
 #
-# Usage: requires add [options]
+#   Missing option: to (required by other)
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP         type: string
-#   --retries INT      type: string, requires: to
-#   --help             Get help on this command
+#   Options:
+#
+#     --to GROUP         type: string
+#     --other GROUP      type: string, requires: to
+#     --help             Get help on this command
 
 ```
 
@@ -961,36 +1019,46 @@ This requires either the option `--api_key` or both options `--username` and
 
 ```ruby
 class Add < Cl::Cmd
-  # read DNF, i.e. "apikey OR username AND password
-  required :api_key, [:username, :password]
+  # read DNF, i.e. "token OR user AND pass
+  required :token, [:user, :pass]
 
-  opt '--api_key KEY'
-  opt '--username NAME'
-  opt '--password PASS'
+  opt '--token TOKEN'
+  opt '--user NAME'
+  opt '--pass PASS'
 
   def run
-    p to, retries
+    p token: token, user: user, pass: pass
   end
 end
 
-Cl.new('owners').run(%w(add --to one --retries 1))
+Cl.new('owners').run(%w(add --token token))
 
 # Output:
 #
-#   "one"
-#   1
+#   {:token=>"token", :user=>nil, :pass=>nil}
 
-Cl.new('owners').run(%w(add --retries 1))
+Cl.new('owners').run(%w(add --user user --pass pass))
 
-# Missing option: to (required by retries)
+# Output:
 #
-# Usage: requires add [options]
+#   {:token=>nil, :user=>"user", :pass=>"pass"}
+
+Cl.new('owners').run(%w(add))
+
+# Output:
 #
-# Options:
+#   Missing options: token, or user and pass
 #
-#   --to GROUP         type: string
-#   --retries INT      type: string, requires: to
-#   --help             Get help on this command
+#   Usage: owners add [options]
+#
+#   Options:
+#
+#     Either token, or user and pass are required.
+#
+#     --token TOKEN      type: string
+#     --user NAME        type: string
+#     --pass PASS        type: string
+#     --help             Get help on this command
 
 ```
 

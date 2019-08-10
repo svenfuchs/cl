@@ -8,39 +8,53 @@ class Required < Cl::Cmd
   arg :two
 
   def run
-    [registry_key, one: one, two: two]
+    p cmd: registry_key, one: one, two: two
   end
 end
 
-def output(cmd, args)
-  args = args.map { |key, value| "#{key}=#{value.inspect}" }.join(' ')
-  puts "Called #{cmd} with #{args}\n\n"
-end
-
-output *Cl.new($0).run(%w(required one two))
+Cl.new($0).run(%w(required one two))
 
 # Output:
 #
-#   Called required with one="one" two="two"
+#   {:cmd=>:required, :one=>"one", :two=>"two"}
 
-output *Cl.new($0).run(%w(required one))
+Cl.new($0).run(%w(required one))
 
 # Output:
 #
-#   Called required with one="one" two=nil
+#   {:cmd=>:required, :one=>"one", :two=>nil}
 
-output *Cl.new($0).run(%w(required))
+Cl.new($0).run(%w(required))
 
 # Output:
 #
 #   Missing arguments (given: 0, required: 1)
 #
-#   Usage: args.rb required one [two]
+#   Usage: bin/examples required one [two] [options]
+#
+#   Arguments:
+#
+#     one         type: string, required: true
+#     two         type: string
+#
+#   Options:
+#
+#     --help      Get help on this command
 
-output *Cl.new($0).run(%w(required one two three))
+Cl.new($0).run(%w(required one two three))
 
 # Output:
 #
 #   Too many arguments (given: 3, allowed: 2)
 #
-#   Usage: args.rb required one [two]
+#   Usage: bin/examples required one [two] [options]
+#
+#   Arguments:
+#
+#     one         type: string, required: true
+#     two         type: string
+#
+#   Options:
+#
+#     --help      Get help on this command
+

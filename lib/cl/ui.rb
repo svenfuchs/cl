@@ -5,8 +5,8 @@ class Cl
     def self.new(ctx, opts)
       const = Test if ctx.test?
       const ||= Silent if opts[:silent]
-      const ||= Tty if $stdout.tty?
-      const ||= Pipe
+      const ||= Tty # if $stdout.tty?
+      # const ||= Pipe
       const.new(opts)
     end
 

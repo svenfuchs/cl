@@ -10,7 +10,9 @@ module Rakeish
 
       arg :name
 
-      def run; [registry_key, args, opts] end
+      def run
+        p cmd: registry_key, args: args, opts: opts
+      end
     end
 
     class Drop < Cl::Cmd
@@ -20,7 +22,9 @@ module Rakeish
 
       opt '-f', '--force'
 
-      def run; [registry_key, args, opts] end
+      def run
+        p cmd: registry_key, args: args, opts: opts
+      end
     end
 
     class Migrate < Cl::Cmd
@@ -30,23 +34,17 @@ module Rakeish
 
       opt '-v', '--version VERSION'
 
-      def run; [registry_key, args, opts] end
+      def run
+        p cmd: registry_key, args: args, opts: opts
+      end
     end
   end
 end
 
-def output(result)
-  result.each do |cmd, args, opts|
-    puts "Called #{cmd} with args=#{args} opts=#{opts}"
-  end
-  puts
-end
-
-argv = %w(db:drop production -f db:create db:migrate production -v 1)
-output Cl.new($0, runner: :multi).run(argv)
+Cl.new('rake', runner: :multi).run(%w(db:drop production -f db:create db:migrate production -v 1))
 
 # Output:
 #
-#   Called db:drop with args=["production"] opts={:force=>true}
-#   Called db:create with args=[] opts={}
-#   Called db:migrate with args=["production"] opts={:version=>"1"}
+#   {:cmd=>:"db:drop", :args=>["production"], :opts=>{:force=>true}}
+#   {:cmd=>:"db:create", :args=>[], :opts=>{}}
+#   {:cmd=>:"db:migrate", :args=>["production"], :opts=>{:version=>"1"}}

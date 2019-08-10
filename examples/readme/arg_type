@@ -15,4 +15,6 @@ end
 
 Cl.new('owners').run(%w(cmd 1 2.1 yes))
 
-# => [Integer, Float, TrueClass]
+# Output:
+#
+#   [Integer, Float, TrueClass]

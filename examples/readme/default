@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', default: 'default'
 
   def run
-    p to
+    p to: to
   end
 end
 
@@ -15,4 +15,4 @@ Cl.new('owners').run(%w(add))
 
 # Output:
 #
-#   "default"
+#   {:to=>"default"}

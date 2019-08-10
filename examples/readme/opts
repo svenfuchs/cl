@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', 'Target group to add owners to'
 
   def run
-    p opts, to, to?
+    p opts: opts, to: to, to?: to?
   end
 end
 
@@ -15,15 +15,15 @@ Cl.new('owners').run(%w(add --to one))
 
 # Output:
 #
-#   {"to" => "one"}
-#   "one"
-#   true
+#   {:opts=>{:to=>"one"}, :to=>"one", :to?=>true}
 
 Cl.new('owners').run(%w(add --help))
 
-# Usage: opts add [options]
+# Output:
 #
-# Options:
+#   Usage: owners add [options]
 #
-#   --to GROUP      Target group to add owners to (type: string)
-#   --help          Get help on this command
+#   Options:
+#
+#     --to GROUP      Target group to add owners to (type: string)
+#     --help          Get help on this command

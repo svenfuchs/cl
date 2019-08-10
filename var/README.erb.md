@@ -1,15 +1,12 @@
-# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.org/svenfuchs/cl)
+# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.com/svenfuchs/cl) [![Rubydocs](http://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/github/svenfuchs/cl) [![Gem Version](https://badge.fury.io/rb/cl.png)](http://badge.fury.io/rb/cl)
 
 OptionParser based CLI support for rapid CLI development in an object-oriented
 context.
 
-This library wraps Ruby's OptionParser in order to make it easier to use it in
-an object oriented context.
+This library wraps Ruby's OptionParser for parsing your options under the hood,
+so you get all the goodness that the Ruby standard library provides.
 
-It uses OptionParser for parsing your options under the hood, so you get all
-the goodness that this library provides.
-
-But on top of that it also provides a rich DSL for defining, validating, and
+On top of that it adds a rich and powerful DSL for defining, validating, and
 normalizing options, as well as automatic and gorgeous help output (modeled
 after `gem --help`).
 
@@ -318,7 +315,7 @@ Array arguments support splats, modeled after Ruby argument splats.
 For example:
 
 ```ruby
-<%= example('readme/arg_type') %>
+<%= example('readme/args_splat') %>
 ```
 
 ### Options

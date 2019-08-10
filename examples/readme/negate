@@ -12,16 +12,31 @@ class Add < Cl::Cmd
 end
 
 Cl.new('owners').run(%w(add --notifications))
-# => true
+
+# Output:
+#
+#   true
 
 Cl.new('owners').run(%w(add --no_notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --no-notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --skip_notifications))
-# => false
+
+# Output:
+#
+#   false
 
 Cl.new('owners').run(%w(add --skip-notifications))
-# => false
+
+# Output:
+#
+#   false

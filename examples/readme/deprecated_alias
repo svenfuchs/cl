@@ -7,7 +7,7 @@ class Add < Cl::Cmd
   opt '--to GROUP', alias: :target, deprecated: :target
 
   def run
-    p to, deprecated_opts
+    p to: to, deprecations: deprecations
   end
 end
 
@@ -15,6 +15,4 @@ Cl.new('owners').run(%w(add --target one))
 
 # Output:
 #
-#   "one"
-#   {:target=>:to}
-
+#   {:to=>"one", :deprecations=>{:target=>:to}}
