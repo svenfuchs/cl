@@ -1,5 +1,8 @@
 ENV['ENV'] = 'test'
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'memfs'
 require 'support'
 require 'cl'

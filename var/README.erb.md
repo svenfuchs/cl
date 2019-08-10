@@ -1,4 +1,4 @@
-# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.com/svenfuchs/cl) [![Rubydocs](http://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/github/svenfuchs/cl) [![Gem Version](https://badge.fury.io/rb/cl.png)](http://badge.fury.io/rb/cl)
+# Cl [![Build Status](https://travis-ci.org/svenfuchs/cl.svg?branch=master)](https://travis-ci.com/svenfuchs/cl) [![Code Climate](https://codeclimate.com/github/svenfuchs/cl.png)](https://codeclimate.com/github/svenfuchs/cl) [![Coverage Status](https://coveralls.io/repos/github/svenfuchs/cl/badge.svg?branch=master)](https://coveralls.io/github/svenfuchs/cl?branch=master) [![Rubydocs](http://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/github/svenfuchs/cl) [![Gem Version](https://img.shields.io/gem/v/cl)](http://rubygems.org/gems/cl)
 
 OptionParser based CLI support for rapid CLI development in an object-oriented
 context.
