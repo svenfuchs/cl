@@ -17,4 +17,4 @@ Cl.new('owners').run(%w(cmd 1 2.1 yes))
 
 # Output:
 #
-#   [Fixnum, Float, TrueClass]
+#   [Integer, Float, TrueClass]

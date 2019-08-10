@@ -15,4 +15,4 @@ Cl.new('owners').run(%w(add --active yes --retries 1 --sleep 0.1))
 
 # Output:
 #
-#   {:active=>TrueClass, :retries=>Fixnum, :sleep=>Float}
+#   {:active=>TrueClass, :retries=>Integer, :sleep=>Float}

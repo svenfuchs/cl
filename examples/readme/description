@@ -28,4 +28,27 @@ Cl.new('owners').run(%w(add --help))
 
 # Output:
 #
-#   Unknown command: add --help
+#   Usage: owners add [options]
+#
+#   Summary:
+#
+#     Add one or more owners to an existing owner group
+#
+#   Description:
+#
+#     Use this command to add one or more owners to an existing
+#     owner group.
+#
+#   Options:
+#
+#     --help      Get help on this command
+#
+#   Examples:
+#
+#     Adding a single user to the group admins:
+#
+#       owners add user --to admins
+#
+#     Adding a several users at once:
+#
+#       owners add one two three --to admins

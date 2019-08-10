@@ -36,10 +36,30 @@ Cl.new('owners').run(args)
 
 # Output:
 #
-#   Unknown command: add one --to group
+#   {:owner=>"one", :to=>"group", :to?=>true, :args=>["one"], :opts=>{:to=>"group"}}
 
 Cl.new('owners').run(%w(add --help))
 
 # Output:
 #
-#   Unknown command: add --help
+#   Usage: owners add [owner] [options]
+#
+#   Summary:
+#
+#     Add one or more owners to an existing owner group
+#
+#   Description:
+#
+#     Use this command to add one or more owners to an existing
+#     owner group.
+#
+#     [...]
+#
+#   Arguments:
+#
+#     owner           type: string
+#
+#   Options:
+#
+#     -t --to TO      An existing owner group (type: string)
+#        --help       Get help on this command
