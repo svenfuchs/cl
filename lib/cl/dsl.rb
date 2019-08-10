@@ -102,6 +102,7 @@ class Cl
       #   @option opts [Object] :default default value for the option
       #   @option opts [String or Symbol] :deprecated deprecation message for the option, or if given a Symbol, deprecated alias name
       #   @option opts [Boolean] :downcase whether to downcase the option value
+      #   @option opts [Boolean] :upcase whether to upcase the option value
       #   @option opts [Array<Object>] :enum list of acceptable option values
       #   @option opts [String] :example example(s) for the option, shown in help output
       #   @option opts [Regexp] :format acceptable option value format
