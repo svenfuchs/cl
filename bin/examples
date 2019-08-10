@@ -93,14 +93,13 @@ def yellow(str)
   "\e[33m#{str}\e[0m"
 end
 
-skip = %w()
+skip = RUBY_VERSION < '2.4' ? %w(readme/basic readme/description) : []
 glob = ARGV.any? ? "{#{ARGV.join(',')}}" : '**/*'
 paths = Dir["examples/_src/#{glob}.erb.rb"].sort
-# paths = paths[-1, 1]
 
 status = paths.inject(true) do |status, path|
-  if skip.include?(path)
-    $stderr.puts yellow("skipping #{path}")
+  if skip.any? { |skip| path.include?(skip) }
+    $stderr.puts yellow("skipping #{path} on Ruby #{RUBY_VERSION}")
     next status
   end
 
