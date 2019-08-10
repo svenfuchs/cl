@@ -86,33 +86,13 @@ Cl.new('owners').run(args)
 
 # Output:
 #
-#   {:owner=>"one", :to=>"group", :to?=>true, :args=>["one"], :opts=>{:to=>"group"}}
+#   Unknown command: add one --to group
 
 Cl.new('owners').run(%w(add --help))
 
 # Output:
 #
-#   Usage: owners add [owner] [options]
-#
-#   Summary:
-#
-#     Add one or more owners to an existing owner group
-#
-#   Description:
-#
-#     Use this command to add one or more owners to an existing
-#     owner group.
-#
-#     [...]
-#
-#   Arguments:
-#
-#     owner           type: string
-#
-#   Options:
-#
-#     -t --to TO      An existing owner group (type: string)
-#        --help       Get help on this command
+#   Unknown command: add --help
 
 ```
 
@@ -288,30 +268,7 @@ Cl.new('owners').run(%w(add --help))
 
 # Output:
 #
-#   Usage: owners add [options]
-#
-#   Summary:
-#
-#     Add one or more owners to an existing owner group
-#
-#   Description:
-#
-#     Use this command to add one or more owners to an existing
-#     owner group.
-#
-#   Options:
-#
-#     --help      Get help on this command
-#
-#   Examples:
-#
-#     Adding a single user to the group admins:
-#
-#       owners add user --to admins
-#
-#     Adding a several users at once:
-#
-#       owners add one two three --to admins
+#   Unknown command: add --help
 
 ```
 
@@ -421,7 +378,7 @@ Cl.new('owners').run(%w(cmd 1 2.1 yes))
 
 # Output:
 #
-#   [Integer, Float, TrueClass]
+#   [Fixnum, Float, TrueClass]
 
 ```
 
@@ -993,7 +950,7 @@ Cl.new('owners').run(%w(add --active yes --retries 1 --sleep 0.1))
 
 # Output:
 #
-#   {:active=>TrueClass, :retries=>Integer, :sleep=>Float}
+#   {:active=>TrueClass, :retries=>Fixnum, :sleep=>Float}
 
 ```
 

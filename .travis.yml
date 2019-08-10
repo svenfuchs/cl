@@ -12,5 +12,5 @@ rvm:
 script:
   - bundle exec rspec
   - bundle exec bin/examples
-  - diff <(cat README.md) <(bin/readme | sed 's/Fixnum/Integer/')
+  - '[[ "$(ruby -v)" < "ruby 2.4" ]] || (diff <(cat README.md) <(bin/readme))'
 
