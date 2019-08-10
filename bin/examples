@@ -20,7 +20,7 @@ class Example < Struct.new(:src)
   private
 
     def target
-      src.sub(%r(/src), '').sub('.erb.rb', '')
+      src.sub(%r(/_src), '').sub('.erb.rb', '')
     end
 
     def render
@@ -94,7 +94,7 @@ end
 
 skip = %w()
 glob = ARGV.any? ? "{#{ARGV.join(',')}}" : '**/*'
-paths = Dir["examples/src/#{glob}.erb.rb"].sort
+paths = Dir["examples/_src/#{glob}.erb.rb"].sort
 # paths = paths[-1, 1]
 
 status = paths.inject(true) do |status, path|
