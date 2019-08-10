@@ -12,7 +12,7 @@ after `gem --help`).
 
 Further documentation is available on [rubydoc.info](https://www.rubydoc.info/github/svenfuchs/cl)
 
-Examples in the README are included from [examples/readme](https://github.com/svenfuchs/cl/tree/master/examples/readme).
+Most examples in this README are included from [examples/readme](https://github.com/svenfuchs/cl/tree/master/examples/readme).
 More examples can be found in [examples](https://github.com/svenfuchs/cl/tree/master/examples).
 All examples are guaranteed to be up to date by the way of being [verified](https://github.com/svenfuchs/cl/blob/master/.travis.yml#L14)
 on CI.
@@ -117,20 +117,16 @@ to decouple looking up command classes from their Ruby namespace.
 For example:
 
 ```ruby
-module One
-  class Cmd < Cl::Cmd
-    register :one
+module Cmd
+  class One < Cl::Cmd
+  end
+
+  class Two < Cl::Cmd
   end
 end
 
-module Two
-  class Cmd < Cl::Cmd
-    register :two
-  end
-end
-
-Cl::Cmd[:one] # => One::Cmd
-Cl::Cmd[:two] # => Two::Cmd
+Cl::Cmd[:one] # => Cmd::One
+Cl::Cmd[:two] # => Cmd::Two
 ```
 
 Commands auto register themselves with the underscored name of the last part of
