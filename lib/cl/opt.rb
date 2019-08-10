@@ -179,6 +179,10 @@ class Cl
       opts[:sep]
     end
 
+    def upcase?
+      !!opts[:upcase]
+    end
+
     def block
       # raise if no block was given, and the option's name cannot be inferred
       super || method(:assign)

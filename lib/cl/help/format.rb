@@ -34,6 +34,7 @@ class Cl
           opts << "known values: #{format_enum(opt)}" if opt.enum?
           opts << "format: #{opt.format}" if opt.format?
           opts << "downcase: true" if opt.downcase?
+          opts << "upcase: true" if opt.upcase?
           opts << "min: #{opt.min}" if opt.min?
           opts << "max: #{opt.max}" if opt.max?
           opts << "e.g.: #{opt.example}" if opt.example?

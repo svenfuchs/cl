@@ -20,6 +20,7 @@ class Cl
       cmd.deprecations = deprecations(cmd, opts)
       opts = with_defaults(cmd, opts)
       opts = downcase(opts)
+      opts = upcase(opts)
       opts = cast(opts)
       opts = taint(opts)
       validate(cmd, self, opts)
@@ -87,6 +88,13 @@ class Cl
         select(&:downcase?).inject(opts) do |opts, opt|
           next opts unless value = opts[opt.name]
           opts.merge(opt.name => value.to_s.downcase)
+        end
+      end
+
+      def upcase(opts)
+        select(&:upcase?).inject(opts) do |opts, opt|
+          next opts unless value = opts[opt.name]
+          opts.merge(opt.name => value.to_s.upcase)
         end
       end
 
