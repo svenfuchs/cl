@@ -12,6 +12,11 @@ after `gem --help`).
 
 Further documentation is available on [rubydoc.info](https://www.rubydoc.info/github/svenfuchs/cl)
 
+Examples in the README are included from [examples/readme](https://github.com/svenfuchs/cl/tree/master/examples/readme).
+More examples can be found in [examples](https://github.com/svenfuchs/cl/tree/master/examples).
+All examples are guaranteed to be up to date by the way of being [verified](https://github.com/svenfuchs/cl/blob/master/.travis.yml#L14)
+on CI.
+
 ## Table of Contents
 
 * [Basic Usage](#basic-usage)
