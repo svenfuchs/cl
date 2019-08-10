@@ -28,7 +28,7 @@ class Example < Struct.new(:src)
     end
 
     def run(code)
-      @actual = capture { eval(code) }.strip
+      @actual = capture { eval(code) }.strip.sub('Example::', '') # ugh.
       code
     rescue Exception => e
       puts e.message, e.backtrace unless e.message == 'exit'
@@ -36,11 +36,12 @@ class Example < Struct.new(:src)
       code
     end
 
-    def out(expected)
+    def out(expected, opts = { short: false })
       @num += 1
       @expected = expected.rstrip
       errors << error unless actual.strip == expected.strip
-      comment ['Output:', indent(actual)].join("\n\n")
+      out = "# => #{actual}" if opts[:short]
+      out || comment(['Output:', indent(actual)].join("\n\n"))
     end
 
     def indent(str)

@@ -12,7 +12,7 @@ after `gem --help`).
 
 Further documentation is available on [rubydoc.info](https://www.rubydoc.info/github/svenfuchs/cl)
 
-Most examples in this README are included from [examples/readme](https://github.com/svenfuchs/cl/tree/master/examples/readme).
+Examples in this README are included from [examples/readme](https://github.com/svenfuchs/cl/tree/master/examples/readme).
 More examples can be found in [examples](https://github.com/svenfuchs/cl/tree/master/examples).
 All examples are guaranteed to be up to date by the way of being [verified](https://github.com/svenfuchs/cl/blob/master/.travis.yml#L14)
 on CI.
@@ -51,60 +51,7 @@ on CI.
 ## Basic Usage
 
 ```ruby
-# lib/cli/owners/add.rb
-module Owners
-  class Add < Cl::Cmd
-    summary 'Add one or more owners to an existing owner group'
-
-    description <<~str
-      Use this command to add one or more owners to an existing
-      owner group.
-
-      [...]
-    str
-
-    args :owners
-
-    opt '-t', '--to TO', 'An existing owner group'
-
-    def run
-      # add owners as listed in `owners` to the group given in
-      # `to`, as well as `opts[:to]`.
-    end
-  end
-end
-
-# bin/owners
-Cl.new('owners').run(ARGV)
-```
-
-Running this, e.g. using `bin/owners add one,two --to group` will instantiate the
-class `Owners::Add`, and call the method `run` on it.
-
-Help output:
-
-```txt
-Usage: owners add [owners] [options]
-
-Summary:
-
-  Add one or more owners to an existing owner group
-
-Description:
-
-  Use this command to add one or more owners to an existing
-  owner group.
-
-  These will be visible in [...]
-
-Arguments:
-
-  owners          type: string
-
-Options:
-
-  -t --to TO      An existing owner group (type: string, required: true)
-     --help       Get help on this command (type: flag)
+<%= example('readme/basic') %>
 ```
 
 ### Command Registry
@@ -117,16 +64,7 @@ to decouple looking up command classes from their Ruby namespace.
 For example:
 
 ```ruby
-module Cmd
-  class One < Cl::Cmd
-  end
-
-  class Two < Cl::Cmd
-  end
-end
-
-Cl::Cmd[:one] # => Cmd::One
-Cl::Cmd[:two] # => Cmd::Two
+<%= example('readme/registry') %>
 ```
 
 Commands auto register themselves with the underscored name of the last part of
@@ -159,60 +97,22 @@ would recognize and run the following commands:
 
 ```
 $ bin/run one something else
-# instantiates One, passing the args array `["something", "else"]`, and calls `run`
+# instantiates One, passing the args array `["something", "else"]`, and calls the instance method `run`
 
-$ bin/run two something else
-# instantiates One, passing an empty args arry `[]`, and calls `run`
+$ bin/run two
+# instantiates Two, passing an empty args arry `[]`, and calls the instance method `run`
 ```
 
 The default runner also supports nested namespaces, and checks for command classes
 with keys separated by colons. For instance:
 
-```ruby
-module Git
-  class Pull < Cl::Cmd
-    register :'git:pull'
-  end
-end
-
-module Git
-  class Push < Cl::Cmd
-    register :'git:push'
-  end
-end
-```
-
-With these classes registered (and assuming the executable that calls `Cl` is
-`bin/git`) the default runner would recognize and run the following commands:
-
-```
-$ bin/git pull:master # instantiates Git::Pull, and passes ["master"] as args
-$ bin/git pull master # does the same
-
-$ bin/git push:master # instantiates Git::Push, and passes ["master"] as args
-$ bin/git push master # does the same
-```
+<%= example('readme/runner') %>
 
 Runners are registered on the module `Cl::Runner`. It is possible to register custom
 runners, and use them by passing the option `runner` to `Cl.new`:
 
-```
-# in bin/run
-Cli.new('run', runner: :custom).run(ARGV)
-
-# anywhere in your library
-class Runner
-  Cl::Runner.register :custom, self
-
-  def initialize(ctx, args)
-    # ...
-  end
-
-  def run
-    const = identify_cmd_class_from_args
-    const.new(ctx, args).run
-  end
-end
+```ruby
+<%= example('readme/runner') %>
 ```
 
 See `Cl::Runner::Default` for more details.
@@ -238,27 +138,8 @@ Commands are classes that are derived from the base class `Cl::Cmd`.
 
 The description, summary, and examples are used in the help output.
 
-```
-module Owners
-  class Add < Cl::Cmd
-    summary 'Add one or more owners to an existing owner group'
-
-    description <<~str
-      Use this command to add one or more owners to an existing
-      owner group.
-    str
-
-    examples <<~str
-      Adding a single user to the group admins:
-
-        owners add user --to admins
-
-      Adding a several users at once:
-
-        owners add one two three --to admins
-    str
-  end
-end
+```ruby
+<%= example('readme/description') %>
 ```
 
 #### Abstract

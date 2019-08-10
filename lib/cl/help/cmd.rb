@@ -146,7 +146,7 @@ class Cl
       end
 
       def indent(str)
-        str.lines.map { |line| "  #{line}" }.join
+        str.lines.map { |line| "  #{line}".rstrip }.join("\n")
       end
     end
   end

@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+$: << File.expand_path('lib')
+
+module Cmd
+  class One < Cl::Cmd
+  end
+
+  class Two < Cl::Cmd
+  end
+end
+
+p Cl::Cmd[:one] # => Cmd::One
+p Cl::Cmd[:two] # => Cmd::Two
