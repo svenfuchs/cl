@@ -17,13 +17,14 @@ class Cl
 
     def apply(cmd, opts)
       return opts if opts[:help]
+      orig = opts.dup
       cmd.deprecations = deprecations(cmd, opts)
-      opts = with_defaults(cmd, opts)
+      opts = defaults(cmd, opts)
       opts = downcase(opts)
       opts = upcase(opts)
       opts = cast(opts)
       opts = taint(opts)
-      validate(cmd, self, opts)
+      validate(cmd, self, opts, orig)
       opts
     end
 
@@ -71,7 +72,7 @@ class Cl
         defs.map(&:deprecated).to_h
       end
 
-      def with_defaults(cmd, opts)
+      def defaults(cmd, opts)
         select(&:default?).inject(opts) do |opts, opt|
           next opts if opts.key?(opt.name)
           value = opt.default

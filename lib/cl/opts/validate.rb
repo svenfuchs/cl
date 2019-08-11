@@ -3,15 +3,15 @@ require 'cl/helper'
 class Cl
   class Opts
     module Validate
-      def validate(cmd, opts, values)
+      def validate(cmd, opts, values, orig)
         Validate.constants.each do |name|
           next if name == :Validator
           const = Validate.const_get(name)
-          const.new(cmd, opts, values).apply
+          const.new(cmd, opts, values, orig).apply
         end
       end
 
-      class Validator < Struct.new(:cmd, :opts, :values)
+      class Validator < Struct.new(:cmd, :opts, :values, :orig)
         include Regex
         def compact(hash, *keys)
           hash.reject { |_, value| value.nil? }.to_h
@@ -62,7 +62,7 @@ class Cl
         end
 
         def requires
-          opts.select(&:requires?).select { |opt| values.key?(opt.name) }
+          opts.select(&:requires?).select { |opt| orig.key?(opt.name) }
         end
       end
 

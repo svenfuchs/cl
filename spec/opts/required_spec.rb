@@ -18,6 +18,22 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd --one one --two two)).opts[:one]).to eq 'one' }
     it { expect { cmd(%w(cmd --one one)) }.to raise_error 'Missing option: two (required by one)' }
+    it { expect { cmd(%w(cmd --two two)) }.to_not raise_error }
+    it { expect { cmd(%w(cmd)) }.to_not raise_error }
+  end
+
+  describe 'requires another option, has a default' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR', default: 'one', requires: :two
+        opt '--two STR'
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one --two two)).opts[:one]).to eq 'one' }
+    it { expect { cmd(%w(cmd --one one)) }.to raise_error 'Missing option: two (required by one)' }
+    it { expect { cmd(%w(cmd --two two)) }.to_not raise_error }
+    it { expect { cmd(%w(cmd)) }.to_not raise_error }
   end
 
   describe 'requires two other options' do
