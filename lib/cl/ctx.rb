@@ -9,16 +9,24 @@ class Cl
     def_delegators :ui, :puts, :stdout, :announce, :info, :notice, :warn,
       :error, :success, :cmd
 
-    attr_accessor :config, :name, :ui
+    attr_accessor :config, :name, :opts
 
     def initialize(name, opts = {})
       @config = Config.new(name).to_h
-      @ui = opts[:ui] || Ui.new(self, opts)
+      @opts = opts
       @name = name
     end
 
+    def ui
+      @ui ||= opts[:ui] || Ui.new(self, opts)
+    end
+
     def abort(error, *strs)
-      ui.abort(error, *strs)
+      abort? ? ui.abort(error, *strs) : raise(error)
+    end
+
+    def abort?
+      !opts[:abort].is_a?(FalseClass)
     end
 
     def test?
