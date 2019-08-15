@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.3 (2019-08-11)
+
+### Add
+
+* Allow clients to configure Ctx so that it does not abort but raise on errors
+
+## 1.0.2 (2019-08-11)
+
+### Fixed
+
+* Fix that validation for `opt '--one STR', requires: :other, default: 'one'` would fail if the option was not given
+
 ## 1.0.1 (2019-08-11)
 
 ### Added
