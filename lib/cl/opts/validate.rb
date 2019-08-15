@@ -86,10 +86,9 @@ class Cl
 
         def unknown
           @unknown ||= opts.select(&:enum?).map do |opt|
-            value = values[opt.name]
-            next unless value && !opt.known?(value)
+            next unless values.key?(opt.name) && !opt.known?(values[opt.name])
             known = opt.enum.map { |str| format_regex(str) }
-            [opt.name, value, known]
+            [opt.name, values[opt.name], known]
           end.compact
         end
       end

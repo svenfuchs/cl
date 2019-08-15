@@ -1,8 +1,14 @@
 # Changelog
 
+## 1.0.4 (2019-08-15)
+
+### Fixed
+
+* Fixed enum when used with `type: :array`
+
 ## 1.0.3 (2019-08-11)
 
-### Add
+### Added
 
 * Allow clients to configure Ctx so that it does not abort but raise on errors
 

@@ -49,6 +49,10 @@ class Cl
       type == :int || type == :integer
     end
 
+    def array?
+      type == :array
+    end
+
     def aliases?
       !!opts[:alias]
     end
@@ -91,6 +95,7 @@ class Cl
     end
 
     def known?(value)
+      return value.all? { |value| known?(value) } if value.is_a?(Array)
       enum.any? { |obj| obj.is_a?(Regexp) ? obj =~ value.to_s : obj == value }
     end
 
@@ -189,7 +194,7 @@ class Cl
     end
 
     def assign(opts, type, name, value)
-      if type == :array
+      if array?
         opts[name] ||= []
         opts[name] << value
       else
