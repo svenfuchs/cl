@@ -33,8 +33,7 @@ class Cl
 
     def aliased(opt, name)
       str = opt.strs.detect { |str| str.start_with?('--') } || raise
-      str = str.sub(opt.name.to_s, name.to_s)
-      str.sub(opt.name.to_s.gsub('_', '-'), name.to_s)
+      str.sub(/(#{opt.name}|#{opt.name.to_s.gsub('_', '-')})/, name.to_s)
     end
 
     # should consider negative arities (e.g. |one, *two|)
