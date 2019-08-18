@@ -1,10 +1,16 @@
 # Changelog
 
+## 1.0.5 (2019-08-18)
+
+### Fixed
+
+* Fix an issue with alias names that contain the aliased name
+
 ## 1.0.4 (2019-08-15)
 
 ### Fixed
 
-* Fixed enum when used with `type: :array`
+* Fix enum when used with `type: :array`
 
 ## 1.0.3 (2019-08-11)
 
