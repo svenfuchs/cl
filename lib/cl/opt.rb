@@ -15,6 +15,7 @@ class Cl
 
     def initialize(*)
       super
+      Validator.new(strs).apply
       noize!(strs) if type == :flag
     end
 
@@ -206,6 +207,43 @@ class Cl
       strs = strs.select { |str| str.start_with?('--') }
       strs = strs.reject { |str| str.include?('[no-]') }
       strs.each { |str| str.replace(str.sub('--', '--[no-]')) unless str == '--help' }
+    end
+
+    class Validator < Struct.new(:opts)
+      SHORT = /^-\w( \w+)?$/
+      LONG  = /^--[\w\-\[\]]+( \w+)?$/
+
+      MSGS = {
+        missing_opts: 'No option strings given. Pass one short -s and/or one --long option string.',
+        wrong_opts:   'Wrong option strings given. Pass one short -s and/or one --long option string.',
+        invalid_opts: 'Invalid option strings given: %p'
+      }
+
+      def apply
+        error :missing_opts if opts.empty?
+        error :wrong_opts if short.size > 1 || long.size > 1
+        error :invalid_opts, invalid unless invalid.empty?
+      end
+
+      def invalid
+        @invalid ||= opts.-(valid).join(', ')
+      end
+
+      def valid
+        opts.grep(Regexp.union(SHORT, LONG))
+      end
+
+      def short
+        opts.grep(SHORT)
+      end
+
+      def long
+        opts.grep(LONG)
+      end
+
+      def error(key, *args)
+        raise Error, MSGS[key] % args
+      end
     end
   end
 end
