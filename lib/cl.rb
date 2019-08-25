@@ -56,5 +56,4 @@ class Cl
     def untaint(args)
       args.map(&:dup).each(&:untaint)
     end
-
 end

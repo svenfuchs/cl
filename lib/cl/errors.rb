@@ -1,3 +1,5 @@
+require 'cl/helper/suggest'
+
 class Cl
   class Error < StandardError
     MSGS = {
@@ -23,8 +25,16 @@ class Cl
   OptionError = Class.new(Error)
 
   class UnknownCmd < Error
-    def initialize(args)
+    attr_reader :runner, :args
+
+    def initialize(runner, args)
+      @runner = runner
+      @args = args
       super(:unknown_cmd, args.join(' '))
+    end
+
+    def suggestions
+      runner.suggestions(args)
     end
   end
 
@@ -65,9 +75,21 @@ class Cl
   end
 
   class UnknownValues < OptionError
+    include Suggest
+
+    attr_reader :opts
+
     def initialize(opts)
-      opts = opts.map { |(key, value, known)| "#{key}=#{value} (known values: #{known.join(', ')})" }.join(', ')
-      super(:unknown_values, opts)
+      @opts = opts
+      opts = opts.map do |(opt, values, known)|
+        pairs = values.map { |value| [opt, value].join('=') }.join(' ')
+        "#{pairs} (known values: #{known.join(', ')})"
+      end
+      super(:unknown_values, opts.join(', '))
+    end
+
+    def suggestions
+      opts.map { |_, value, known| suggest(known, value) }.flatten
     end
   end
 end

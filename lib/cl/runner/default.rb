@@ -8,7 +8,7 @@ class Cl
       Runner.register :default, self
 
       extend Forwardable
-      include Merge
+      include Merge, Suggest
 
       def_delegators :ctx, :abort
 
@@ -29,6 +29,11 @@ class Cl
 
       def help
         Help.new(ctx, [cmd.registry_key])
+      end
+
+      def suggestions(args)
+        keys = args.inject([]) { |keys, arg| keys << [keys.last, arg].compact.join(':') }
+        keys.map { |key| suggest(providers.map(&:to_s), key) }.flatten
       end
 
         private
@@ -63,10 +68,14 @@ class Cl
           end
 
           cmd, keys = keys[0].last
-          cmd || raise(UnknownCmd.new(args))
+          raise UnknownCmd.new(self, args) unless cmd
           keys.each { |key| args.delete_at(args.index(key)) }
           [cmd, args]
         end
+
+      def providers
+        Cmd.registry.keys
+      end
     end
   end
 end

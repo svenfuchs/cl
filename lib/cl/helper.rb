@@ -1,3 +1,5 @@
+require 'cl/helper/suggest'
+
 class Cl
   module Merge
     MERGE = ->(key, lft, rgt) do

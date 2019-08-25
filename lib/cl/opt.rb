@@ -113,6 +113,11 @@ class Cl
       enum.any? { |obj| obj.is_a?(Regexp) ? obj =~ value.to_s : obj == value }
     end
 
+    def unknown(value)
+      return value.reject { |value| known?(value) } if value.is_a?(Array)
+      known?(value) ? [] : Array(value)
+    end
+
     def example?
       !!opts[:example]
     end

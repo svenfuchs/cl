@@ -23,6 +23,7 @@ describe Cl, 'enum' do
   describe 'with an array' do
     let(:opts) { ->(*) { opt('--one STRS', type: :array, enum: ['one', /^two$/]) } }
     it { expect(cmd(%w(cmd --one one --one two)).opts[:one]).to eq ['one', 'two'] }
-    it { expect { cmd(%w(cmd --one one --one three)) }.to raise_error 'Unknown value: one=["one", "three"] (known values: one, /^two$/)' }
+    it { expect { cmd(%w(cmd --one on --one two --one three)) }.to raise_error 'Unknown value: one=on one=three (known values: one, /^two$/)' }
+    it { expect { cmd(%w(cmd --one on --one two --one three)) }.to suggest 'one' }
   end
 end

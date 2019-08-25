@@ -1,29 +1,33 @@
 describe Cl, 'basic' do
-  let!(:a) do
+  let!(:one) do
     Class.new(Cl::Cmd) do
-      register :a
-      opt('-a') { opts[:a] = true }
+      register :one
+      opt('--one') { opts[:one] = true }
     end
   end
 
-  let!(:b) do
+  let!(:two) do
     Class.new(Cl::Cmd) do
-      register :b
-      opt('-a') { opts[:a] = true }
-      opt('-b') { opts[:b] = true }
+      register :two
+      opt('--one') { opts[:one] = true }
+      opt('--two') { opts[:two] = true }
     end
   end
 
   describe 'args and opts' do
-    let(:args) { %w(b c d -b) }
-    it { expect(cmd).to be_a b }
-    it { expect(cmd.args).to eq %w(c d) }
-    it { expect(cmd.opts).to eq b: true }
-    it { expect(b.opts.map(&:strs).flatten).to eq %w(-a -b --help) }
+    let(:args) { %w(one foo bar --one) }
+    it { expect(cmd).to be_a one }
+    it { expect(cmd.args).to eq %w(foo bar) }
+    it { expect(cmd.opts).to eq one: true }
+  end
+
+  describe 'strs' do
+    it { expect(two.opts.map(&:strs).flatten).to eq %w(--one --two --help) }
   end
 
   describe 'unknown cmd' do
-    let(:args) { %w(unknown a b) }
-    it { expect { cmd }.to raise_error 'Unknown command: unknown a b' }
+    let(:args) { %w(on a b) }
+    it { expect { cmd }.to raise_error 'Unknown command: on a b' }
+    it { expect { cmd }.to suggest 'one' }
   end
 end
