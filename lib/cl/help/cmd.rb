@@ -55,7 +55,7 @@ class Cl
           opts = cmd.opts.to_a
           opts = opts.reject(&:internal?)
           opts = opts - cmd.superclass.opts.to_a if common?
-          strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
+          strs = Table.new(rjust(opts.map { |opt| opt_strs(opt) }))
           opts = opts.map { |opt| format_obj(opt) }
           Table.new(strs.rows.zip(opts))
         end
@@ -65,10 +65,22 @@ class Cl
         @cmmn ||= begin
           opts = cmd.superclass.opts
           opts = opts.reject(&:internal?)
-          strs = Table.new(rjust(opts.map { |opt| [*opt.strs] }))
+          strs = Table.new(rjust(opts.map(&:strs)))
           opts = opts.map { |opt| format_obj(opt) }
           Table.new(strs.rows.zip(opts))
         end
+      end
+
+      def opt_strs(opt)
+        return opt.strs if !opt.flag? || opt.help?
+        opts = [opt.short]
+        opts << negate(opt.long, opt.negate) if opt.long && opt.negate?
+        opts.compact
+      end
+
+      def negate(opt, negations)
+        negations = negations.map { |str| "#{str}-" }.join('|')
+        opt.dup.insert(2, "[#{negations}]")
       end
 
       def requireds

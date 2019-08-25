@@ -18,7 +18,6 @@ class Cl
     def apply(cmd, opts)
       return opts if opts[:help]
       orig = opts.dup
-      cmd.deprecations = deprecations(cmd, opts)
       opts = defaults(cmd, opts)
       opts = downcase(opts)
       opts = upcase(opts)
@@ -65,12 +64,6 @@ class Cl
     end
 
     private
-
-      def deprecations(cmd, opts)
-        defs = cmd.class.opts.select(&:deprecated?)
-        defs = defs.select { |opt| opts.key?(opt.deprecated[0]) }
-        defs.map(&:deprecated).to_h
-      end
 
       def defaults(cmd, opts)
         select(&:default?).inject(opts) do |opts, opt|

@@ -38,7 +38,7 @@ describe Cl, 'opts' do
     end
 
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --one one)).deprecations).to eq({}) }
+    it { expect(cmd(%w(cmd --one one)).deprecations).to be_empty }
     it { expect(cmd(%w(cmd --two two)).opts[:one]).to eq 'two' }
     it { expect(cmd(%w(cmd --two two)).deprecations).to eq two: :one }
   end

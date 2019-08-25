@@ -29,8 +29,9 @@ class Cl
         registry.values
       end
 
-      def parse(ctx, args)
-        opts = Parser.new(self.opts, args).opts unless self == Help
+      def parse(ctx, cmd, args)
+        parser = Parser.new(cmd, args)
+        args, opts = parser.args, parser.opts unless self == Help
         opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
         [args, opts || {}]
       end
@@ -39,17 +40,20 @@ class Cl
     opt '--help', 'Get help on this command'
 
     attr_reader :ctx, :args
-    attr_accessor :deprecations
 
     def initialize(ctx, args)
-      args, opts = self.class.parse(ctx, args)
       @ctx = ctx
+      args, opts = self.class.parse(ctx, self, args)
       @opts = self.class.opts.apply(self, self.opts.merge(opts))
       @args = self.class.args.apply(self, args, opts)
     end
 
     def opts
       @opts ||= {}
+    end
+
+    def deprecations
+      @deprecations ||= {}
     end
   end
 end

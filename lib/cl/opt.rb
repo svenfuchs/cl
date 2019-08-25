@@ -1,8 +1,14 @@
 require 'cl/cast'
+require 'cl/errors'
 
 class Cl
   class Opt < Struct.new(:strs, :opts, :block)
     include Cast, Regex
+
+    OPTS = %i(
+      alias default deprecated description downcase eg enum example format
+      internal max min negate note required requires secret see sep type upcase
+    )
 
     OPT = /^--(?:\[.*\])?(.*)$/
 
@@ -13,10 +19,11 @@ class Cl
       boolean: :flag
     }
 
-    def initialize(*)
+    attr_reader :short, :long
+
+    def initialize(strs, *)
       super
-      Validator.new(strs).apply
-      noize!(strs) if type == :flag
+      @short, @long = Validator.new(strs, opts).apply
     end
 
     def define(const)
@@ -29,17 +36,20 @@ class Cl
 
     def name
       return @name if instance_variable_defined?(:@name)
-      opt = strs.detect { |str| str.start_with?('--') }
-      name = opt.split(' ').first.match(OPT)[1] if opt
+      name = long.split(' ').first.match(OPT)[1] if long
       @name = name.sub('-', '_').to_sym if name
     end
 
     def type
-      TYPES[opts[:type]] || opts[:type] || infer_type
+      @type ||= TYPES[opts[:type]] || opts[:type] || infer_type
     end
 
     def infer_type
       strs.any? { |str| str.split(' ').size > 1 } ? :string : :flag
+    end
+
+    def help?
+      name == :help
     end
 
     def flag?
@@ -66,13 +76,16 @@ class Cl
       opts[:description]
     end
 
-    def deprecated?
-      !!opts[:deprecated]
+    def deprecated?(name = nil)
+      name ? deprecated.first == name : !!opts[:deprecated]
     end
 
     def deprecated
+      # If it's a string then it's a deprecation message and the option itself
+      # is considered deprecated. If it's a symbol it refers to a deprecated
+      # alias, and the option's name is the deprecation message.
       return [name, opts[:deprecated]] unless opts[:deprecated].is_a?(Symbol)
-      [opts[:deprecated], name] if opts[:deprecated]
+      opts[:deprecated] ? [opts[:deprecated], name] : []
     end
 
     def downcase?
@@ -142,11 +155,11 @@ class Cl
     end
 
     def negate?
-      !!opts[:negate]
+      !!negate
     end
 
     def negate
-      Array(opts[:negate])
+      ['no'] + Array(opts[:negate]) if flag?
     end
 
     def note?
@@ -194,55 +207,62 @@ class Cl
       super || method(:assign)
     end
 
-    def assign(opts, type, name, value)
-      if array?
-        opts[name] ||= []
-        opts[name] << value
-      else
-        opts[name] = value
+    def assign(opts, type, _, value)
+      [name, *aliases].each do |name|
+        if array?
+          opts[name] ||= []
+          opts[name] << value
+        else
+          opts[name] = value
+        end
       end
     end
 
-    def noize!(strs)
-      strs = strs.select { |str| str.start_with?('--') }
-      strs = strs.reject { |str| str.include?('[no-]') }
-      strs.each { |str| str.replace(str.sub('--', '--[no-]')) unless str == '--help' }
+    def long?(str)
+      str.start_with?('--')
     end
 
-    class Validator < Struct.new(:opts)
+    class Validator < Struct.new(:strs, :opts)
       SHORT = /^-\w( \w+)?$/
       LONG  = /^--[\w\-\[\]]+( \w+)?$/
 
       MSGS = {
-        missing_opts: 'No option strings given. Pass one short -s and/or one --long option string.',
-        wrong_opts:   'Wrong option strings given. Pass one short -s and/or one --long option string.',
-        invalid_opts: 'Invalid option strings given: %p'
+        missing_strs: 'No option strings given. Pass one short -s and/or one --long option string.',
+        wrong_strs:   'Wrong option strings given. Pass one short -s and/or one --long option string.',
+        invalid_strs: 'Invalid option strings given: %p',
+        unknown_opts: 'Unknown options: %s'
       }
 
       def apply
-        error :missing_opts if opts.empty?
-        error :wrong_opts if short.size > 1 || long.size > 1
-        error :invalid_opts, invalid unless invalid.empty?
+        error :missing_strs if strs.empty?
+        error :wrong_strs if short.size > 1 || long.size > 1
+        error :invalid_strs, invalid unless invalid.empty?
+        error :unknown_opts, unknown.map(&:inspect).join(', ') unless unknown.empty?
+        [short.first, long.first]
+      end
+
+      def unknown
+        @unknown ||= opts.keys - Opt::OPTS
       end
 
       def invalid
-        @invalid ||= opts.-(valid).join(', ')
+        @invalid ||= strs.-(valid).join(', ')
       end
 
       def valid
-        opts.grep(Regexp.union(SHORT, LONG))
+        strs.grep(Regexp.union(SHORT, LONG))
       end
 
       def short
-        opts.grep(SHORT)
+        strs.grep(SHORT)
       end
 
       def long
-        opts.grep(LONG)
+        strs.grep(LONG)
       end
 
       def error(key, *args)
-        raise Error, MSGS[key] % args
+        raise Cl::Error, MSGS[key] % args
       end
     end
   end

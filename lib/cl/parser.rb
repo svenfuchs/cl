@@ -1,47 +1,35 @@
 require 'optparse'
+require 'cl/parser/format'
 
 class Cl
   class Parser < OptionParser
-    attr_reader :opts
+    attr_reader :cmd, :args, :opts
 
-    def initialize(opts, args)
+    def initialize(cmd, args)
+      @cmd = cmd
       @opts = {}
+      opts = cmd.class.opts
 
       super do
         opts.each do |opt|
-          on(*args_for(opt, opt.strs)) do |value|
-            set(opt, value)
-          end
-
-          opt.aliases.each do |name|
-            on(*args_for(opt, [aliased(opt, name)])) do |value|
-              @opts[name] = set(opt, value)
-            end
+          Format.new(opt).strs.each do |str|
+            on(str) { |value| set(opt, str, value) }
           end
         end
       end
 
-      args.replace(normalize(opts, args))
-      parse!(args)
-    end
-
-    def args_for(opt, strs)
-      args = dasherize(strs)
-      args = flagerize(args) if opt.flag?
-      args
-    end
-
-    def aliased(opt, name)
-      str = opt.strs.detect { |str| str.start_with?('--') } || raise
-      str.sub(/(#{opt.name}|#{opt.name.to_s.gsub('_', '-')})/, name.to_s)
+      orig = args.map(&:dup)
+      @args = parse!(normalize(opts, args))
     end
 
     # should consider negative arities (e.g. |one, *two|)
-    def set(opt, value)
+    def set(opt, str, value)
+      name = long?(str) ? opt_name(str) : opt.name
       value = true if value.nil? && opt.flag?
-      args = [opts, opt.type, opt.name, value]
+      args = [opts, opt.type, name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
+      cmd.deprecations[name] = opt.deprecated.last if opt.deprecated?(name)
     end
 
     def normalize(opts, args)
@@ -57,7 +45,7 @@ class Cl
     end
 
     def negation(opts, arg)
-      opts.detect do |opt|
+      opts.select(&:flag?).detect do |opt|
         str = opt.negate.detect { |str| arg =~ /^--#{str}[-_]+#{opt.name}/ }
         break str if str
       end
@@ -71,9 +59,12 @@ class Cl
       end
     end
 
-    def flagerize(strs)
-      strs = strs.map { |str| str.include?(' ') ? str : "#{str} [true|false|yes|no]" }
-      strs << TrueClass
+    def long?(str)
+      str.start_with?('--')
+    end
+
+    def opt_name(str)
+      str.split(' ').first.sub(/--(\[no[_\-]\])?/, '').to_sym
     end
   end
 end
