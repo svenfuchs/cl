@@ -18,7 +18,6 @@ class Cl
         end
       end
 
-      orig = args.map(&:dup)
       @args = parse!(normalize(opts, args))
     end
 
