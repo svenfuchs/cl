@@ -74,13 +74,18 @@ class Cl
       def opt_strs(opt)
         return opt.strs if !opt.flag? || opt.help?
         opts = [opt.short]
-        opts << negate(opt.long, opt.negate) if opt.long && opt.negate?
+        opts.push(negate?(opt) ? negate(opt) : opt.long)
         opts.compact
       end
 
-      def negate(opt, negations)
-        negations = negations.map { |str| "#{str}-" }.join('|')
-        opt.dup.insert(2, "[#{negations}]")
+      def negate?(opt)
+        negations = opt.negate.map { |str| "#{str}-" }.join('|')
+        opt.long && opt.negate? && opt.long !~ /\[#{negations}\]/
+      end
+
+      def negate(opt)
+        negations = opt.negate.map { |str| "#{str}-" }.join('|')
+        opt.long.dup.insert(2, "[#{negations}]")
       end
 
       def requireds

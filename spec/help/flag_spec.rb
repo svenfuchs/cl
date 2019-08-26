@@ -38,4 +38,21 @@ describe Cl, 'help' do
       str
     end
   end
+
+  describe 'flag, negated' do
+    let(:opts) { ->(*) { opt '--[no-]flag', 'A flag' } }
+    let(:args) { ['a', '--help'] }
+    before { run }
+
+    it do
+      expect(ctx.stdout.string).to eq unindent(<<-str)
+        Usage: cl a [options]
+
+        Options:
+
+          --[no-]flag      A flag
+          --help           Get help on this command
+      str
+    end
+  end
 end
