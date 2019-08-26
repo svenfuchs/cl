@@ -24,6 +24,6 @@ describe Cl, 'enum' do
     let(:opts) { ->(*) { opt('--one STRS', type: :array, enum: ['one', /^two$/]) } }
     it { expect(cmd(%w(cmd --one one --one two)).opts[:one]).to eq ['one', 'two'] }
     it { expect { cmd(%w(cmd --one on --one two --one three)) }.to raise_error 'Unknown value: one=on one=three (known values: one, /^two$/)' }
-    it { expect { cmd(%w(cmd --one on --one two --one three)) }.to suggest 'one' }
+    it { expect { cmd(%w(cmd --one on --one two --one three)) }.to suggest 'one' } if RUBY_VERSION >= '2.4'
   end
 end

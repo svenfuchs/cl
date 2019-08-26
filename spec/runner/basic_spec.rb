@@ -29,5 +29,5 @@ describe Cl, 'basic' do
     let(:args) { %w(on a b) }
     it { expect { cmd }.to raise_error 'Unknown command: on a b' }
     it { expect { cmd }.to suggest 'one' }
-  end
+  end if RUBY_VERSION >= '2.4'
 end
