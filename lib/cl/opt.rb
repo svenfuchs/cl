@@ -77,7 +77,7 @@ class Cl
     end
 
     def deprecated?(name = nil)
-      name ? deprecated.first == name : !!opts[:deprecated]
+      name ? deprecated? && deprecated.first == name : !!opts[:deprecated]
     end
 
     def deprecated

@@ -1,6 +1,21 @@
 describe Cl, 'opts' do
   let!(:const) { Class.new(Cl::Cmd, &opts).register(:cmd) }
 
+  describe 'not deprecated' do
+    let(:opts) do
+      ->(*) do
+        opt '--one STR'
+        opt '--two'
+      end
+    end
+
+    it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
+    it { expect(cmd(%w(cmd --one one)).deprecations).to be_empty }
+
+    it { expect(cmd(%w(cmd --two two)).opts[:two]).to be true }
+    it { expect(cmd(%w(cmd --two two)).deprecations).to be_empty }
+  end
+
   describe 'deprecated' do
     let(:opts) do
       ->(*) do
