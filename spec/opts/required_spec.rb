@@ -8,6 +8,13 @@ describe Cl, 'opts' do
     it { expect { cmd(%w(cmd)) }.to raise_error Cl::OptionError }
   end
 
+  describe 'required (array)' do
+    let(:opts) { ->(*) { opt('--str STR', type: :array, required: true) } }
+
+    it { expect(cmd(%w(cmd --str str)).opts[:str]).to eq ['str'] }
+    it { expect { cmd(%w(cmd)) }.to raise_error Cl::OptionError }
+  end
+
   describe 'requires another option' do
     let(:opts) do
       ->(*) do
