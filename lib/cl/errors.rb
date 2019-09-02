@@ -4,6 +4,7 @@ class Cl
   class Error < StandardError
     MSGS = {
       unknown_cmd:    'Unknown command: %s',
+      unknown_option: 'Unknown option: %s',
       missing_args:   'Missing arguments (given: %s, required: %s)',
       too_many_args:  'Too many arguments (given: %s, allowed: %s)',
       wrong_type:     'Wrong argument type (given: %s, expected: %s)',
@@ -35,6 +36,20 @@ class Cl
 
     def suggestions
       runner.suggestions(args)
+    end
+  end
+
+  class UnknownOption < Error
+    attr_reader :cmd, :opt
+
+    def initialize(cmd, str)
+      @cmd = cmd
+      @opt = str.sub('invalid option: ', '')
+      super(:unknown_option, opt)
+    end
+
+    def suggestions
+      cmd.suggestions(opt)
     end
   end
 

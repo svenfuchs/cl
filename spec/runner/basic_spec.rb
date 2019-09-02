@@ -14,6 +14,8 @@ describe Cl, 'basic' do
     end
   end
 
+  before { Cl::Help.register :help }
+
   describe 'args and opts' do
     let(:args) { %w(one foo bar --one) }
     it { expect(cmd).to be_a one }
@@ -25,9 +27,15 @@ describe Cl, 'basic' do
     it { expect(two.opts.map(&:strs).flatten).to eq %w(--one --two --help) }
   end
 
+  describe 'invalid option' do
+    let(:args) { %w(one --une) }
+    it { expect { subject.run(args) }.to raise_error 'Unknown option: --une' }
+    it { expect { subject.run(args) }.to suggest 'one' } if RUBY_VERSION >= '2.4'
+  end
+
   describe 'unknown cmd' do
     let(:args) { %w(on a b) }
     it { expect { cmd }.to raise_error 'Unknown command: on a b' }
-    it { expect { cmd }.to suggest 'one' }
-  end if RUBY_VERSION >= '2.4'
+    it { expect { cmd }.to suggest 'one' } if RUBY_VERSION >= '2.4'
+  end
 end

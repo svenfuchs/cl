@@ -21,6 +21,8 @@ class Cl
 
       def run
         cmd.help? ? help.run : cmd.run
+      rescue OptionParser::InvalidOption => e
+        raise UnknownOption.new(const, e.message)
       end
 
       def cmd

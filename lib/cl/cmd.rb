@@ -17,7 +17,7 @@ class Cl
     extend Dsl
 
     class << self
-      include Merge, Underscore
+      include Merge, Suggest, Underscore
 
       inherited = ->(const) do
         const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
@@ -34,6 +34,10 @@ class Cl
         args, opts = parser.args, parser.opts unless self == Help
         opts = merge(ctx.config[registry_key], opts) if ctx.config[registry_key]
         [args, opts || {}]
+      end
+
+      def suggestions(opt)
+        suggest(opts.map(&:name), opt.sub(/^--/, ''))
       end
     end
 
