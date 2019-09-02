@@ -77,7 +77,9 @@ class Cl
     end
 
     def deprecated?(name = nil)
-      name ? deprecated? && deprecated.first == name : !!opts[:deprecated]
+      return !!opts[:deprecated] if name.nil?
+      names = [name.to_s.gsub('_', '-').to_sym, name.to_s.gsub('-', '_').to_sym]
+      deprecated? && names.include?(deprecated.first)
     end
 
     def deprecated

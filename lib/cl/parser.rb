@@ -28,7 +28,7 @@ class Cl
       args = [opts, opt.type, name, value]
       args = args[-opt.block.arity, opt.block.arity]
       instance_exec(*args, &opt.block)
-      cmd.deprecations[name] = opt.deprecated.last if opt.deprecated?(name)
+      cmd.deprecations.update([opt.deprecated].to_h) if opt.deprecated?(name)
     end
 
     def normalize(opts, args)
