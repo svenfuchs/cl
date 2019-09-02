@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.3 (2019-09-02)
+
+* Rescue OptionParser::InvalidOption, suggest known options
+
+## 1.1.2 (2019-09-02)
+
+* Fix deprecations for underscored keys
+
+## 1.1.1 (2019-08-26)
+
+* Fix an issue in opt.deprecated?(name)
+
+## 1.1.0 (2019-08-26)
+
+* Add suggestions on unknown cmds and enums
+* Validate option options
+
 ## 1.0.5 (2019-08-18)
 
 ### Fixed
