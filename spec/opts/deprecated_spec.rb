@@ -99,8 +99,8 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --one-one one)).deprecations).to be_empty }
 
     it { expect(cmd(%w(cmd --two_two one)).opts[:one_one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --two_two one)).deprecations).to eq 'two-two': :one_one }
+    it { expect(cmd(%w(cmd --two_two one)).deprecations).to eq :'two-two' => :one_one }
     it { expect(cmd(%w(cmd --two-two one)).opts[:one_one]).to eq 'one' }
-    it { expect(cmd(%w(cmd --two-two one)).deprecations).to eq 'two-two': :one_one }
+    it { expect(cmd(%w(cmd --two-two one)).deprecations).to eq :'two-two' => :one_one }
   end
 end
