@@ -42,9 +42,11 @@ class Cl
   class UnknownOption < Error
     attr_reader :cmd, :opt
 
+    VALUE = /=[^ ]*/
+
     def initialize(cmd, str)
       @cmd = cmd
-      @opt = str.sub('invalid option: ', '')
+      @opt = str.sub('invalid option: ', '').sub(VALUE, '')
       super(:unknown_option, opt)
     end
 

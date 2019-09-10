@@ -10,7 +10,7 @@ describe Cl, 'basic' do
     Class.new(Cl::Cmd) do
       register :two
       opt('--one') { opts[:one] = true }
-      opt('--two') { opts[:two] = true }
+      opt('--two TWO') { |obj| opts[:two] = obj }
     end
   end
 
@@ -24,13 +24,18 @@ describe Cl, 'basic' do
   end
 
   describe 'strs' do
-    it { expect(two.opts.map(&:strs).flatten).to eq %w(--one --two --help) }
+    it { expect(two.opts.map(&:strs).flatten).to eq ['--one', '--two TWO', '--help'] }
   end
 
   describe 'invalid option' do
     let(:args) { %w(one --une) }
     it { expect { subject.run(args) }.to raise_error 'Unknown option: --une' }
     it { expect { subject.run(args) }.to suggest 'one' } if RUBY_VERSION >= '2.4'
+  end
+
+  describe 'invalid option (key=value)' do
+    let(:args) { %w(one --twu=2) }
+    it { expect { subject.run(args) }.to raise_error 'Unknown option: --twu' }
   end
 
   describe 'unknown cmd' do
