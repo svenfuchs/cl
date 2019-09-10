@@ -46,6 +46,7 @@ class Cl
   # Returns help output for the given command
   def help(*args)
     runner(['help', *args]).cmd.help
+  rescue
   end
 
   private

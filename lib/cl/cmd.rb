@@ -20,7 +20,11 @@ class Cl
       include Merge, Suggest, Underscore
 
       inherited = ->(const) do
-        const.register [registry_key, underscore(const.name.split('::').last)].compact.join(':') if const.name
+        if const.name
+          key = underscore(const.name.split('::').last)
+          key = [registry_key, key].compact.join(':') unless abstract?
+        end
+        const.register key
         const.define_singleton_method(:inherited, &inherited)
       end
       define_method(:inherited, &inherited)
@@ -40,6 +44,8 @@ class Cl
         suggest(opts.map(&:name), opt.sub(/^--/, ''))
       end
     end
+
+    abstract
 
     opt '--help', 'Get help on this command'
 

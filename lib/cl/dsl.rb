@@ -7,6 +7,11 @@ class Cl
 
       def abstract
         unregister
+        @abstract = true
+      end
+
+      def abstract?
+        !!@abstract
       end
 
       # Declare multiple arguments at once

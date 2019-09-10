@@ -70,7 +70,7 @@ class Cl
           end
 
           cmd, keys = keys[0].last
-          raise UnknownCmd.new(self, args) unless cmd
+          raise UnknownCmd.new(self, args) if cmd.nil? || cmd.abstract?
           keys.each { |key| args.delete_at(args.index(key)) }
           [cmd, args]
         end
