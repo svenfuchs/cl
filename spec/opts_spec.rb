@@ -52,13 +52,16 @@ describe Cl, 'opts' do
   end
 
   describe 'dashed opts' do
-    let(:opts) { ->(*) { opt('--one_two') } }
+    let(:opts) { ->(*) { opt('--one_two_three') } }
 
-    it { expect(cmd(%w(cmd --one_two)).opts[:one_two]).to be true }
-    it { expect(cmd(%w(cmd --one_two)).one_two?).to be true }
+    it { expect(cmd(%w(cmd --one_two_three)).opts[:one_two_three]).to be true }
+    it { expect(cmd(%w(cmd --one_two_three)).one_two_three?).to be true }
 
-    it { expect(cmd(%w(cmd --one-two)).opts[:one_two]).to be true }
-    it { expect(cmd(%w(cmd --one-two)).one_two?).to be true }
+    it { expect(cmd(%w(cmd --one-two-three)).opts[:one_two_three]).to be true }
+    it { expect(cmd(%w(cmd --one-two-three)).one_two_three?).to be true }
+
+    it { expect(cmd(%w(cmd --one-two_three)).opts[:one_two_three]).to be true }
+    it { expect(cmd(%w(cmd --one_two-three)).one_two_three?).to be true }
   end
 
   describe 'does not dasherize values' do
