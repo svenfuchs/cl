@@ -26,8 +26,10 @@ class Cl
           paths.select { |path| File.exist?(path) }
         end
 
-        def symbolize(hash)
-          hash.map { |key, value| [key.to_sym, value] }.to_h
+        def symbolize(hash, first_pass = true)
+          hash.map { |key, value|
+            [key.to_sym, (first_pass && value.is_a?(Hash)) ? symbolize(value, false) : value]
+          }.to_h
         end
     end
   end
