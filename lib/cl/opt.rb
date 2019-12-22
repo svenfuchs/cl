@@ -231,7 +231,7 @@ class Cl
 
     class Validator < Struct.new(:strs, :opts)
       SHORT = /^-\w( \w+)?$/
-      LONG  = /^--[\w\-\[\]]+( \w+)?$/
+      LONG  = /^--[\w\-\[\]]+( \[?\w+\]?)?$/
 
       MSGS = {
         missing_strs: 'No option strings given. Pass one short -s and/or one --long option string.',
