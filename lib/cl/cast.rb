@@ -31,12 +31,12 @@ class Cl
         alias flag boolean
 
         def int
-          Integer(value)
+          Integer(value) if value
         end
         alias integer int
 
         def float
-          Float(value)
+          Float(value) if value
         end
 
         def split(value)
