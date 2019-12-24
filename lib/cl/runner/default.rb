@@ -7,6 +7,9 @@ class Cl
     class Default
       Runner.register :default, self
 
+      singleton_class.send(:attr_accessor, :run_method)
+      self.run_method = :run
+
       extend Forwardable
       include Merge, Suggest
 
@@ -20,7 +23,7 @@ class Cl
       end
 
       def run
-        cmd.help? ? help.run : cmd.run
+        cmd.help? ? help.run : cmd.send(self.class.run_method)
       rescue OptionParser::InvalidOption => e
         raise UnknownOption.new(const, e.message)
       end

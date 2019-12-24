@@ -18,7 +18,7 @@ class Cl
       #
       # See {Cl::Cmd::Dsl#arg} for more details.
       def args(*args)
-        return @args ||= Args.new unless args.any?
+        return @args ||= superclass.respond_to?(:args) ? superclass.args.dup : Args.new unless args.any?
         opts = args.last.is_a?(Hash) ? args.pop : {}
         args.each { |arg| arg(arg, opts) }
       end

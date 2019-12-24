@@ -28,15 +28,27 @@ class Cl
       self.args.index(*args, &block)
     end
 
+    attr_writer :args
+
     def args
       @args ||= []
+    end
+
+    def clear
+      args.clear
+    end
+
+    def dup
+      args = super
+      args.args = args.args.dup
+      args
     end
 
     private
 
       def validate(args)
         raise ArgumentError.new(:missing_args, args.size, required) if args.size < required
-        raise ArgumentError.new(:too_many_args, args.size, allowed) if args.size > allowed && !splat?
+        raise ArgumentError.new(:too_many_args, args.join(' '), args.size, allowed) if args.size > allowed && !splat?
       end
 
       def allowed

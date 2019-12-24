@@ -92,7 +92,7 @@ describe Cl, 'args' do
 
   describe 'raises on too many arguments' do
     let(:args) { %w(args foo 1 2 3) }
-    it { expect { cmd }.to raise_error(Cl::ArgumentError, 'Too many arguments (given: 3, allowed: 2)') }
+    it { expect { cmd }.to raise_error(Cl::ArgumentError, 'Too many arguments: 1 2 3 (given: 3, allowed: 2)') }
   end
 
   describe 'raises on wrong argument type (int)' do
@@ -115,5 +115,34 @@ describe Cl, 'args' do
   describe 'no args' do
     let(:args) { %w(args none) }
     it { expect(cmd.args).to eq [] }
+  end
+
+  describe 'inheritance' do
+    let!(:foo) do
+      Class.new(Cl::Cmd) do
+        register :foo
+        arg :a
+        def what
+          p a
+        end
+      end
+    end
+
+    let!(:bar) do
+      Class.new(foo) do
+        register :'foo:bar'
+        arg :b
+      end
+    end
+
+    describe 'parent' do
+      let(:args) { %w(foo 1) }
+      it { expect(cmd.args).to eq %w(1) }
+    end
+
+    describe 'child' do
+      let(:args) { %w(foo bar 1 2) }
+      it { expect(cmd.args).to eq %w(1 2) }
+    end
   end
 end
