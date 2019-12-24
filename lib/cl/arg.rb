@@ -5,7 +5,9 @@ class Cl
     include Cast
 
     def define(const)
-      const.send(:attr_accessor, name)
+      mod = Module.new
+      mod.send(:attr_accessor, name)
+      const.include(mod)
     end
 
     def set(cmd, value)
