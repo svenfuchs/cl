@@ -17,33 +17,6 @@ describe Cl, 'args' do
     end
   end
 
-  let!(:baz) do
-    Class.new(Cl::Cmd) do
-      register 'args:baz'
-      arg :a, type: :array, splat: true
-      arg :b
-      arg :c
-    end
-  end
-
-  let!(:buz) do
-    Class.new(Cl::Cmd) do
-      register 'args:buz'
-      arg :a
-      arg :b, type: :array, splat: true
-      arg :c
-    end
-  end
-
-  let!(:bum) do
-    Class.new(Cl::Cmd) do
-      register 'args:bum'
-      arg :a
-      arg :b
-      arg :c, type: :array, splat: true
-    end
-  end
-
   describe 'defines argument accessors' do
     let(:args) { %w(args foo 1 2) }
     it { expect(runner.args).to eq %w(1 2) }
@@ -59,30 +32,6 @@ describe Cl, 'args' do
     it { expect(cmd.b).to eq true }
     it { expect(cmd.c).to eq 1 }
     it { expect(cmd.d).to eq 1.2 }
-  end
-
-  describe 'splats (left)' do
-    let(:args) { %w(args baz a b c d e) }
-    it { expect(cmd).to be_a baz }
-    it { expect(cmd.a).to eq %w(a b c) }
-    it { expect(cmd.b).to eq 'd' }
-    it { expect(cmd.c).to eq 'e' }
-  end
-
-  describe 'splats (middle)' do
-    let(:args) { %w(args buz a b c d e) }
-    it { expect(cmd).to be_a buz }
-    it { expect(cmd.a).to eq 'a' }
-    it { expect(cmd.b).to eq %w(b c d) }
-    it { expect(cmd.c).to eq 'e' }
-  end
-
-  describe 'splats (right)' do
-    let(:args) { %w(args bum a b c d e) }
-    it { expect(cmd).to be_a bum }
-    it { expect(cmd.a).to eq 'a' }
-    it { expect(cmd.b).to eq 'b' }
-    it { expect(cmd.c).to eq %w(c d e) }
   end
 
   describe 'raises on missing arguments' do

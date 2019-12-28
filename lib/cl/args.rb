@@ -67,6 +67,7 @@ class Cl
       def splat(values)
         args.each.with_index.inject([]) do |group, (arg, ix)|
           count = arg && arg.splat? ? [values.size - args.size + ix + 1] : []
+          count = 0 if count.first.to_i < 0
           group << values.shift(*count)
         end
       end
