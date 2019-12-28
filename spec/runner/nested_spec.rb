@@ -2,6 +2,7 @@ describe Cl, 'nested' do
   let!(:a) do
     Class.new(Cl::Cmd) do
       register 'nested:a'
+      arg :foo
       opt('-a') { opts[:a] = true }
     end
   end
@@ -9,6 +10,7 @@ describe Cl, 'nested' do
   let!(:b) do
     Class.new(a) do
       register 'nested:a:b'
+      arg :bar
       opt('-b') { opts[:b] = true }
     end
   end

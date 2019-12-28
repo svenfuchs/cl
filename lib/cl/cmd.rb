@@ -54,8 +54,8 @@ class Cl
     def initialize(ctx, args)
       @ctx = ctx
       args, opts = self.class.parse(ctx, self, args)
-      @opts = self.class.opts.apply(self, self.opts.merge(opts))
-      @args = self.class.args.apply(self, args, opts)
+      @opts = self.class.opts.apply(self, opts)
+      @args = self.class.args.apply(self, args, opts) unless help?
     end
 
     def opts

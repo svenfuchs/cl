@@ -2,6 +2,7 @@ describe Cl, 'basic' do
   let!(:one) do
     Class.new(Cl::Cmd) do
       register :one
+      args :foo, :bar
       opt('--one') { opts[:one] = true }
     end
   end
@@ -20,6 +21,8 @@ describe Cl, 'basic' do
     let(:args) { %w(one foo bar --one) }
     it { expect(cmd).to be_a one }
     it { expect(cmd.args).to eq %w(foo bar) }
+    it { expect(cmd.foo).to eq 'foo' }
+    it { expect(cmd.bar).to eq 'bar' }
     it { expect(cmd.opts).to eq one: true }
   end
 

@@ -2,6 +2,7 @@ describe Cl, 'grouped' do
   let!(:a) do
     Class.new(Cl::Cmd) do
       register 'grouped:a'
+      args :foo, :bar
       opt('-a') { opts[:a] = true }
     end
   end
@@ -9,6 +10,7 @@ describe Cl, 'grouped' do
   let!(:b) do
     Class.new(Cl::Cmd) do
       register 'grouped:b'
+      args :foo, :bar
       opt('-b') { opts[:b] = true }
       opt('-c') { opts[:c] = true }
       opt('-d') { opts[:d] = true }

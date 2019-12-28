@@ -2,6 +2,8 @@ class Cl
   class Help < Cl::Cmd
     register :help
 
+    arg :args, splat: true
+
     def run
       ctx.puts help
     end

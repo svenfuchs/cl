@@ -14,9 +14,9 @@ class Cl
     end
 
     def apply(cmd, values, opts)
-      return values if args.empty? || opts[:help]
       values = splat(values) if splat?
       validate(values)
+      return values if args.empty?
       args.zip(values).map { |(arg, value)| arg.set(cmd, value) }.flatten(1).compact
     end
 
@@ -47,6 +47,7 @@ class Cl
     private
 
       def validate(args)
+        # raise ArgumentError.new(:unknown_arg, arg) if unknown?(arg)
         raise ArgumentError.new(:missing_args, args.size, required) if args.size < required
         raise ArgumentError.new(:too_many_args, args.join(' '), args.size, allowed) if args.size > allowed && !splat?
       end

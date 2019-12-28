@@ -22,6 +22,14 @@ class Cl
       opts[:description]
     end
 
+    def enum
+      opts[:enum]
+    end
+
+    def default
+      opts[:default]
+    end
+
     def required?
       !!opts[:required]
     end
