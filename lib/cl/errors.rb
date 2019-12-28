@@ -5,6 +5,7 @@ class Cl
     MSGS = {
       unknown_cmd:    'Unknown command: %s',
       unknown_option: 'Unknown option: %s',
+      unknown_arg:    'Unknown argument value: %s (known: %s)',
       missing_args:   'Missing arguments (given: %s, required: %s)',
       too_many_args:  'Too many arguments: %s (given: %s, allowed: %s)',
       wrong_type:     'Wrong argument type (given: %s, expected: %s)',
@@ -88,6 +89,12 @@ class Cl
     def initialize(opts)
       opts = opts.map { |opt, format| "#{opt} (format: #{format})" }.join(', ')
       super(:invalid_format, opts)
+    end
+  end
+
+  class UnknownArgumentValue < OptionError
+    def initialize(value, known)
+      super(:unknown_arg, value, known)
     end
   end
 

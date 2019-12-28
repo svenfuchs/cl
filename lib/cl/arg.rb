@@ -11,7 +11,9 @@ class Cl
     end
 
     def set(cmd, value)
-      cmd.send(:"#{name}=", cast(value))
+      value = cast(value)
+      unknown(value) if enum? && !known?(value)
+      cmd.send(:"#{name}=", value)
     end
 
     def type
@@ -23,7 +25,11 @@ class Cl
     end
 
     def enum
-      opts[:enum]
+      Array(opts[:enum])
+    end
+
+    def enum?
+      opts.key?(:enum)
     end
 
     def default
@@ -32,6 +38,10 @@ class Cl
 
     def default?
       opts.key?(:default)
+    end
+
+    def known?(value)
+      enum.include?(value)
     end
 
     def required?
@@ -44,6 +54,10 @@ class Cl
 
     def splat?
       opts[:splat] && type == :array
+    end
+
+    def unknown(value)
+      raise UnknownArgumentValue.new(value, enum.join(', '))
     end
 
     def to_s
