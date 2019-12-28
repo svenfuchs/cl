@@ -23,19 +23,32 @@ describe Cl::Parser::Format do
       should eq [
         '-o',
         '--[no-]one',
-        '--[no-]one [true|false|yes|no]',
         '--[no-]two',
-        '--[no-]two [true|false|yes|no]'
       ]
     end
   end
 
-  describe '--[no-]one, alias: :two' do
+  describe '--[no-]one, alias: :two (without flag values)' do
     let(:strs) { %w(--[no-]one) }
     let(:opts) { { alias: :two } }
 
     it do
       should eq [
+        '--[no-]one',
+        '--[no-]two',
+      ]
+    end
+  end
+
+  describe '-o, --one, alias: :two (with flag values)' do
+    let(:strs) { %w(-o --one) }
+    let(:opts) { { alias: :two } }
+
+    before { Cl.flag_values = true }
+
+    it do
+      should eq [
+        '-o',
         '--[no-]one',
         '--[no-]one [true|false|yes|no]',
         '--[no-]two',
@@ -44,9 +57,34 @@ describe Cl::Parser::Format do
     end
   end
 
-  describe '--one, negate: %w(skip without)' do
+  describe '--[no-]one, alias: :two (without flag values)' do
+    let(:strs) { %w(--[no-]one) }
+    let(:opts) { { alias: :two } }
+
+    it do
+      should eq [
+        '--[no-]one',
+        '--[no-]two',
+      ]
+    end
+  end
+
+  describe '--one, negate: %w(skip without) (without flag values)' do
     let(:strs) { %w(--one) }
     let(:opts) { { negate: %w(skip without) } }
+
+    it do
+      should eq [
+        '--[no-]one',
+      ]
+    end
+  end
+
+  describe '--one, negate: %w(skip without) (with flag values)' do
+    let(:strs) { %w(--one) }
+    let(:opts) { { negate: %w(skip without) } }
+
+    before { Cl.flag_values = true }
 
     it do
       should eq [

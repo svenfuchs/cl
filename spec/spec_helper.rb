@@ -11,6 +11,7 @@ require 'cl'
 
 RSpec.configure do |c|
   c.before { Cl::Cmd.registry.clear }
+  c.after  { Cl.flag_values = false }
 
   c.before { MemFs.activate! }
   c.after  { MemFs.deactivate! }

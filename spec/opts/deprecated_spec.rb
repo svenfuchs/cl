@@ -12,8 +12,8 @@ describe Cl, 'opts' do
     it { expect(cmd(%w(cmd --one one)).opts[:one]).to eq 'one' }
     it { expect(cmd(%w(cmd --one one)).deprecations).to be_empty }
 
-    it { expect(cmd(%w(cmd --two two)).opts[:two]).to be true }
-    it { expect(cmd(%w(cmd --two two)).deprecations).to be_empty }
+    it { expect(cmd(%w(cmd --two)).opts[:two]).to be true }
+    it { expect(cmd(%w(cmd --two)).deprecations).to be_empty }
   end
 
   describe 'deprecated (underscored)' do

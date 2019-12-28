@@ -13,7 +13,7 @@ class Cl
         strs = strs.map { |str| negated(str) }.flatten if flag?
         strs = collect(strs, :dashed)
         strs = collect(strs, :underscored)
-        strs = collect(strs, :valued) if flag?
+        strs = collect(strs, :valued) if flag? && Cl.flag_values
         strs.uniq
       end
 

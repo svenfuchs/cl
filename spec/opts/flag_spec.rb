@@ -99,18 +99,22 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd)).flag?).to be false }
     it { expect(cmd(%w(cmd --flag)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag true)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag no)).flag).to be false }
-    it { expect(cmd(%w(cmd --flag false)).flag).to be false }
-
     it { expect(cmd(%w(cmd --no-flag)).flag).to be false }
+    it { expect { cmd(%w(cmd --flag value)) }.to raise_error Cl::ArgumentError }
 
-    # looks like option parser just does not support these?
-    # it { expect(cmd(%w(cmd --no-flag yes)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag true)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag no)).flag).to be true }
-    # it { expect(cmd(%w(cmd --no-flag false)).flag).to be true }
+    describe 'flag_values' do
+      before { Cl.flag_values = true }
+      it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag true)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag no)).flag).to be false }
+      it { expect(cmd(%w(cmd --flag false)).flag).to be false }
+
+      # looks like option parser just does not support these?
+      # it { expect(cmd(%w(cmd --no-flag yes)).flag).to be false }
+      # it { expect(cmd(%w(cmd --no-flag true)).flag).to be false }
+      # it { expect(cmd(%w(cmd --no-flag no)).flag).to be true }
+      # it { expect(cmd(%w(cmd --no-flag false)).flag).to be true }
+    end
   end
 
   describe 'flag, optional argument, default true' do
@@ -118,14 +122,15 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd)).flag?).to be true }
     it { expect(cmd(%w(cmd --flag)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag true)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag no)).flag).to be false }
-    it { expect(cmd(%w(cmd --flag false)).flag).to be false }
-
     it { expect(cmd(%w(cmd --no-flag)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag yes)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag true)).flag).to be false }
+
+    describe 'flag_values' do
+      before { Cl.flag_values = true }
+      it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag true)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag no)).flag).to be false }
+      it { expect(cmd(%w(cmd --flag false)).flag).to be false }
+    end
   end
 
   describe 'flag, optional argument, default false' do
@@ -133,13 +138,14 @@ describe Cl, 'opts' do
 
     it { expect(cmd(%w(cmd)).flag?).to be false }
     it { expect(cmd(%w(cmd --flag)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag true)).flag).to be true }
-    it { expect(cmd(%w(cmd --flag no)).flag).to be false }
-    it { expect(cmd(%w(cmd --flag false)).flag).to be false }
-
     it { expect(cmd(%w(cmd --no-flag)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag yes)).flag).to be false }
-    # it { expect(cmd(%w(cmd --no-flag true)).flag).to be false }
+
+    describe 'flag_values' do
+      before { Cl.flag_values = true }
+      it { expect(cmd(%w(cmd --flag yes)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag true)).flag).to be true }
+      it { expect(cmd(%w(cmd --flag no)).flag).to be false }
+      it { expect(cmd(%w(cmd --flag false)).flag).to be false }
+    end
   end
 end
