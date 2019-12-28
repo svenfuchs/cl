@@ -25,6 +25,12 @@ describe Cl, 'args' do
     it { expect(cmd.b).to eq '2' }
   end
 
+  describe 'defines argument predicates' do
+    let(:args) { %w(args foo 1) }
+    it { expect(cmd.a?).to be true }
+    it { expect(cmd.b?).to be false }
+  end
+
   describe 'casts' do
     let(:args) { %w(args bar a,b,c true 1 1.2) }
     it { expect(cmd).to be_a bar }

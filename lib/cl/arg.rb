@@ -7,6 +7,7 @@ class Cl
     def define(const)
       mod = Module.new
       mod.send(:attr_accessor, name)
+      mod.class_eval "def #{name}?; #{name}.is_a?(Array) ? !#{name}.empty? : !!#{name} end"
       const.include(mod)
     end
 
@@ -18,6 +19,10 @@ class Cl
 
     def type
       opts[:type] || :string
+    end
+
+    def array?
+      type == :array
     end
 
     def description
@@ -53,7 +58,7 @@ class Cl
     end
 
     def splat?
-      opts[:splat] && type == :array
+      !!opts[:splat] && array?
     end
 
     def unknown(value)
