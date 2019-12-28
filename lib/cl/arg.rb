@@ -30,6 +30,10 @@ class Cl
       opts[:default]
     end
 
+    def default?
+      opts.key?(:default)
+    end
+
     def required?
       !!opts[:required]
     end

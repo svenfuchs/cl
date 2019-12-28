@@ -15,9 +15,11 @@ class Cl
 
     def apply(cmd, values, opts)
       values = splat(values) if splat?
+      values = default(values) if default?
       validate(values)
       return values if args.empty?
-      args.zip(values).map { |(arg, value)| arg.set(cmd, value) }.flatten(1).compact
+      values = args.zip(values).map { |(arg, value)| arg.set(cmd, value) }.flatten(1) #.compact
+      compact_args(values)
     end
 
     def each(&block)
@@ -60,6 +62,10 @@ class Cl
         any?(&:splat?)
       end
 
+      def default?
+        any?(&:default?)
+      end
+
       def required
         select(&:required?).size
       end
@@ -70,6 +76,17 @@ class Cl
           count = 0 if count.first.to_i < 0
           group << values.shift(*count)
         end
+      end
+
+      def default(values)
+        args.each.with_index.inject([]) do |args, (arg, ix)|
+          args << (values[ix] || arg.default)
+        end
+      end
+
+      def compact_args(args)
+        args = compact_args(args[0..-2]) while args.last.nil? && args.size > 0
+        args
       end
   end
 end
