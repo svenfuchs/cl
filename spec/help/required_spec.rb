@@ -59,11 +59,11 @@ describe Cl, 'help' do
 
           Options:
 
-            --aaa AAA      type: string, required: true
+            --aaa AAA      type: string, required
 
           Common Options:
 
-            --bbb BBB      type: string, required: true
+            --bbb BBB      type: string, required
             --help         Get help on this command
         str
       end

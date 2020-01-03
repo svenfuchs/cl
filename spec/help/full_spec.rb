@@ -9,7 +9,7 @@ describe Cl, 'help' do
       end
 
       Class.new(base) do
-        register :'test:a'
+        register :'test:a', :test
 
         summary 'Use this to a the a'
         description 'Description of the a'
@@ -54,6 +54,7 @@ describe Cl, 'help' do
       it do
         expect(ctx.stdout.string).to eq unindent(<<-str)
           Usage: cl test a foo:int [bar] [baz] [options]
+             or: cl test foo:int [bar] [baz] [options]
 
           Summary:
 
@@ -65,7 +66,7 @@ describe Cl, 'help' do
 
           Arguments:
 
-            foo                The foo (type: integer, required: true)
+            foo                The foo (type: integer, required)
             bar                type: string
             baz                type: string
 

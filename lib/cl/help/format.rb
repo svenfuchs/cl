@@ -9,7 +9,7 @@ class Cl
         def format
           opts = []
           opts << "type: #{type(obj)}" unless obj.type == :flag
-          opts << 'required: true' if obj.required?
+          opts << 'required' if obj.required?
           opts += Opt.new(obj).format if obj.is_a?(Cl::Opt)
           opts = opts.join(', ')
           opts = "(#{opts})" if obj.description && !opts.empty?
@@ -33,8 +33,8 @@ class Cl
           opts << "default: #{format_default(opt)}" if opt.default?
           opts << "known values: #{format_enum(opt)}" if opt.enum?
           opts << "format: #{opt.format}" if opt.format?
-          opts << "downcase: true" if opt.downcase?
-          opts << "upcase: true" if opt.upcase?
+          opts << "downcases" if opt.downcase?
+          opts << "upcases" if opt.upcase?
           opts << "min: #{opt.min}" if opt.min?
           opts << "max: #{opt.max}" if opt.max?
           opts << "e.g.: #{opt.example}" if opt.example?

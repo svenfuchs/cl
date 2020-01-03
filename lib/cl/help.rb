@@ -9,7 +9,11 @@ class Cl
     end
 
     def help
-      args.any? ? Cmd.new(ctx, cmd).format : Cmds.new(ctx, cmds).format
+      Array(args).any? ? Cmd.new(ctx, cmd).format : Cmds.new(ctx, cmds).format
+    end
+
+    def help?
+      true
     end
 
     private

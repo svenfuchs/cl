@@ -33,7 +33,7 @@ class Cl
       end
 
       def help
-        Help.new(ctx, [cmd.registry_key])
+        cmd.is_a?(Help) ? cmd : Help.new(ctx, [cmd.registry_key])
       end
 
       def suggestions(args)

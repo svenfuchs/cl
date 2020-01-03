@@ -12,7 +12,7 @@ class Cl
       end
 
       def usage
-        "Usage: #{Usage.new(ctx, cmd).format}"
+        "Usage: #{Usage.new(ctx, cmd).format.join("\n   or: ")}"
       end
 
       def summary

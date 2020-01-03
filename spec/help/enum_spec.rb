@@ -33,7 +33,7 @@ describe Cl, 'help' do
 
         Options:
 
-          --aaa AAA      type: string, known values: one, downcase: true
+          --aaa AAA      type: string, known values: one, downcases
           --help         Get help on this command
       str
     end

@@ -33,7 +33,8 @@ class Cl
 
     def normalize(opts, args)
       args = noize(opts, args)
-      dasherize(args)
+      # dasherize(args)
+      args
     end
 
     def noize(opts, args)
@@ -50,13 +51,13 @@ class Cl
       end
     end
 
-    DASHERIZE = /^--([^= ])*/
-
-    def dasherize(strs)
-      strs.map do |str|
-        str.is_a?(String) ? str.gsub(DASHERIZE) { |opt| opt.gsub('_', '-') } : str
-      end
-    end
+    # DASHERIZE = /^--([^= ])*/
+    #
+    # def dasherize(strs)
+    #   strs.map do |str|
+    #     str.is_a?(String) ? str.gsub(DASHERIZE) { |opt| opt.gsub('_', '-') } : str
+    #   end
+    # end
 
     def long?(str)
       str.start_with?('--')

@@ -23,14 +23,14 @@ class Cl
         if const.name
           key = underscore(const.name.split('::').last)
           key = [registry_key, key].compact.join(':') unless abstract?
+          const.register(key)
         end
-        const.register key
         const.define_singleton_method(:inherited, &inherited)
       end
       define_method(:inherited, &inherited)
 
       def cmds
-        registry.values
+        registry.values.uniq
       end
 
       def parse(ctx, cmd, args)
@@ -55,7 +55,7 @@ class Cl
       @ctx = ctx
       args, opts = self.class.parse(ctx, self, args)
       @opts = self.class.opts.apply(self, self.opts.merge(opts))
-      @args = self.class.args.apply(self, args, opts) unless help?
+      @args = self.class.args.apply(self, args, opts) unless help? && !is_a?(Help)
     end
 
     def opts

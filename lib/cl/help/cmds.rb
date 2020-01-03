@@ -19,7 +19,7 @@ class Cl
       end
 
       def format_cmd(cmd)
-        ["#{Usage.new(ctx, cmd).format}", cmd.summary]
+        ["#{Usage.new(ctx, cmd).format.first}", cmd.summary]
       end
     end
   end
