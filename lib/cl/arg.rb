@@ -8,7 +8,7 @@ class Cl
       mod = Module.new
       mod.send(:attr_accessor, name)
       mod.class_eval "def #{name}?; #{name}.is_a?(Array) ? !#{name}.empty? : !!#{name} end"
-      const.include(mod)
+      const.send(:include, mod)
     end
 
     def set(cmd, value)
