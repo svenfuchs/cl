@@ -32,7 +32,7 @@ $: << File.expand_path('lib')
 
     Arguments:
 
-      one         type: string, required: true
+      one         type: string, required
       two         type: string
 
     Options:
@@ -44,13 +44,13 @@ $: << File.expand_path('lib')
 <%= run 'Cl.new($0).run(%w(required one two three))' %>
 
 <%= out sq(<<-'str')
-    Too many arguments (given: 3, allowed: 2)
+    Too many arguments: one two three (given: 3, allowed: 2)
 
     Usage: bin/examples required one [two] [options]
 
     Arguments:
 
-      one         type: string, required: true
+      one         type: string, required
       two         type: string
 
     Options:

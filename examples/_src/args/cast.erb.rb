@@ -38,7 +38,7 @@ $: << File.expand_path('lib')
 <%= run 'Cl.new($0).run(%w(types true 1 1.2 foo bar))' %>
 
 <%= out sq(<<-'str')
-    Too many arguments (given: 5, allowed: 4)
+    Too many arguments: true 1 1.2 foo bar (given: 5, allowed: 4)
 
     Usage: bin/examples types [a:bool] [b:int] [c:float] [d] [options]
 

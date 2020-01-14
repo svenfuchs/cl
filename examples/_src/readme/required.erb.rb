@@ -27,7 +27,7 @@ $: << File.expand_path('lib')
 
   Options:
 
-    --to GROUP      type: string, required: true
+    --to GROUP      type: string, required
     --help          Get help on this command
   str
 %>

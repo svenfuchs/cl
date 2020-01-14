@@ -27,5 +27,5 @@ Cl.new('owners').run(%w(add))
 #
 #   Options:
 #
-#     --to GROUP      type: string, required: true
+#     --to GROUP      type: string, required
 #     --help          Get help on this command

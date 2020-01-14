@@ -183,6 +183,8 @@ module Git
   class Pull < Cl::Cmd
     register :'git:pull'
 
+    arg :branch
+
     def run
       p cmd: registry_key, args: args
     end
@@ -214,6 +216,8 @@ runners, and use them by passing the option `runner` to `Cl.new`:
 module Git
   class Pull < Cl::Cmd
     register :'git:pull'
+
+    arg :branch
 
     def run
       p cmd: registry_key, args: args
@@ -1032,7 +1036,7 @@ Cl.new('owners').run(%w(add))
 #
 #   Options:
 #
-#     --to GROUP      type: string, required: true
+#     --to GROUP      type: string, required
 #     --help          Get help on this command
 
 ```

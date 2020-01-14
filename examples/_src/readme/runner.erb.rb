@@ -6,6 +6,8 @@ $: << File.expand_path('lib')
     class Pull < Cl::Cmd
       register :'git:pull'
 
+      arg :branch
+
       def run
         p cmd: registry_key, args: args
       end
