@@ -12,7 +12,7 @@ class Cl
 
       opt = Opt.new(strs, opts, block)
       opt.define(const)
-      self << opt
+      insert(opt, const)
     end
 
     def apply(cmd, opts)
@@ -27,10 +27,11 @@ class Cl
       opts
     end
 
-    def <<(opt)
+    def insert(opt, const)
       delete(opt)
-      # keep the --help option at the end for help output
-      opts.empty? ? opts << opt : opts.insert(-2, opt)
+      return opts << opt if const == Cmd
+      ix = opts.index(const.superclass.opts.first)
+      opts.empty? ? opts << opt : opts.insert(ix.to_i, opt)
     end
 
     def [](key)
@@ -45,6 +46,10 @@ class Cl
       opts.delete(opts.detect { |o| o.strs == opt.strs })
     end
 
+    def first
+      opts.first
+    end
+
     def to_a
       opts
     end
@@ -57,6 +62,10 @@ class Cl
 
     def deprecated
       map(&:deprecated).flatten.compact
+    end
+
+    def ==(other)
+      strs == other.strs
     end
 
     def dup
