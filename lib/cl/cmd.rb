@@ -7,6 +7,7 @@ require 'cl/parser'
 
 class Cl
   singleton_class.send(:attr_accessor, :auto_register) # remove unless anyone needs this
+  singleton_class.instance_variable_set(:@auto_register, true)
 
   # Base class for all command classes that can be run.
   #
@@ -23,7 +24,7 @@ class Cl
       include Merge, Suggest, Underscore
 
       inherited = ->(const) do
-        return unless Cl.auto_register
+        # return unless Cl.auto_register
         if const.name
           key = underscore(const.name.split('::').last)
           key = [registry_key, key].compact.join(':') unless abstract?
