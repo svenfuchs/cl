@@ -53,6 +53,8 @@ on CI.
 ```ruby
 module Owners
   class Add < Cl::Cmd
+    register :add
+
     summary 'Add one or more owners to an existing owner group'
 
     description <<~str
@@ -128,9 +130,11 @@ For example:
 ```ruby
 module Cmd
   class One < Cl::Cmd
+    register :one
   end
 
   class Two < Cl::Cmd
+    register :two
   end
 end
 
@@ -139,9 +143,7 @@ p Cl::Cmd[:two] # => Cmd::Two
 
 ```
 
-Commands auto register themselves with the underscored name of the last part of
-their class name (as seen in the example above). It is possible to ovewrite this
-key by manually registering the class, like so:
+Commands can be registered like so:
 
 ```ruby
 module One
@@ -150,13 +152,6 @@ module One
   end
 end
 ```
-
-Be aware that if you derive a common base command class from `Cl::Cmd` it
-should be declared as `abstract` in order to unregister itself from the command
-registry.
-
-This will prevent the runner to consider it as a runnable command, and omit it
-from help output. See [abstract](#abstract) for details.
 
 ### Runners
 
@@ -269,6 +264,8 @@ The description, summary, and examples are used in the help output.
 ```ruby
 module Owners
   class Add < Cl::Cmd
+    register :add
+
     summary 'Add one or more owners to an existing owner group'
 
     description <<~str
@@ -333,6 +330,8 @@ class Base < Cl::Cmd
 end
 
 class Add < Base
+  register :add
+
   def run
     puts 'Success'
   end
@@ -365,6 +364,8 @@ example the method `ownsers` will be available on the `Cmd` instance:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   arg :owner
 
   def run
@@ -393,6 +394,8 @@ using this separator.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   arg :owners, type: :array, sep: ','
 
   def run
@@ -412,6 +415,8 @@ Other types cast the given argument to the expected Ruby type.
 
 ```ruby
 class Cmd < Cl::Cmd
+  register :cmd
+
   arg :one, type: :integer
   arg :two, type: :float
   arg :three, type: :boolean
@@ -437,6 +442,8 @@ For example:
 
 ```ruby
 class Lft < Cl::Cmd
+  register :lft
+
   arg :a, type: :array, splat: true
   arg :b
   arg :c
@@ -447,6 +454,8 @@ class Lft < Cl::Cmd
 end
 
 class Mid < Cl::Cmd
+  register :mid
+
   arg :a
   arg :b, type: :array, splat: true
   arg :c
@@ -457,6 +466,8 @@ class Mid < Cl::Cmd
 end
 
 class Rgt < Cl::Cmd
+  register :rgt
+
   arg :a
   arg :b
   arg :c, type: :array, splat: true
@@ -498,6 +509,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', 'Target group to add owners to'
 
   def run
@@ -532,6 +545,8 @@ the command.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   # depending on its arity the block can receive:
   #
   # * value
@@ -562,6 +577,8 @@ Options can have one or many alias names, given as a Symbol or Array of Symbols:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', alias: :group
 
   def run
@@ -586,6 +603,8 @@ I.e. this value is going to be used if the user does not provide the option:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', default: 'default'
 
   def run
@@ -609,6 +628,8 @@ For a deprecated option:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--target GROUP', deprecated: 'Deprecated.'
 
   def run
@@ -628,6 +649,8 @@ For a deprecated option alias name:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', alias: :target, deprecated: :target
 
   def run
@@ -651,6 +674,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', downcase: true
 
   def run
@@ -677,6 +702,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', enum: %w(one two)
 
   def run
@@ -711,6 +738,8 @@ Options can have examples that will be printed in the help output.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', example: 'group-one'
 end
 
@@ -738,6 +767,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', format: /^\w+$/
 
   def run
@@ -774,6 +805,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP'
   opt '--hidden', internal: true
 end
@@ -803,6 +836,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--retries COUNT', type: :integer, min: 1, max: 5
 
   def run
@@ -840,6 +875,8 @@ an option `negate` like so:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--notifications', 'Send out notifications to the team', negate: %w(skip)
 
   def run
@@ -885,6 +922,8 @@ Options can have a note that will be printed in the help output.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', note: 'needs to be a group'
 end
 
@@ -911,6 +950,8 @@ on this in order to, for example, obfuscate values from log output.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--pass PASS', secret: true
 
   def run
@@ -938,6 +979,8 @@ For example:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', see: 'https://docs.io/cli/owners/add'
 end
 
@@ -965,6 +1008,8 @@ only supports arrays of strings).
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', type: :array
 
   def run
@@ -984,6 +1029,8 @@ Other types cast the given value to the expected Ruby type.
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--active BOOL', type: :boolean
   opt '--retries INT', type: :integer
   opt '--sleep FLOAT', type: :float
@@ -1013,6 +1060,8 @@ For example, this simply requires the option `--to`:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', required: true
 
   def run
@@ -1045,6 +1094,8 @@ This will make the option `--retries` depend on the option `--to`:
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP'
   opt '--other GROUP', requires: :to
 
@@ -1080,6 +1131,8 @@ This requires either the option `--api_key` or both options `--username` and
 
 ```ruby
 class Add < Cl::Cmd
+  register :add
+
   # read DNF, i.e. "token OR user AND pass
   required :token, [:user, :pass]
 

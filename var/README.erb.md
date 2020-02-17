@@ -67,9 +67,7 @@ For example:
 <%= example('readme/registry') %>
 ```
 
-Commands auto register themselves with the underscored name of the last part of
-their class name (as seen in the example above). It is possible to ovewrite this
-key by manually registering the class, like so:
+Commands can be registered like so:
 
 ```ruby
 module One
@@ -78,13 +76,6 @@ module One
   end
 end
 ```
-
-Be aware that if you derive a common base command class from `Cl::Cmd` it
-should be declared as `abstract` in order to unregister itself from the command
-registry.
-
-This will prevent the runner to consider it as a runnable command, and omit it
-from help output. See [abstract](#abstract) for details.
 
 ### Runners
 

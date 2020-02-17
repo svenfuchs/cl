@@ -2,6 +2,8 @@
 $: << File.expand_path('lib')
 
 class Add < Cl::Cmd
+  register :add
+
   # read DNF, i.e. "token OR user AND pass
   required :token, [:user, :pass]
 

@@ -4,6 +4,8 @@ $: << File.expand_path('lib')
 require 'cl'
 
 class Add < Cl::Cmd
+  register :add
+
   opt '--retries COUNT', type: :integer, min: 1, max: 5
 
   def run

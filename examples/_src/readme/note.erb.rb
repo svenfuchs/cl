@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Add < Cl::Cmd
+      register :add
+
       opt '--to GROUP', note: 'needs to be a group'
     end
   rb

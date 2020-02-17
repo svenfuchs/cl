@@ -3,6 +3,8 @@ $: << File.expand_path('lib')
 
 <%= run sq(<<-'rb')
   class Add < Cl::Cmd
+    register :add
+
     opt '--active BOOL', type: :boolean
     opt '--retries INT', type: :integer
     opt '--sleep FLOAT', type: :float

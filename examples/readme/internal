@@ -6,6 +6,8 @@ require 'cl'
 require 'cl'
 
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP'
   opt '--hidden', internal: true
 end

@@ -3,9 +3,11 @@ $: << File.expand_path('lib')
 
 module Cmd
   class One < Cl::Cmd
+    register :one
   end
 
   class Two < Cl::Cmd
+    register :two
   end
 end
 

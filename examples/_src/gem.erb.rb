@@ -8,6 +8,8 @@ $: << File.expand_path('lib')
       module Release
         module Cmds
           class Release < Cl::Cmd
+            register 'release'
+
             arg :gemspec
 
             opt '-h', '--host HOST', 'Push to a compatible host other than rubygems.org'
@@ -20,6 +22,8 @@ $: << File.expand_path('lib')
           end
 
           class Bump < Cl::Cmd
+            register 'bump'
+
             opt '-v', '--version VERSION', 'The version to bump to [1.1.1|major|minor|patch|pre|rc|release]'
             opt '--[no-]commit',           'Bump the version, but do not commit'
 

@@ -3,6 +3,8 @@ $: << File.expand_path('lib')
 
 <%= run sq(<<-'rb')
   class Add < Cl::Cmd
+    register :add
+
     # read DNF, i.e. "token OR user AND pass
     required :token, [:user, :pass]
 

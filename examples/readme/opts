@@ -4,6 +4,8 @@ $: << File.expand_path('lib')
 require 'cl'
 
 class Add < Cl::Cmd
+  register :add
+
   opt '--to GROUP', 'Target group to add owners to'
 
   def run

@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Add < Cl::Cmd
+      register :add
+
       opt '--target GROUP', deprecated: 'Deprecated.'
 
       def run

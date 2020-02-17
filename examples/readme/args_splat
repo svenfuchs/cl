@@ -4,6 +4,8 @@ $: << File.expand_path('lib')
 require 'cl'
 
 class Lft < Cl::Cmd
+  register :lft
+
   arg :a, type: :array, splat: true
   arg :b
   arg :c
@@ -14,6 +16,8 @@ class Lft < Cl::Cmd
 end
 
 class Mid < Cl::Cmd
+  register :mid
+
   arg :a
   arg :b, type: :array, splat: true
   arg :c
@@ -24,6 +28,8 @@ class Mid < Cl::Cmd
 end
 
 class Rgt < Cl::Cmd
+  register :rgt
+
   arg :a
   arg :b
   arg :c, type: :array, splat: true

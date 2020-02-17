@@ -4,6 +4,8 @@
   # e.g. lib/owners/add.rb
   module Owners
     class Add < Cl::Cmd
+      register :add
+
       summary 'Add one or more owners to an existing owner group'
 
       description <<~str

@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Add < Cl::Cmd
+      register :add
+
       # depending on its arity the block can receive:
       #
       # * value

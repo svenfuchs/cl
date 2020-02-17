@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Cmd < Cl::Cmd
+      register :cmd
+
       arg :one, type: :integer
       arg :two, type: :float
       arg :three, type: :boolean

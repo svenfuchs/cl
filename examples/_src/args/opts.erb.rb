@@ -6,6 +6,8 @@ $: << File.expand_path('lib')
 
     module Opts
       class Bool < Cl::Cmd
+        register :bool
+
         arg :bool, type: :bool
 
         def run
@@ -14,6 +16,8 @@ $: << File.expand_path('lib')
       end
 
       class Types < Cl::Cmd
+        register :types
+
         arg :a, type: :bool
         arg :b, type: :int
         arg :c, type: :float

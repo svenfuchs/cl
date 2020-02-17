@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Required < Cl::Cmd
+      register :required
+
       arg :one, required: true
       arg :two
 

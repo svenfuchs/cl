@@ -9,6 +9,8 @@ require 'cl'
     end
 
     class Add < Base
+      register :add
+
       def run
         puts 'Success'
       end

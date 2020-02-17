@@ -3,6 +3,8 @@ $: << File.expand_path('lib')
 
 <%= run sq(<<-'rb')
   class Add < Cl::Cmd
+    register :add
+
     opt '--to GROUP'
     opt '--other GROUP', requires: :to
 

@@ -5,6 +5,8 @@ $: << File.expand_path('lib')
     require 'cl'
 
     class Add < Cl::Cmd
+      register :add
+
       opt '--notifications', 'Send out notifications to the team', negate: %w(skip)
 
       def run

@@ -3,6 +3,8 @@ $: << File.expand_path('lib')
 
 <%= run sq(<<-'rb')
   class Add < Cl::Cmd
+    register :add
+
     opt '--pass PASS', secret: true
 
     def run
