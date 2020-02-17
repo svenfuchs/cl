@@ -4,7 +4,7 @@ require 'cl/runner'
 require 'cl/errors'
 
 class Cl
-  singleton_class.send(:attr_accessor, :flag_values) # remove unless Dpl needs this
+  singleton_class.send(:attr_accessor, :flag_values)   # remove unless Dpl needs this
 
   attr_reader :ctx, :name, :opts
 

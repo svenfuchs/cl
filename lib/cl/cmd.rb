@@ -1,10 +1,13 @@
 require 'registry'
+require 'cl'
 require 'cl/args'
 require 'cl/dsl'
 require 'cl/opts'
 require 'cl/parser'
 
 class Cl
+  singleton_class.send(:attr_accessor, :auto_register) # remove unless anyone needs this
+
   # Base class for all command classes that can be run.
   #
   # Inherit your command classes from this class, use the {Cl::Cmd::Dsl} to
@@ -20,6 +23,7 @@ class Cl
       include Merge, Suggest, Underscore
 
       inherited = ->(const) do
+        return unless Cl.auto_register
         if const.name
           key = underscore(const.name.split('::').last)
           key = [registry_key, key].compact.join(':') unless abstract?
