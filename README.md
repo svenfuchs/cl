@@ -153,6 +153,33 @@ module One
 end
 ```
 
+By default commands auto register themselves with the underscored name of the
+last part of their class name (as seen in the example above). It is possible to
+turn this off using:
+
+```ruby
+Cl::Cmd.auto_register = false
+```
+
+Command auto-registration can cause name clashes when namespaced commands have
+the same demodulized class name. For example:
+
+```ruby
+class Git < Cl::Cmd
+  # auto-registers as :git
+end
+
+module Heroku
+  class Git < Cl::Cmd
+    # also auto-registers as :git
+  end
+end
+```
+
+It is recommended to turn auto-registration off when using such module
+structures.
+
+
 ### Runners
 
 Runners lookup the command to execute from the registry, by checking the

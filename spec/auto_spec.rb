@@ -1,6 +1,4 @@
 describe Cl, 'auto register' do
-  before { Cl.auto_register = true }
-  after { Cl.auto_register = false }
   after { Object.send(:remove_const, :Test) }
 
   let(:keys) { Cl::Cmd.registry.keys }

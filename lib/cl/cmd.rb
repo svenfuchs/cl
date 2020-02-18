@@ -6,9 +6,6 @@ require 'cl/opts'
 require 'cl/parser'
 
 class Cl
-  singleton_class.send(:attr_accessor, :auto_register) # remove unless anyone needs this
-  singleton_class.instance_variable_set(:@auto_register, true)
-
   # Base class for all command classes that can be run.
   #
   # Inherit your command classes from this class, use the {Cl::Cmd::Dsl} to
@@ -23,9 +20,10 @@ class Cl
     class << self
       include Merge, Suggest, Underscore
 
+      attr_accessor :auto_register
+
       inherited = ->(const) do
-        # return unless Cl.auto_register
-        if const.name
+        if const.name && Cmd.auto_register
           key = underscore(const.name.split('::').last)
           key = [registry_key, key].compact.join(':') unless abstract?
           const.register(key)
@@ -49,6 +47,8 @@ class Cl
         suggest(opts.map(&:name), opt.sub(/^--/, ''))
       end
     end
+
+    self.auto_register = true
 
     abstract
 

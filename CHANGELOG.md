@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.2.4 (2020-01-18)
+
+* Make auto-registration optional, but on by default
+
+## 1.2.3 (2020-01-17)
+
+* Bring back auto regisration (broke dpl)
+
+## 1.2.2 (2020-01-17)
+
+* Do not auto-register commands by default
+
+## 1.2.1 (2020-01-14)
+
+* Fix calling const.include on older Ruby versions
+
+## 1.2.0 (2020-01-14)
+
+* Enforce declaring arguments
+* Allow optional strings on long opts
+* Define arg accessor on an included module so it can be overwritten
+* Inherit args from parent commands
+* Do not raise on empty splats
+* Allow args to have defaults
+* Allow args to be enums
+* Define predicate methods for args
+* Make flag values an optional feature
+* List multiple usage lines if a command has multiple registry keys
+* Sort options by class hierarchie
+* Do not try to cast nil values to integers
+
 ## 1.1.3 (2019-09-02)
 
 * Rescue OptionParser::InvalidOption, suggest known options
