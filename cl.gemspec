@@ -26,5 +26,5 @@ Gem::Specification.new do |s|
   s.platform     = Gem::Platform::RUBY
   s.require_path = 'lib'
 
-  s.add_dependency 'regstry', '~> 1.0.3'
+  s.add_dependency 'regstry', '~> 1.0'
 end
