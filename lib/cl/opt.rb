@@ -37,7 +37,7 @@ class Cl
     def name
       return @name if instance_variable_defined?(:@name)
       name = long.split(' ').first.match(OPT)[1] if long
-      @name = name.sub('-', '_').to_sym if name
+      @name = name.gsub('-', '_').to_sym if name
     end
 
     def type
