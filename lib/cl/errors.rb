@@ -47,7 +47,7 @@ class Cl
 
     def initialize(cmd, str)
       @cmd = cmd
-      @opt = str.sub('invalid option: ', '').sub(VALUE, '')
+      @opt = str.sub('invalid option: ', '').sub(VALUE, '').split("\n").first
       super(:unknown_option, opt)
     end
 
