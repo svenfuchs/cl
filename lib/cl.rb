@@ -31,7 +31,7 @@ class Cl
   #
   # @param args [Array<String>] arguments (usually ARGV)
   def run(args)
-    runner(untaint(args)).run
+    runner(args).run
   rescue UnknownCmd => e
     ctx.abort e
   rescue Error => e
@@ -50,13 +50,4 @@ class Cl
     runner(['help', *args]).cmd.help
   rescue
   end
-
-  private
-
-    # Tainting is being used for identifying values on options that have
-    # been declared as secret. Ruby taints incoming arguments, so we want to
-    # untaint them here.
-    def untaint(args)
-      args.map(&:dup).each(&:untaint)
-    end
 end

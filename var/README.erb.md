@@ -365,18 +365,6 @@ Options can have a note that will be printed in the help output.
 <%= example('readme/note') %>
 ```
 
-#### Secret
-
-Options can be declared as secret.
-
-This makes it possible for client code to inspect if a given option is secret.
-Also, option values given by the user will be tainted, so client code can rely
-on this in order to, for example, obfuscate values from log output.
-
-```ruby
-<%= example('readme/secret') %>
-```
-
 #### See Also
 
 Options can refer to documentation using the `see` option. This will be printed

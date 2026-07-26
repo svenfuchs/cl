@@ -967,36 +967,6 @@ Cl.new('owners').run(%w(add --help))
 
 ```
 
-#### Secret
-
-Options can be declared as secret.
-
-This makes it possible for client code to inspect if a given option is secret.
-Also, option values given by the user will be tainted, so client code can rely
-on this in order to, for example, obfuscate values from log output.
-
-```ruby
-class Add < Cl::Cmd
-  register :add
-
-  opt '--pass PASS', secret: true
-
-  def run
-    p(
-      secret?: self.class.opts[:pass].secret?,
-      tainted?: pass.tainted?
-    )
-  end
-end
-
-Cl.new('owners').run(%w(add --pass pass))
-
-# Output:
-#
-#   {:secret?=>true, :tainted?=>true}
-
-```
-
 #### See Also
 
 Options can refer to documentation using the `see` option. This will be printed

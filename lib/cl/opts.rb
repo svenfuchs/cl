@@ -22,7 +22,6 @@ class Cl
       opts = downcase(opts)
       opts = upcase(opts)
       opts = cast(opts)
-      opts = taint(opts)
       validate(cmd, self, opts, orig)
       opts
     end
@@ -104,12 +103,6 @@ class Cl
       def cast(opts)
         opts.map do |key, value|
           [key, self[key] ? self[key].cast(value) : value]
-        end.to_h
-      end
-
-      def taint(opts)
-        opts.map do |key, value|
-          [key, self[key] && self[key].secret? ? value.taint : value]
         end.to_h
       end
   end
